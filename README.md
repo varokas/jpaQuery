@@ -1,15 +1,17 @@
-context = new Context()
-context.add( Deps.from(Child_.class).field(childId).to(Parent_).on(parentId))
+[![Build Status](https://secure.travis-ci.org/varokas/jpaQuery.png)](http://travis-ci.org/varokas/jpaQuery)
 
-context.create(Child.class)
+    context = new Context()
+    context.add( Deps.from(Child_.class).field(childId).to(Parent_).on(parentId))
 
-result = context.create(Root.class).with(Root_.status).eq("Active").whichContains(Leaf.class).with(Leaf_.status).
+    context.create(Child.class)
 
-Root("active")
-   - â...¦.
-      - â....€¦
+    result = context.create(Root.class).with(Root_.status).eq("Active").whichContains(Leaf.class).with(Leaf_.status).
+
+    Root("active")
+        - ....
+        - ...
            - Leaf(status="Active")
 
-root = result.getEntity(Root.class)[0]
-leaf = result.getEntity(Leaf.class)[0]
+    root = result.getEntity(Root.class)[0]
+    leaf = result.getEntity(Leaf.class)[0]
 

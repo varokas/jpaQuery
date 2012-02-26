@@ -2,6 +2,9 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="testPersistentUnit"
                       transaction-type="RESOURCE_LOCAL">
+        <class>com.huskycode.jpaquery.testmodel.ClassA</class>
+        <class>com.huskycode.jpaquery.testmodel.ClassB</class>
+
         <properties>
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
@@ -16,5 +19,6 @@
                       value="org.hibernate.dialect.HSQLDialect" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
         </properties>
+
     </persistence-unit>
 </persistence>

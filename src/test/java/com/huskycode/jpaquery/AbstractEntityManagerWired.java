@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/applicationContext-test.xml"})
 @Transactional
-public class AbstractEntityManagerWiredTest {
+public class AbstractEntityManagerWired {
     @PersistenceContext
     protected EntityManager entityManager;
 }

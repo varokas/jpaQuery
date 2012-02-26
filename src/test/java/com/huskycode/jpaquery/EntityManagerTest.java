@@ -17,13 +17,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Varokas Panusuwan
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/applicationContext-test.xml"})
-@Transactional
-public class EntityManagerTest {
-    @PersistenceContext
-    private EntityManager entityManager;
-
+public class EntityManagerTest extends AbstractEntityManagerWiredTest {
     @Test
     @Rollback
     public void testEntityManagerWiredBySpringCorrectly() {

@@ -13,6 +13,14 @@
     <embeddables>**/*Stories.java</embeddables>
   </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>jboss-releases-repository</id>
+            <name>JBoss Releases Repository</name>
+            <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.jbehave</groupId>
@@ -32,6 +40,37 @@
       <version>${jbehave.site.version}</version>
       <type>zip</type>
     </dependency>
+      <dependency>
+          <groupId>hsqldb</groupId>
+          <artifactId>hsqldb</artifactId>
+          <version>1.8.0.10</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-entitymanager</artifactId>
+          <version>3.4.0.GA</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-annotations</artifactId>
+          <version>3.4.0.GA</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-jpamodelgen</artifactId>
+          <version>1.2.0.CR1</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-test</artifactId>
+          <version>3.1.1.RELEASE</version>
+      </dependency>
+
+
   </dependencies>
 
   <build>
@@ -53,10 +92,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.1</version>
           <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.6</source>
+            <target>1.6</target>
+            <compilerArguments>
+                <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+            </compilerArguments>
           </configuration>
         </plugin>
       </plugins>

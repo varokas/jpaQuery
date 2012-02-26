@@ -3,6 +3,7 @@ target/
 *.ipr
 *.iws
 .idea/
+generated/
 
 #ignore eclipse files
 *.pydevproject

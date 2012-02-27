@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery;
 
 import com.huskycode.jpaquery.testmodel.ClassA;
+import com.huskycode.jpaquery.testmodel.ClassA_;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
@@ -12,7 +13,6 @@ import static org.junit.Assert.assertThat;
  */
 public class EntityManagerTest extends AbstractEntityManagerWired {
     @Test
-    @Rollback
     public void testEntityManagerWiredBySpringCorrectly() {
         assertThat(entityManager, is(not(nullValue())));
     }
@@ -25,5 +25,10 @@ public class EntityManagerTest extends AbstractEntityManagerWired {
         ClassA queried = entityManager.find(ClassA.class, a.getId());
                 
         assertThat(queried.getId(), is(equalTo(a.getId())));
+    }
+
+    @Test
+    public void testMetamodelNotNull() {
+        assertThat(ClassA_.id, is(not(nullValue())));
     }
 }

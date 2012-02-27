@@ -17,7 +17,7 @@
         <repository>
             <id>jboss-releases-repository</id>
             <name>JBoss Releases Repository</name>
-            <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
         </repository>
     </distributionManagement>
 
@@ -41,16 +41,16 @@
       <type>zip</type>
     </dependency>
       <dependency>
-          <groupId>hsqldb</groupId>
-          <artifactId>hsqldb</artifactId>
-          <version>1.8.0.10</version>
-          <scope>test</scope>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.164</version>
       </dependency>
       <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-entitymanager</artifactId>
-          <version>3.4.0.GA</version>
+          <version>4.1.0.Final</version>
       </dependency>
+      <!--
       <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-annotations</artifactId>
@@ -60,6 +60,11 @@
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate-commons-annotations</artifactId>
           <version>3.3.0.ga</version>
+      </dependency>
+    --><dependency>
+        <groupId>cglib</groupId>
+        <artifactId>cglib</artifactId>
+        <version>2.2.2</version>
       </dependency>
       <dependency>
           <groupId>org.hibernate</groupId>

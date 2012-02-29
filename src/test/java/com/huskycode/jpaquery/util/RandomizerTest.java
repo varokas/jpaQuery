@@ -2,13 +2,12 @@ package com.huskycode.jpaquery.util;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 
 /** */
@@ -75,5 +74,27 @@ public class RandomizerTest {
     @Test
     public void testGetBoolean() {
         assertThat(Randomizer.getBoolean(),instanceOf(Boolean.class));
+    }
+
+    @Test
+    public void testGetRandomFromArray() {
+        Integer[] data = {any.nextInt(), any.nextInt(), any.nextInt(), any.nextInt()};
+        
+        int selectData =  Randomizer.getRandomFromArray(data);
+        
+        assertThat(selectData, isIn(data));
+    }
+
+
+    @Test
+    public void testGetRandomFromList() {
+        List<Integer> data = new ArrayList<Integer>();
+        data.add(any.nextInt());
+        data.add(any.nextInt());
+        data.add(any.nextInt());
+
+        int selectData =  Randomizer.getRandomFromList(data);
+
+        assertThat(selectData, isIn(data));
     }
 }

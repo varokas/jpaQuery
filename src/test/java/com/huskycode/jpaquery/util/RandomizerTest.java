@@ -19,8 +19,6 @@ public class RandomizerTest {
     
     @Test
     public void testGetString() {
-        assertThat(Randomizer.getString(),instanceOf(String.class));
-          
         int length = Math.abs(any.nextInt(MAX_LENGTH));
         String expected = Randomizer.getString(length);
 
@@ -32,8 +30,6 @@ public class RandomizerTest {
 
     @Test
     public void testGetAsciiString() {
-        assertThat(Randomizer.getAsciiString(),instanceOf(String.class));
-
         int length = Math.abs(any.nextInt(MAX_LENGTH));
         String expected = Randomizer.getAsciiString(length);
 

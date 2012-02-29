@@ -14,7 +14,7 @@ public class Randomizer {
     }
 
     public static String getString() {
-        return RandomStringUtils.random(Math.abs(any.nextInt()));
+        return getString(any.nextInt());
     }
 
     public static String getAsciiString(int length) {
@@ -22,7 +22,7 @@ public class Randomizer {
     }
 
     public static String getAsciiString() {
-        return RandomStringUtils.randomAscii(Math.abs(any.nextInt()));
+        return getAsciiString(any.nextInt());
     }
     
     public static int getInt() {

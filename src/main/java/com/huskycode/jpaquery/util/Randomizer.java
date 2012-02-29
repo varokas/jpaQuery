@@ -2,6 +2,7 @@ package com.huskycode.jpaquery.util;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.util.List;
 import java.util.Random;
 
 /** */
@@ -47,5 +48,15 @@ public class Randomizer {
 
     public static boolean getBoolean() {
         return any.nextDouble() > 0.5;
+    }
+    
+    public static <T> T  getRandomFromArray(T[] array) {
+        int length = array.length;
+        return array[any.nextInt(length)];
+    }
+
+    public static <T> T  getRandomFromList(List<T> list) {
+        int length = list.size();
+        return list.get(any.nextInt(length));
     }
 }

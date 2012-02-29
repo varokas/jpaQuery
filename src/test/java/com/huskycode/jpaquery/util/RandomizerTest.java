@@ -24,21 +24,23 @@ public class RandomizerTest {
 
         assertThat(expected,instanceOf(String.class));
         assertThat(expected.length(), equalTo(length));
+
+        length = 0;
+        String expect = "";
+        assertEquals(Randomizer.getString(length), expect);
     }
-
-
 
     @Test
     public void testGetAsciiString() {
         int length = Math.abs(any.nextInt(MAX_LENGTH));
-        String expected = Randomizer.getAsciiString(length);
+        String actual = Randomizer.getAsciiString(length);
 
-        assertThat(expected,instanceOf(String.class));
-        assertThat(expected.length(), equalTo(length));
+        assertThat(actual,instanceOf(String.class));
+        assertThat(actual.length(), equalTo(length));
 
         length = 0;
-        expected = "";
-        assertEquals(expected, "");
+        String expect = "";
+        assertEquals(Randomizer.getAsciiString(length), expect);
     }
 
     @Test
@@ -48,9 +50,9 @@ public class RandomizerTest {
 
     @Test
     public void testGetNonNegativeInt() {
-        int expected = Randomizer.getNonNegativeInt();
-        assertThat(expected,instanceOf(Integer.class));
-        assertTrue(expected >= 0);
+        int actual = Randomizer.getNonNegativeInt();
+        assertThat(actual,instanceOf(Integer.class));
+        assertTrue(actual >= 0);
     }
 
     @Test
@@ -60,9 +62,9 @@ public class RandomizerTest {
 
     @Test
     public void testGetNonNegativeLong() {
-        long expected = Randomizer.getNonNegativeLong();
-        assertThat(expected,instanceOf(Long.class));
-        assertTrue(expected >= 0);
+        long actual = Randomizer.getNonNegativeLong();
+        assertThat(actual,instanceOf(Long.class));
+        assertTrue(actual >= 0);
     }
 
     @Test

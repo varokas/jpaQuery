@@ -15,72 +15,85 @@ public class RandomizerTest {
 
     private Random any = new Random();
     private static final int MAX_LENGTH = 100;
+
+    @Test
+    public void testRandomByType() {
+        RandomizerImpl randomizer = new RandomizerImpl();
+        
+        assertThat(randomizer.getRandomOfType(String.class), instanceOf(String.class));
+        assertThat(randomizer.getRandomOfType(Integer.class), instanceOf(Integer.class));
+        assertThat(randomizer.getRandomOfType(Double.class), instanceOf(Double.class));
+        assertThat(randomizer.getRandomOfType(Float.class), instanceOf(Float.class));
+        assertThat(randomizer.getRandomOfType(Long.class), instanceOf(Long.class));
+        assertThat(randomizer.getRandomOfType(Boolean.class), instanceOf(Boolean.class));
+        assertThat(randomizer.getRandomOfType(Character.class), instanceOf(Character.class));
+    }
     
     @Test
     public void testGetString() {
         int length = Math.abs(any.nextInt(MAX_LENGTH));
-        String expected = Randomizer.getString(length);
+        String expected = RandomizerImpl.getString(length);
 
         assertThat(expected,instanceOf(String.class));
         assertThat(expected.length(), equalTo(length));
 
         length = 0;
         String expect = "";
-        assertEquals(Randomizer.getString(length), expect);
+        assertEquals(RandomizerImpl.getString(length), expect);
     }
 
     @Test
     public void testGetAsciiString() {
         int length = Math.abs(any.nextInt(MAX_LENGTH));
-        String actual = Randomizer.getAsciiString(length);
+        String actual = RandomizerImpl.getAsciiString(length);
 
         assertThat(actual,instanceOf(String.class));
         assertThat(actual.length(), equalTo(length));
 
         length = 0;
         String expect = "";
-        assertEquals(Randomizer.getAsciiString(length), expect);
+        assertEquals(RandomizerImpl.getAsciiString(length), expect);
     }
 
     @Test
     public void testGetInt() {
-        assertThat(Randomizer.getInt(),instanceOf(Integer.class));
+        assertThat(RandomizerImpl.getInt(),instanceOf(Integer.class));
     }
 
     @Test
     public void testGetNonNegativeInt() {
-        int actual = Randomizer.getNonNegativeInt();
+        int actual = RandomizerImpl.getNonNegativeInt();
         assertThat(actual,instanceOf(Integer.class));
         assertTrue(actual >= 0);
     }
 
     @Test
     public void testGetLong() {
-        assertThat(Randomizer.getLong(),instanceOf(Long.class));
+        assertThat(RandomizerImpl.getLong(),instanceOf(Long.class));
     }
 
     @Test
     public void testGetNonNegativeLong() {
-        long actual = Randomizer.getNonNegativeLong();
+        long actual = RandomizerImpl.getNonNegativeLong();
         assertThat(actual,instanceOf(Long.class));
         assertTrue(actual >= 0);
     }
 
     @Test
     public void testGetDouble() {
-        assertThat(Randomizer.getDouble(),instanceOf(Double.class));
+        assertThat(RandomizerImpl.getDouble(),instanceOf(Double.class));
     }
 
     @Test
     public void testGetBoolean() {
-        assertThat(Randomizer.getBoolean(),instanceOf(Boolean.class));
+        assertThat(RandomizerImpl.getBoolean(),instanceOf(Boolean.class));
     }
 
     @Test
     public void testGetRandomFromArray() {
         Integer[] data = {any.nextInt(), any.nextInt(), any.nextInt(), any.nextInt()};
         
-        int selectData =  Randomizer.getRandomFromArray(data);
+        int selectData =  RandomizerImpl.getRandomFromArray(data);
         
         assertThat(selectData, isIn(data));
     }
@@ -93,7 +106,7 @@ public class RandomizerTest {
         data.add(any.nextInt());
         data.add(any.nextInt());
 
-        int selectData =  Randomizer.getRandomFromList(data);
+        int selectData =  RandomizerImpl.getRandomFromList(data);
 
         assertThat(selectData, isIn(data));
     }

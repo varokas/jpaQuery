@@ -67,7 +67,7 @@ public class JPAQueryContextTest {
     }
 
     @Test
-    public void shouldRandomValueOfTheClassBeingCreated() {
+    public void shouldRandomValueOfTheClassBeingCreated() throws ClassNotFoundException, IllegalAccessException {
         JPAQueryContext
                 .newInstance(entityManager, randomValuePopulator)
                 .create(EntityWithFields.class);

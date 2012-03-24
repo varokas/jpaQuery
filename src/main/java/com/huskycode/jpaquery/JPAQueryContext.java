@@ -2,6 +2,7 @@ package com.huskycode.jpaquery;
 
 import com.huskycode.jpaquery.random.RandomValuePopulator;
 import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.util.RandomizerImpl;
 
 import javax.persistence.EntityManager;
 
@@ -32,7 +33,7 @@ public class JPAQueryContext {
 
     
     public static JPAQueryContext newInstance(EntityManager entityManager) {
-        return newInstance(entityManager, new RandomValuePopulatorImpl());
+        return newInstance(entityManager, new RandomValuePopulatorImpl(new RandomizerImpl()));
     }
 
     public EntityManager getEntityManager() {

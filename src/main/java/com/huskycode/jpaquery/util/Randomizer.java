@@ -1,62 +1,12 @@
 package com.huskycode.jpaquery.util;
 
-import org.apache.commons.lang.RandomStringUtils;
-
-import java.util.List;
-import java.util.Random;
-
-/** */
-public class Randomizer {
-    
-    private static final Random any = new Random();
-    
-    public static String getString(int length) {
-        return (length == 0) ? "" : RandomStringUtils.random(Math.abs(length));
-    }
-
-    public static String getString() {
-        return getString(any.nextInt());
-    }
-
-    public static String getAsciiString(int length) {
-        return (length == 0) ? "" : RandomStringUtils.randomAscii(Math.abs(length));
-    }
-
-    public static String getAsciiString() {
-        return getAsciiString(any.nextInt());
-    }
-    
-    public static int getInt() {
-        return any.nextInt();
-    }
-
-    public static int getNonNegativeInt() {
-        return Math.abs(any.nextInt());
-    }
-
-    public static long getLong() {
-        return any.nextLong();
-    }
-
-    public static long getNonNegativeLong() {
-        return Math.abs(any.nextLong());
-    }
-
-    public static double getDouble() {
-        return any.nextDouble();
-    }
-
-    public static boolean getBoolean() {
-        return any.nextDouble() > 0.5;
-    }
-    
-    public static <T> T  getRandomFromArray(T[] array) {
-        int length = array.length;
-        return array[any.nextInt(length)];
-    }
-
-    public static <T> T  getRandomFromList(List<T> list) {
-        int length = list.size();
-        return list.get(any.nextInt(length));
-    }
+/**
+ * Created by IntelliJ IDEA.
+ * User: Ta
+ * Date: 3/22/12
+ * Time: 11:17 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public interface Randomizer {
+    public <T> T getRandomOfType(Class<T> type, int ... length);
 }

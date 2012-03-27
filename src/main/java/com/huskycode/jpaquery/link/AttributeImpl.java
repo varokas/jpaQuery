@@ -38,4 +38,24 @@ public class AttributeImpl<E, T> implements Attribute<E, T> {
     public Class<T> getType() {
         return (Class<T>)this.field.getType();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AttributeImpl attribute = (AttributeImpl) o;
+
+        if (!cls.equals(attribute.cls)) return false;
+        if (!field.equals(attribute.field)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = cls.hashCode();
+        result = 31 * result + field.hashCode();
+        return result;
+    }
 }

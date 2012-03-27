@@ -13,11 +13,9 @@ public class RandomizerImpl implements Randomizer{
     public static Integer DEFAULT_LENGTH = 10;
     
     @Override
-    public <T> T getRandomOfType(Class<T> type, int ... length) {
+    public <T> T getRandomOfType(Class<T> type, int length) {
         if (type.equals(String.class)) {
-            return length != null
-                    && length.length > 0
-                    && length[0] > 0 ? (T)(getAsciiString(length[0])) : (T)(getAsciiString());
+            return length > 0 ? (T)(getAsciiString(length)) : (T)(getAsciiString());
         } else if (type.equals(Integer.class) || type.equals(int.class)) {
             return (T)(getInt());
         } else if (type.equals(Double.class)  || type.equals(double.class)) {
@@ -36,6 +34,10 @@ public class RandomizerImpl implements Randomizer{
             System.out.println("Not primitive: " + type);
             throw new UnsupportedOperationException("Not a primitive class: " + type);
         }
+    }
+
+    public <T> T getRandomOfType(Class<T> type) {
+        return getRandomOfType(type, 0);
     }
     
     public static String getString(int length) {

@@ -18,42 +18,55 @@ import static org.mockito.Mockito.*;
  */
 public class JPAQueryContextTest {
     private EntityManager entityManager;
+    private DependenciesDefinition deps;
     private JPAQueryContext jpaContext;
     private RandomValuePopulator randomValuePopulator;
 
     @Before
     public void before() {
         entityManager = mock(EntityManager.class);
+        deps = mock(DependenciesDefinition.class);
         randomValuePopulator = mock(RandomValuePopulator.class);
     }
 
     @Test
     public void shouldCreateWithGivenEntityManager() {
-        jpaContext = JPAQueryContext.newInstance(entityManager);
+        jpaContext = JPAQueryContext.newInstance(entityManager, deps);
         assertThat(jpaContext.getEntityManager(), is(equalTo(entityManager)));
     }
 
     @Test
+    public void shouldCreateWithGivenDependencies() {
+        jpaContext = JPAQueryContext.newInstance(entityManager, deps);
+        assertThat(jpaContext.getDependenciesDefinition(), is(equalTo(deps)));
+    }
+
+    @Test
     public void shouldCreateWithRandomValueGeneratorNotNull() {
-        jpaContext = JPAQueryContext.newInstance(entityManager);
+        jpaContext = JPAQueryContext.newInstance(entityManager, deps);
         assertThat(jpaContext.getRandomValuePopulator(), is(not(nullValue())));
     }
 
     @Test
     public void shouldCreateWithGivenRandomValueGenerator() {
-        jpaContext = JPAQueryContext.newInstance(entityManager, randomValuePopulator);
+        jpaContext = JPAQueryContext.newInstance(entityManager, deps, randomValuePopulator);
         assertThat(jpaContext.getRandomValuePopulator(), is(equalTo(randomValuePopulator)));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWhenEntityManagerIsNull() {
-        JPAQueryContext.newInstance(null);
+        JPAQueryContext.newInstance(null, deps);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenDependenciesIsNull() {
+        JPAQueryContext.newInstance(entityManager, null);
     }
 
     @Test
     public void shouldTryToPersistAClassToCreateIfNoDependencies() {
         JPAQueryContext
-                .newInstance(entityManager)
+                .newInstance(entityManager, deps)
                 .create(EntityWithFields.class);
 
         verify(entityManager, times(1)).persist(Matchers.any(EntityWithFields.class));
@@ -62,14 +75,14 @@ public class JPAQueryContextTest {
     @Test(expected = EntityInstantiationException.class)
     public void shouldThrowExceptionIfCannotInstantiateClass() {
         JPAQueryContext
-                .newInstance(entityManager)
+                .newInstance(entityManager, deps)
                 .create(NoPublicConstructor.class);
     }
 
     @Test
     public void shouldRandomValueOfTheClassBeingCreated() throws ClassNotFoundException, IllegalAccessException {
         JPAQueryContext
-                .newInstance(entityManager, randomValuePopulator)
+                .newInstance(entityManager, deps, randomValuePopulator)
                 .create(EntityWithFields.class);
 
         verify(randomValuePopulator, times(1)).populateValue(any(EntityWithFields.class));

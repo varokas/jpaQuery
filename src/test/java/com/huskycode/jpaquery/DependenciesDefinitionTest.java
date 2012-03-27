@@ -17,7 +17,7 @@ public class DependenciesDefinitionTest {
     public void shouldBeAbleToDefineDependenciesByLinks() {
         SingularAttribute pointA = Mockito.mock(SingularAttribute.class);
         SingularAttribute pointB = Mockito.mock(SingularAttribute.class);
-        Link anyLink = Link.from(pointA).to(pointB);
+        Link anyLink = Link.from(Object.class, pointA).to(Object.class, pointB);
 
         DependenciesDefinition deps =
                 DependenciesDefinition.fromLinks(new Link[] { anyLink });

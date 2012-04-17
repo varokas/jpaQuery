@@ -63,31 +63,4 @@ public class JPAQueryContextTest {
         JPAQueryContext.newInstance(entityManager, null);
     }
 
-    @Test
-    public void shouldTryToPersistAClassToCreateIfNoDependencies() {
-        JPAQueryContext
-                .newInstance(entityManager, deps)
-                .create(EntityWithFields.class);
-
-        verify(entityManager, times(1)).persist(Matchers.any(EntityWithFields.class));
-    }
-
-    @Test(expected = EntityInstantiationException.class)
-    public void shouldThrowExceptionIfCannotInstantiateClass() {
-        JPAQueryContext
-                .newInstance(entityManager, deps)
-                .create(NoPublicConstructor.class);
-    }
-
-    @Test
-    public void shouldRandomValueOfTheClassBeingCreated() throws ClassNotFoundException, IllegalAccessException {
-        JPAQueryContext
-                .newInstance(entityManager, deps, randomValuePopulator)
-                .create(EntityWithFields.class);
-
-        verify(randomValuePopulator, times(1)).populateValue(any(EntityWithFields.class));
-    }
-
-    /** A class with no public constructor for test */
-    private class NoPublicConstructor{ private NoPublicConstructor() {} }
 }

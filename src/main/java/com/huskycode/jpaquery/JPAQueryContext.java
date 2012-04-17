@@ -1,10 +1,19 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.jpaquery.random.RandomValuePopulator;
-import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
-import com.huskycode.jpaquery.util.RandomizerImpl;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+
+import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.persister.EntityInstantiationException;
+import com.huskycode.jpaquery.persister.Persister;
+import com.huskycode.jpaquery.persister.PersisterImpl;
+import com.huskycode.jpaquery.random.RandomValuePopulator;
+import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.solver.Solver;
+import com.huskycode.jpaquery.solver.SolverImpl;
+import com.huskycode.jpaquery.types.tree.CreationTree;
+import com.huskycode.jpaquery.types.tree.PersistedTree;
 
 /**
  * @author Varokas Panusuwan
@@ -41,25 +50,21 @@ public class JPAQueryContext {
     public static JPAQueryContext newInstance(EntityManager entityManager, DependenciesDefinition deps) {
         return newInstance(entityManager,
                 deps,
-                new RandomValuePopulatorImpl(new RandomizerImpl()));
+                new RandomValuePopulatorImpl());
     }
 
+    public <E> E create(Class<E> entityClass) {
+            Solver solver = SolverImpl.newInstance();
+            List<CreationTree> creationTrees = solver.solveFor(entityClass, DependenciesDefinition.fromLinks(new Link[0]));
+            
+            Persister persister = PersisterImpl.newInstance(entityManager);
+            List<PersistedTree> persistedTrees = persister.persistValues(creationTrees);
+
+            return (E)persistedTrees.get(0);
+    }
+    
     public EntityManager getEntityManager() {
         return entityManager;
-    }
-
-    public <E> void create(Class<E> entityClass) {
-        try {
-
-            E entityObject = entityClass.newInstance();
-            randomValuePopulator.populateValue(entityObject);
-            entityManager.persist(entityObject);
-
-        } catch (InstantiationException e) {
-            throw new EntityInstantiationException("Cannot create class: " + entityClass.getName(), e);
-        } catch (IllegalAccessException e) {
-            throw new EntityInstantiationException("Cannot create class: " + entityClass.getName(), e);
-        }
     }
 
     public RandomValuePopulator getRandomValuePopulator() {

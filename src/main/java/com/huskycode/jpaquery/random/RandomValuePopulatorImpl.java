@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.random;
 
 import com.huskycode.jpaquery.util.Randomizer;
+import com.huskycode.jpaquery.util.RandomizerImpl;
 
 import javax.persistence.Column;
 import javax.persistence.metamodel.SingularAttribute;
@@ -18,11 +19,14 @@ import java.util.Queue;
 public class RandomValuePopulatorImpl implements RandomValuePopulator {
 
     private Randomizer randomizer;
-
-    public  RandomValuePopulatorImpl(final Randomizer randomizer) {
+    
+    RandomValuePopulatorImpl(final Randomizer randomizer) {
         this.randomizer = randomizer;
     }
 
+    public RandomValuePopulatorImpl() {
+    	this(new RandomizerImpl());
+    }
 
     @Override
     public <E> void populateValue(E entity) throws IllegalAccessException {

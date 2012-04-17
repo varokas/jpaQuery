@@ -50,26 +50,10 @@
           <artifactId>hibernate-entitymanager</artifactId>
           <version>4.1.0.Final</version>
       </dependency>
-      <!--
-      <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-annotations</artifactId>
-          <version>3.4.0.GA</version>
-      </dependency>
-      <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-commons-annotations</artifactId>
-          <version>3.3.0.ga</version>
-      </dependency>
-    --><dependency>
+		<dependency>
         <groupId>cglib</groupId>
         <artifactId>cglib</artifactId>
         <version>2.2.2</version>
-      </dependency>
-      <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-jpamodelgen</artifactId>
-          <version>1.2.0.CR1</version>
       </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
@@ -135,9 +119,6 @@
           <configuration>
             <source>1.6</source>
             <target>1.6</target>
-            <compilerArguments>
-                <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
-            </compilerArguments>
           </configuration>
         </plugin>
       </plugins>

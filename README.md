@@ -10,13 +10,13 @@ Create a database hierarchy using simple command.
 
     context.create(Child.class)
 
-    result = context.create(Root.class).with(Root_.status).eq("Active").whichContains(Leaf.class).with(Leaf_.status).
+    result = context.create(Root.class).with(Root_.status,"Active").whichContains(Leaf.class).with(Leaf_.status,"Active").
 
     [What is created on Database]
     Root("active")
-        - ....
-        - ...
-           - Leaf(status="Active")
+        - .... >> Random value for things in between
+           - ...
+              - Leaf(status="Active")
 
     [How to retrieve it]
     root = result.getEntity(Root.class)[0]

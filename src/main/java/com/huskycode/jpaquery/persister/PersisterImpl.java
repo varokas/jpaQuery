@@ -1,15 +1,14 @@
 package com.huskycode.jpaquery.persister;
 
+import com.huskycode.jpaquery.random.RandomValuePopulator;
+import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.types.tree.CreationPlan;
+import com.huskycode.jpaquery.types.tree.PersistedTree;
+
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-
-import com.huskycode.jpaquery.random.RandomValuePopulator;
-import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
-import com.huskycode.jpaquery.types.tree.CreationTree;
-import com.huskycode.jpaquery.types.tree.PersistedTree;
 
 /**
  * @author Varokas Panusuwan
@@ -37,28 +36,25 @@ public class PersisterImpl implements Persister {
 		persisterImpl.randomValuePopulator = new RandomValuePopulatorImpl();
 		return persisterImpl;
 	}
-	
 
+    @Override
+    public List<PersistedTree> persistValues(CreationPlan plan) {
+        List<Object> objects = new ArrayList<Object>();
+        for(Class<?> c: plan.getClasses()) {
+            Object obj = beanCreator.newInstance(c);
 
-	@Override
-	public List<PersistedTree> persistValues(List<CreationTree> creationTrees) {
-		List<Object> objects = new ArrayList<Object>();
-		for(CreationTree creationTree: creationTrees) {
-			Object obj = beanCreator.newInstance(creationTree.getRoot());
-			
-			try {
-				randomValuePopulator.populateValue(obj);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			
-			objects.add(obj);
-			em.persist(obj);
-		}
-		
-		List<PersistedTree> persistedTree = Arrays.asList(PersistedTree.newInstance(objects));
-		
-		return persistedTree;
-	}
+            try {
+                randomValuePopulator.populateValue(obj);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
+            objects.add(obj);
+            em.persist(obj);
+        }
+
+        List<PersistedTree> persistedTree = Arrays.asList(PersistedTree.newInstance(objects));
+
+        return persistedTree;
+    }
 }

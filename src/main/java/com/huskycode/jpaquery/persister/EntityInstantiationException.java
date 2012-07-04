@@ -1,4 +1,4 @@
-package com.huskycode.jpaquery;
+package com.huskycode.jpaquery.persister;
 
 /**
  * @author Varokas Panusuwan

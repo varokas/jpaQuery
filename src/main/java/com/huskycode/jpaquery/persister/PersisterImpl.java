@@ -2,7 +2,9 @@ package com.huskycode.jpaquery.persister;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 
@@ -18,6 +20,8 @@ public class PersisterImpl implements Persister {
 	private EntityManager em;
 	private BeanCreator beanCreator;
     private RandomValuePopulator randomValuePopulator;
+    
+    private Map<Class, Object> persistedObjects = new HashMap<Class, Object>();
 	
 	private PersisterImpl(EntityManager em) {
 		this.em = em;

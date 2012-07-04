@@ -28,16 +28,28 @@ public class Link<E1,E2,T> {
     public static <E, T> From from(Class<E> fromEntity, SingularAttribute<?,T> from) {
         return new From(fromEntity, from);
     }
+    
+    public static <E, T> From from(Class<E> fromEntity, Field field) {
+    	return new From(fromEntity, field);
+    }
 
     public static class From<E1,E2,T> {
         private final Attribute<E1, T> from;
 
         private From(Class<E1> fromEntity, SingularAttribute<?,T> from) {
-            this.from = AttributeImpl.newInstance(fromEntity, (Field)from.getJavaMember());
+            this(fromEntity, (Field)from.getJavaMember());
         }
 
-        public Link to(Class<E2> toEntity, SingularAttribute<?, T> to) {
-            return new Link(this.from,  AttributeImpl.newInstance(toEntity, (Field)to.getJavaMember()));
+        public From(Class<E1> fromEntity, Field field) {
+			this.from = AttributeImpl.newInstance(fromEntity, field);
+		}
+        
+        public Link to(Class<E2> toEntity, Field field) {
+            return new Link(this.from,  AttributeImpl.newInstance(toEntity, field));
+        }
+
+		public Link to(Class<E2> toEntity, SingularAttribute<?, T> to) {
+            return to(toEntity, (Field)to.getJavaMember());
         }
     }
 }

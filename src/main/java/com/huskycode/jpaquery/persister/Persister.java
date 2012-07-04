@@ -1,9 +1,9 @@
 package com.huskycode.jpaquery.persister;
 
-import java.util.List;
-
-import com.huskycode.jpaquery.types.tree.CreationTree;
+import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedTree;
+
+import java.util.List;
 
 /**
  * Persist an object hierarchy to database, propergating the 
@@ -11,5 +11,5 @@ import com.huskycode.jpaquery.types.tree.PersistedTree;
  * @author varokaspanusuwan
  */
 public interface Persister {
-	List<PersistedTree> persistValues(List<CreationTree> creationTree);
+	List<PersistedTree> persistValues(CreationPlan plan);
 }

@@ -1,10 +1,8 @@
 package com.huskycode.jpaquery.solver;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.huskycode.jpaquery.DependenciesDefinition;
-import com.huskycode.jpaquery.types.tree.CreationTree;
+import com.huskycode.jpaquery.types.tree.CreationPlan;
+
 public class SolverImpl implements Solver {
 	private SolverImpl() {
 		
@@ -15,11 +13,11 @@ public class SolverImpl implements Solver {
 	}
 
 	@Override
-	public <E> List<CreationTree> solveFor(Class<E> entityClass,
+	public <E> CreationPlan solveFor(Class<E> entityClass,
 			DependenciesDefinition deps) {
-		CreationTree creationTree = CreationTree.newInstance(entityClass);
+        //CreationPlan plan = CreationPlan.newInstance(new ArrayList<Class<?>>(entityClass));
 		
-		return Arrays.asList(creationTree);
+		return CreationPlan.newInstance(null);
 	}
 
 }

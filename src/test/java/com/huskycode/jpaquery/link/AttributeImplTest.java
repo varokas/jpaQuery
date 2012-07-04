@@ -27,8 +27,39 @@ public class AttributeImplTest {
 
     }
 
+    @Test
+    public void testEqual() throws NoSuchFieldException {
+        Attribute<TestClass, Integer> attr1 = createAttribute("a");
+        Attribute<TestClass, Integer> attr2 = createAttribute("a");
+
+        Assert.assertEquals(attr1, attr2);
+
+        Class<TestClass> c = TestClass.class;
+        Attribute<TestClass, Integer> attr3  = AttributeImpl.newInstance(c, c.getDeclaredField("b"));
+
+        Assert.assertFalse(attr1.equals(attr3));
+
+        Class<TestClass2> c2 = TestClass2.class;
+        Attribute<TestClass2, Integer> attr4  = AttributeImpl.newInstance(c2, c2.getDeclaredField("a"));
+
+        Assert.assertFalse(attr1.equals(attr4));
+    }
+
+    private  Attribute<TestClass, Integer> createAttribute(String fieldName) throws NoSuchFieldException {
+        Class<TestClass> c = TestClass.class;
+        Field field = c.getDeclaredField(fieldName);
+        return AttributeImpl.newInstance(c, field);
+    }
+
+
     private class TestClass {
         private int a;
+        private int b;
+    }
+
+    private class TestClass2 {
+        private int a;
+        private int b;
     }
 
 }

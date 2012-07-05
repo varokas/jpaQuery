@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Id;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
@@ -55,8 +56,11 @@ public class PersisterImpl implements Persister {
         for(Class<?> c: plan.getClasses()) {
             Object obj = beanCreator.newInstance(c);
             randomValuePopulator.populateValue(obj);
+            Field idField = findIdField(c);
+            //idField.set(obj, value)
             
             populateValueFromHierarchy(obj, c, persistedValueLookup);
+            
             
             em.persist(obj);
             
@@ -90,5 +94,15 @@ public class PersisterImpl implements Persister {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private Field findIdField(Class<?> entityClass) {
+		Field[] fields = entityClass.getDeclaredFields();
+		for(Field field : fields) {
+			if(field.getAnnotation(Id.class) != null) {
+				return field;
+			}
+		}
+		return null;
 	}
 }

@@ -30,7 +30,7 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
     	pizzaDeps = new PizzaDeps();
     }
 	
-	@Test
+	@Test @Ignore
     public void testCreateClassWithNoDeps() {
         context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
         
@@ -38,7 +38,7 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
         assertThat(result, is(not(nullValue())));
     }
 	
-	@Test
+	@Test @Ignore
     public void testCreateClassWithDeps() {
         context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
         

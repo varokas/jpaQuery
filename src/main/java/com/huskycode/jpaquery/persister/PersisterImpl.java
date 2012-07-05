@@ -58,7 +58,7 @@ public class PersisterImpl implements Persister {
             
             populateValueFromHierarchy(obj, c, persistedValueLookup);
             
-            em.merge(obj);
+            em.persist(obj);
             
             objects.add(obj);
             persistedValueLookup.put(c, obj);

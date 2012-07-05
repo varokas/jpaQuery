@@ -4,6 +4,7 @@ import com.huskycode.jpaquery.link.Link;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,11 @@ public class DependenciesDefinition {
     }
     
     public <E> List<Link<?,?,?>>  getDirectDependency(Class<E> entityClass) {
-        return entityDependencyMap.get(entityClass);
+        if (entityDependencyMap.containsKey(entityClass)) {
+        	return entityDependencyMap.get(entityClass);
+        }
+        
+        return new LinkedList<Link<?,?,?>>();
     }
     
 }

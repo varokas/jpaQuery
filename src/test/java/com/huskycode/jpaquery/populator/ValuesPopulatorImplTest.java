@@ -26,6 +26,6 @@ public class ValuesPopulatorImplTest {
 		Customer customer = new Customer();
 		populator.populateValue(customer, attributeValues);	
 		
-		Assert.assertEquals(expectedValue.longValue(), customer.getCustomerId());	
+		Assert.assertEquals(expectedValue, customer.getCustomerId());	
 	}
 }

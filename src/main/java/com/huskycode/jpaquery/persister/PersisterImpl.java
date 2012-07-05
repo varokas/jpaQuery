@@ -104,6 +104,5 @@ public class PersisterImpl implements Persister {
 			}
 		}
 		return null;
-		/// something
 	}
 }

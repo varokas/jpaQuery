@@ -1,7 +1,9 @@
 package com.huskycode.jpaquery.persister;
 
+import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.random.RandomValuePopulator;
 import com.huskycode.jpaquery.testmodel.ClassA;
+import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 import org.hamcrest.CoreMatchers;
@@ -23,14 +25,16 @@ public class PersisterImplTest {
 	private BeanCreator beanCreator;
 	private RandomValuePopulator randomValuePopulator;
 	private EntityManager em;
+	private DependenciesDefinition deps;
 
 	@Before
 	public void before() {
 	    em = Mockito.mock(EntityManager.class);
 		beanCreator = new BeanCreator();
 		randomValuePopulator = Mockito.mock(RandomValuePopulator.class);
+		deps = new PizzaDeps().getDepsUsingField();
 		
-	    persister = new PersisterImpl(em, beanCreator, randomValuePopulator);
+	    persister = new PersisterImpl(em, beanCreator, randomValuePopulator, deps);
 	}
 	
 	@Test

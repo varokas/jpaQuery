@@ -54,7 +54,7 @@ public class JPAQueryContext {
             Solver solver = SolverImpl.newInstance();
             CreationPlan creationPlan = solver.solveFor(entityClass, DependenciesDefinition.fromLinks(new Link[0]));
             
-            Persister persister = PersisterImpl.newInstance(entityManager);
+            Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
             return persister.persistValues(creationPlan);
     }
     

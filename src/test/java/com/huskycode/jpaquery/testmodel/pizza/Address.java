@@ -17,7 +17,7 @@ import javax.persistence.Id;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	private long addressId;
+	private Long addressId;
     
 	private String line1;
 	private String line2;
@@ -28,10 +28,10 @@ public class Address {
 	private String stateProviceCounty;
 	private String countryCode;
 	private String otherAddressDetails;
-	public long getAddressId() {
+	public Long getAddressId() {
 		return addressId;
 	}
-	public void setAddressId(long addressId) {
+	public void setAddressId(Long addressId) {
 		this.addressId = addressId;
 	}
 	public String getLine1() {

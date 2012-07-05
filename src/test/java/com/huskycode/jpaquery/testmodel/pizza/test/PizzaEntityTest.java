@@ -11,7 +11,7 @@ import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.testmodel.pizza.Address_;
 import com.huskycode.jpaquery.testmodel.pizza.Customer_;
 import com.huskycode.jpaquery.testmodel.pizza.Employee_;
-import com.huskycode.jpaquery.testmodel.pizza.Order_;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder_;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 
 public class PizzaEntityTest extends AbstractEntityManagerWired {
@@ -22,11 +22,11 @@ public class PizzaEntityTest extends AbstractEntityManagerWired {
 		
 		assertThat(Address_.addressId, is(not(nullValue())));
 		
-		assertThat(Order_.orderId, is(not(nullValue())));
-		assertThat(Order_.customerId, is(not(nullValue())));
-		assertThat(Order_.takenByEmployeeId, is(not(nullValue())));
-		assertThat(Order_.deliveredByEmployeeId, is(not(nullValue())));
-		assertThat(Order_.vehicleId, is(not(nullValue())));
+		assertThat(PizzaOrder_.orderId, is(not(nullValue())));
+		assertThat(PizzaOrder_.customerId, is(not(nullValue())));
+		assertThat(PizzaOrder_.takenByEmployeeId, is(not(nullValue())));
+		assertThat(PizzaOrder_.deliveredByEmployeeId, is(not(nullValue())));
+		assertThat(PizzaOrder_.vehicleId, is(not(nullValue())));
 		
 		assertThat(Employee_.employeeId, is(not(nullValue())));
 		assertThat(Employee_.employeeAddressId, is(not(nullValue())));

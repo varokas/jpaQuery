@@ -24,7 +24,7 @@ import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
-import com.huskycode.jpaquery.testmodel.pizza.Order;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
@@ -48,14 +48,14 @@ public class SolverImplTest {
 	@Test
 	public void testSolveForClassWithDependencies() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CreationPlan result = solverImpl.solveFor(Order.class, dependenciesDefinition);
+		CreationPlan result = solverImpl.solveFor(PizzaOrder.class, dependenciesDefinition);
 		
 		assertThat(result.getClasses().size(), is(5));
 		assertEquals(result.getClasses().get(0), Address.class);
 		assertEquals(result.getClasses().get(1), Vehicle.class);
 		assertEquals(result.getClasses().get(2), Customer.class);
 		assertEquals(result.getClasses().get(3), Employee.class);
-		assertEquals(result.getClasses().get(4), Order.class);
+		assertEquals(result.getClasses().get(4), PizzaOrder.class);
 	}
 	
 	@Test

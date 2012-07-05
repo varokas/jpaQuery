@@ -16,17 +16,17 @@ import javax.persistence.Id;
 @Entity
 public class Employee {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private long employeeId;
+	private Long employeeId;
 	private long employeeAddressId;
 	
 	private String employeeName;
 	private String employeePhone;
 	private String otherEmployeeDetails;
 	
-	public long getEmployeeId() {
+	public Long getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(long employeeId) {
+	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
 	public long getEmployeeAddressId() {

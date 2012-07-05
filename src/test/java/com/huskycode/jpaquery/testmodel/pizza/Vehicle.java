@@ -16,15 +16,15 @@ import javax.persistence.Id;
 @Entity
 public class Vehicle {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private long vehicleId;
+	private Long vehicleId;
 	//private long vehicleTypeCode;
 	private String vehicleLicenseNumber;
 	private String vehicleDetails;
 	
-	public long getVehicleId() {
+	public Long getVehicleId() {
 		return vehicleId;
 	}
-	public void setVehicleId(long vehicleId) {
+	public void setVehicleId(Long vehicleId) {
 		this.vehicleId = vehicleId;
 	}
 	public String getVehicleLicenseNumber() {

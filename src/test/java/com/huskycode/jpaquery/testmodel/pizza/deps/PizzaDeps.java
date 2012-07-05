@@ -8,8 +8,8 @@ import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Customer_;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.Employee_;
-import com.huskycode.jpaquery.testmodel.pizza.Order;
-import com.huskycode.jpaquery.testmodel.pizza.Order_;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder_;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 
@@ -25,13 +25,13 @@ public class PizzaDeps {
 			Link.from(Employee.class, Employee_.employeeAddressId)
 				.to(Address.class, Address_.addressId),
 				
-			Link.from(Order.class, Order_.customerId)
+			Link.from(PizzaOrder.class, PizzaOrder_.customerId)
 				.to(Customer.class, Customer_.customerId),
-			Link.from(Order.class, Order_.takenByEmployeeId)
+			Link.from(PizzaOrder.class, PizzaOrder_.takenByEmployeeId)
 				.to(Employee.class, Employee_.employeeId),
-			Link.from(Order.class, Order_.deliveredByEmployeeId)
+			Link.from(PizzaOrder.class, PizzaOrder_.deliveredByEmployeeId)
 				.to(Employee.class, Employee_.employeeId),
-			Link.from(Order.class, Order_.vehicleId)
+			Link.from(PizzaOrder.class, PizzaOrder_.vehicleId)
 				.to(Vehicle.class, Vehicle_.vehicleId),
 		});
 	}
@@ -51,13 +51,13 @@ public class PizzaDeps {
 				Link.from(Employee.class, Employee.class.getDeclaredField("employeeAddressId"))
 					.to(Address.class, Address.class.getDeclaredField("addressId")),
 					
-				Link.from(Order.class, Order.class.getDeclaredField("customerId"))
+				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("customerId"))
 					.to(Customer.class, Customer.class.getDeclaredField("customerId")),
-				Link.from(Order.class, Order.class.getDeclaredField("takenByEmployeeId"))
+				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("takenByEmployeeId"))
 					.to(Employee.class, Employee.class.getDeclaredField("employeeId")),
-				Link.from(Order.class, Order.class.getDeclaredField("deliveredByEmployeeId"))
+				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("deliveredByEmployeeId"))
 					.to(Employee.class, Employee.class.getDeclaredField("employeeId")),
-				Link.from(Order.class, Order.class.getDeclaredField("vehicleId"))
+				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("vehicleId"))
 					.to(Vehicle.class, Vehicle.class.getDeclaredField("vehicleId"))
 			});
 		} catch (Exception e) {

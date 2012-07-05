@@ -16,9 +16,9 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class Order {
+public class PizzaOrder {
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private long orderId;
+	private Long orderId;
 	
 	private long customerId;
 	private long takenByEmployeeId;
@@ -31,7 +31,7 @@ public class Order {
 	private double totalOrderPrice;
 	private String otherOrderDetails;
 	
-	public long getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
 	public void setOrderId(long orderId) {

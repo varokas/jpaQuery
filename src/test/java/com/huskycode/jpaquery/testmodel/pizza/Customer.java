@@ -20,7 +20,8 @@ import javax.persistence.Id;
 public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long customerId;
+	private Long customerId;
+	
 	private long customerAddressId;
 	//private long paymentMethodCode
 	private String customerName;
@@ -28,10 +29,10 @@ public class Customer {
 	private Date dateOfFirstOrder;
 	private String otherCustomerDetails;
 	
-	public long getCustomerId() {
+	public Long getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(long customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 	public long getCustomerAddressId() {

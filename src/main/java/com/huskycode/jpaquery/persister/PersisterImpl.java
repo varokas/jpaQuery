@@ -57,7 +57,18 @@ public class PersisterImpl implements Persister {
             Object obj = beanCreator.newInstance(c);
             randomValuePopulator.populateValue(obj);
             Field idField = findIdField(c);
-            //idField.set(obj, value)
+            try {
+            	if(idField != null) {
+					idField.setAccessible(true);
+	            	idField.set(obj, null);
+            	}
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             
             populateValueFromHierarchy(obj, c, persistedValueLookup);
             

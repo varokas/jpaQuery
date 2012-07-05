@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.JPAQueryContext;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
-import com.huskycode.jpaquery.testmodel.pizza.Order;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 
@@ -30,7 +30,7 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
     	pizzaDeps = new PizzaDeps();
     }
 	
-	@Test @Ignore
+	@Test
     public void testCreateClassWithNoDeps() {
         context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
         
@@ -38,11 +38,11 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
         assertThat(result, is(not(nullValue())));
     }
 	
-	@Test @Ignore
+	@Test 
     public void testCreateClassWithDeps() {
         context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
         
-        PersistedResult result = context.create(Order.class);
+        PersistedResult result = context.create(PizzaOrder.class);
         assertThat(result, is(not(nullValue())));
     }
 }

@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.persister;
 
 import com.huskycode.jpaquery.types.tree.CreationPlan;
-import com.huskycode.jpaquery.types.tree.PersistedTree;
+import com.huskycode.jpaquery.types.tree.PersistedResult;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
  * @author varokaspanusuwan
  */
 public interface Persister {
-	List<PersistedTree> persistValues(CreationPlan plan);
+	PersistedResult persistValues(CreationPlan plan);
 }

@@ -3,7 +3,7 @@ package com.huskycode.jpaquery.persister;
 import com.huskycode.jpaquery.random.RandomValuePopulator;
 import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
-import com.huskycode.jpaquery.types.tree.PersistedTree;
+import com.huskycode.jpaquery.types.tree.PersistedResult;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class PersisterImpl implements Persister {
 	}
 
     @Override
-    public List<PersistedTree> persistValues(CreationPlan plan) {
+    public PersistedResult persistValues(CreationPlan plan) {
         List<Object> objects = new ArrayList<Object>();
         for(Class<?> c: plan.getClasses()) {
             Object obj = beanCreator.newInstance(c);
@@ -49,8 +49,6 @@ public class PersisterImpl implements Persister {
             em.persist(obj);
         }
 
-        List<PersistedTree> persistedTree = Arrays.asList(PersistedTree.newInstance(objects));
-
-        return persistedTree;
+        return PersistedResult.newInstance(objects);
     }
 }

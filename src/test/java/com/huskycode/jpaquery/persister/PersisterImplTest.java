@@ -3,7 +3,7 @@ package com.huskycode.jpaquery.persister;
 import com.huskycode.jpaquery.random.RandomValuePopulator;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
-import com.huskycode.jpaquery.types.tree.PersistedTree;
+import com.huskycode.jpaquery.types.tree.PersistedResult;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,10 +39,9 @@ public class PersisterImplTest {
         classes.add(ClassA.class) ;
 		CreationPlan plan = CreationPlan.newInstance(classes);
 		
-		List<PersistedTree> persistedTree = persister.persistValues(plan);
-		assertThat(persistedTree.size(), is(1));
-		assertThat(persistedTree.get(0).getPersistedObjects().size(), is(1));
-		assertThat(persistedTree.get(0).getPersistedObjects().get(0), CoreMatchers.instanceOf(ClassA.class));
+		PersistedResult persistedTree = persister.persistValues(plan);
+		assertThat(persistedTree.getPersistedObjects().size(), is(1));
+		assertThat(persistedTree.getPersistedObjects().get(0), CoreMatchers.instanceOf(ClassA.class));
 	}
 	
 	@Test

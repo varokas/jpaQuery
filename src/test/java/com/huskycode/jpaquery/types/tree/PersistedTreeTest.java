@@ -13,7 +13,7 @@ public class PersistedTreeTest {
 	@Test
 	public void shouldBeAbleToCreateAndRetrieve() {
 		List<Object> persistedObjects = Arrays.asList(new Object());
-		PersistedTree pt = PersistedTree.newInstance(persistedObjects);
+		PersistedResult pt = PersistedResult.newInstance(persistedObjects);
 		Assert.assertThat(pt.getPersistedObjects(), sameInstance(persistedObjects));
 	}
 

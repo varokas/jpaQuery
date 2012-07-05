@@ -1,14 +1,14 @@
 package com.huskycode.jpaquery.persister;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import com.huskycode.jpaquery.random.RandomValuePopulator;
 import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Varokas Panusuwan

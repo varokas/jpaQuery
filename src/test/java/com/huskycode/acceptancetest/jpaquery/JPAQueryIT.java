@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.JPAQueryContext;
@@ -19,6 +20,7 @@ import com.huskycode.jpaquery.types.tree.PersistedResult;
 /**
  * @author Varokas Panusuwan
  */
+@Transactional
 public class JPAQueryIT extends AbstractEntityManagerWired {
     private PizzaDeps pizzaDeps;
     private JPAQueryContext context;
@@ -28,7 +30,7 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
     	pizzaDeps = new PizzaDeps();
     }
 	
-	@Test @Ignore
+	@Test
     public void testCreateClassWithNoDeps() {
         context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
         
@@ -36,7 +38,7 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
         assertThat(result, is(not(nullValue())));
     }
 	
-	@Test @Ignore
+	@Test
     public void testCreateClassWithDeps() {
         context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
         

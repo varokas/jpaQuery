@@ -1,16 +1,15 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.jpaquery.link.Link;
+import javax.persistence.EntityManager;
+
 import com.huskycode.jpaquery.persister.Persister;
 import com.huskycode.jpaquery.persister.PersisterImpl;
-import com.huskycode.jpaquery.random.RandomValuePopulator;
-import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.populator.RandomValuePopulator;
+import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.solver.Solver;
 import com.huskycode.jpaquery.solver.SolverImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-
-import javax.persistence.EntityManager;
 
 /**
  * @author Varokas Panusuwan
@@ -52,7 +51,7 @@ public class JPAQueryContext {
 
     public <E> PersistedResult create(Class<E> entityClass) {
             Solver solver = SolverImpl.newInstance();
-            CreationPlan creationPlan = solver.solveFor(entityClass, DependenciesDefinition.fromLinks(new Link[0]));
+            CreationPlan creationPlan = solver.solveFor(entityClass, dependenciesDefinition);
             
             Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
             return persister.persistValues(creationPlan);

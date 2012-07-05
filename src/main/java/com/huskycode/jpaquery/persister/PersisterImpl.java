@@ -1,5 +1,6 @@
 package com.huskycode.jpaquery.persister;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
-import com.huskycode.jpaquery.random.RandomValuePopulator;
-import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.populator.RandomValuePopulator;
+import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 
@@ -56,7 +58,7 @@ public class PersisterImpl implements Persister {
             
             populateValueFromHierarchy(obj, c, persistedValueLookup);
             
-            em.persist(obj);
+            em.merge(obj);
             
             objects.add(obj);
             persistedValueLookup.put(c, obj);
@@ -66,8 +68,27 @@ public class PersisterImpl implements Persister {
     }
 
 	private void populateValueFromHierarchy(Object obj, Class<?> c,
-			Map<Class<?>, Object> persistedValueLookup) {
+		Map<Class<?>, Object> persistedValueLookup) {
+	
+		List<Link<?, ?, ?>> directDependencies = deps.getDirectDependency(c);
+		for(Link<?, ?, ?> directDep : directDependencies) {
+			Class<?> parentClass = directDep.getTo().getEntityClass();
+			
+			//This should always has value if resolver resolved in correct order
+			Object parentObj = persistedValueLookup.get(parentClass);
+			populateValue(parentObj, obj, directDep);
+		}
+	}
+	
+	private void populateValue(Object parentObj, Object childObj, Link<?,?,?> link) {
+		Field parentField = link.getTo().getField();
+		Field childField = link.getFrom().getField();
 		
-		
+		try {
+			Object theValue = parentField.get(parentObj);
+			childField.set(childObj, theValue);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

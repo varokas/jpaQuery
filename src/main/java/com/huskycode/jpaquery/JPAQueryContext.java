@@ -8,6 +8,7 @@ import com.huskycode.jpaquery.random.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.solver.Solver;
 import com.huskycode.jpaquery.solver.SolverImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
+import com.huskycode.jpaquery.types.tree.PersistedResult;
 
 import javax.persistence.EntityManager;
 
@@ -49,12 +50,12 @@ public class JPAQueryContext {
                 new RandomValuePopulatorImpl());
     }
 
-    public <E> E create(Class<E> entityClass) {
+    public <E> PersistedResult create(Class<E> entityClass) {
             Solver solver = SolverImpl.newInstance();
-            CreationPlan creationTrees = solver.solveFor(entityClass, DependenciesDefinition.fromLinks(new Link[0]));
+            CreationPlan creationPlan = solver.solveFor(entityClass, DependenciesDefinition.fromLinks(new Link[0]));
             
             Persister persister = PersisterImpl.newInstance(entityManager);
-            return null;
+            return persister.persistValues(creationPlan);
     }
     
     public EntityManager getEntityManager() {

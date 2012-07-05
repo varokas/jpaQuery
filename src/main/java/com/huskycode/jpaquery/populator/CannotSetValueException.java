@@ -1,4 +1,4 @@
-package com.huskycode.jpaquery.random;
+package com.huskycode.jpaquery.populator;
 
 /**
  * @author Varokas Panusuwan

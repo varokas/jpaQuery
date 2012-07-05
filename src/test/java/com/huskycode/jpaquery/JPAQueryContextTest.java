@@ -1,6 +1,6 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.jpaquery.random.RandomValuePopulator;
+import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.testmodel.EntityWithFields;
 import org.junit.Before;
 import org.junit.Test;

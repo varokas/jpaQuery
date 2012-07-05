@@ -1,4 +1,4 @@
-package com.huskycode.jpaquery.random;
+package com.huskycode.jpaquery.populator;
 
 import com.huskycode.jpaquery.util.Randomizer;
 import com.huskycode.jpaquery.util.RandomizerImpl;

@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.persister;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
-import com.huskycode.jpaquery.random.RandomValuePopulator;
+import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.CreationPlan;

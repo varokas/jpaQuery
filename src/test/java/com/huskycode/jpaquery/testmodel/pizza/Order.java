@@ -30,4 +30,59 @@ public class Order {
 	private Date dateTimeOrderDelivered;
 	private double totalOrderPrice;
 	private String otherOrderDetails;
+	
+	public long getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
+	public long getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
+	}
+	public long getTakenByEmployeeId() {
+		return takenByEmployeeId;
+	}
+	public void setTakenByEmployeeId(long takenByEmployeeId) {
+		this.takenByEmployeeId = takenByEmployeeId;
+	}
+	public long getDeliveredByEmployeeId() {
+		return deliveredByEmployeeId;
+	}
+	public void setDeliveredByEmployeeId(long deliveredByEmployeeId) {
+		this.deliveredByEmployeeId = deliveredByEmployeeId;
+	}
+	public long getVehicleId() {
+		return vehicleId;
+	}
+	public void setVehicleId(long vehicleId) {
+		this.vehicleId = vehicleId;
+	}
+	public Date getDateTimeOrderTaken() {
+		return dateTimeOrderTaken;
+	}
+	public void setDateTimeOrderTaken(Date dateTimeOrderTaken) {
+		this.dateTimeOrderTaken = dateTimeOrderTaken;
+	}
+	public Date getDateTimeOrderDelivered() {
+		return dateTimeOrderDelivered;
+	}
+	public void setDateTimeOrderDelivered(Date dateTimeOrderDelivered) {
+		this.dateTimeOrderDelivered = dateTimeOrderDelivered;
+	}
+	public double getTotalOrderPrice() {
+		return totalOrderPrice;
+	}
+	public void setTotalOrderPrice(double totalOrderPrice) {
+		this.totalOrderPrice = totalOrderPrice;
+	}
+	public String getOtherOrderDetails() {
+		return otherOrderDetails;
+	}
+	public void setOtherOrderDetails(String otherOrderDetails) {
+		this.otherOrderDetails = otherOrderDetails;
+	}
 }

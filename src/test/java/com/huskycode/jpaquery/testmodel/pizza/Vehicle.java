@@ -20,4 +20,23 @@ public class Vehicle {
 	//private long vehicleTypeCode;
 	private String vehicleLicenseNumber;
 	private String vehicleDetails;
+	
+	public long getVehicleId() {
+		return vehicleId;
+	}
+	public void setVehicleId(long vehicleId) {
+		this.vehicleId = vehicleId;
+	}
+	public String getVehicleLicenseNumber() {
+		return vehicleLicenseNumber;
+	}
+	public void setVehicleLicenseNumber(String vehicleLicenseNumber) {
+		this.vehicleLicenseNumber = vehicleLicenseNumber;
+	}
+	public String getVehicleDetails() {
+		return vehicleDetails;
+	}
+	public void setVehicleDetails(String vehicleDetails) {
+		this.vehicleDetails = vehicleDetails;
+	}
 }

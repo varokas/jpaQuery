@@ -23,4 +23,38 @@ public class Topping {
 	//private int toppingCode;
 	
 	private String toppingName;
+
+	public long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
+
+	public int getPizzaSequenceNumber() {
+		return pizzaSequenceNumber;
+	}
+
+	public void setPizzaSequenceNumber(int pizzaSequenceNumber) {
+		this.pizzaSequenceNumber = pizzaSequenceNumber;
+	}
+
+	public int getToppingSequenceNumber() {
+		return toppingSequenceNumber;
+	}
+
+	public void setToppingSequenceNumber(int toppingSequenceNumber) {
+		this.toppingSequenceNumber = toppingSequenceNumber;
+	}
+
+	public String getToppingName() {
+		return toppingName;
+	}
+
+	public void setToppingName(String toppingName) {
+		this.toppingName = toppingName;
+	}
+	
+	
 }

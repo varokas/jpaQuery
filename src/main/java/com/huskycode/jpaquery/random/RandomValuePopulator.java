@@ -6,5 +6,5 @@ package com.huskycode.jpaquery.random;
  * @author Varokas Panusuwan
  */
 public interface RandomValuePopulator {
-    <E> void populateValue(E entity) throws IllegalAccessException;
+    <E> void populateValue(E entity);
 }

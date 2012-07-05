@@ -1,7 +1,5 @@
 package com.huskycode.jpaquery.testmodel.pizza.deps;
 
-import javax.management.RuntimeErrorException;
-
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.pizza.Address;

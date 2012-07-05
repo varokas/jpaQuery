@@ -29,11 +29,15 @@ public class RandomValuePopulatorImpl implements RandomValuePopulator {
     }
 
     @Override
-    public <E> void populateValue(E entity) throws IllegalAccessException {
+    public <E> void populateValue(E entity) {
         List<Field> allFields = getAllFieldsInHierarchy(entity);
         for (Field f : allFields) {
             if ((f.getModifiers() & Modifier.FINAL) != Modifier.FINAL) {
-                setRandomValue(entity, f);
+                try {
+					setRandomValue(entity, f);
+				} catch (IllegalAccessException e) {
+					throw new CannotSetValueException(e);
+				}
             }
         }
     }

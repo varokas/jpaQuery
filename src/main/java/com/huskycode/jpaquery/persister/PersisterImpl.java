@@ -43,11 +43,7 @@ public class PersisterImpl implements Persister {
         for(Class<?> c: plan.getClasses()) {
             Object obj = beanCreator.newInstance(c);
 
-            try {
-                randomValuePopulator.populateValue(obj);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            randomValuePopulator.populateValue(obj);
 
             objects.add(obj);
             em.persist(obj);

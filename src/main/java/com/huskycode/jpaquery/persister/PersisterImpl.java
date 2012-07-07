@@ -13,6 +13,8 @@ import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.populator.ValuesPopulator;
+import com.huskycode.jpaquery.populator.ValuesPopulatorImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 
@@ -24,6 +26,8 @@ public class PersisterImpl implements Persister {
 	private BeanCreator beanCreator;
     private RandomValuePopulator randomValuePopulator;
     private DependenciesDefinition deps;
+    
+    private ValuesPopulator valuesPopulator = ValuesPopulatorImpl.getInstance();
 	
 	private PersisterImpl(EntityManager em, DependenciesDefinition deps) {
 		this.em = em;
@@ -56,22 +60,15 @@ public class PersisterImpl implements Persister {
         for(Class<?> c: plan.getClasses()) {
             Object obj = beanCreator.newInstance(c);
             randomValuePopulator.populateValue(obj);
+            
             Field idField = findIdField(c);
-            try {
-            	if(idField != null) {
-					idField.setAccessible(true);
-	            	idField.set(obj, null);
-            	}
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+            Map<Field, Object> valuesToPopulate = getValuesToPopulate(obj, c, persistedValueLookup);
+            if(idField != null) {
+            	valuesToPopulate.put(idField, null); //Reset id field to null for JPA to autogen id.
+            }
             
-            populateValueFromHierarchy(obj, c, persistedValueLookup);
-            
+            valuesPopulator.populateValue(obj, valuesToPopulate);
             
             em.persist(obj);
             
@@ -81,31 +78,32 @@ public class PersisterImpl implements Persister {
 
         return PersistedResult.newInstance(objects);
     }
-
-	private void populateValueFromHierarchy(Object obj, Class<?> c,
-		Map<Class<?>, Object> persistedValueLookup) {
-	
-		List<Link<?, ?, ?>> directDependencies = deps.getDirectDependency(c);
-		for(Link<?, ?, ?> directDep : directDependencies) {
-			Class<?> parentClass = directDep.getTo().getEntityClass();
-			
-			//This should always has value if resolver resolved in correct order
-			Object parentObj = persistedValueLookup.get(parentClass);
-			populateValue(parentObj, obj, directDep);
-		}
-	}
-	
-	private void populateValue(Object parentObj, Object childObj, Link<?,?,?> link) {
-		Field parentField = link.getTo().getField();
-		Field childField = link.getFrom().getField();
-		
-		try {
-			Object theValue = parentField.get(parentObj);
-			childField.set(childObj, theValue);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    
+    private Map<Field, Object> getValuesToPopulate(Object obj, Class<?> c,
+    		Map<Class<?>, Object> persistedValueLookup) {
+    	
+    		Map<Field, Object> valuesToOverride = new HashMap<Field, Object>();
+    	
+    		List<Link<?, ?, ?>> directDependencies = deps.getDirectDependency(c);
+    		for(Link<?, ?, ?> directDep : directDependencies) {
+    			Class<?> parentClass = directDep.getTo().getEntityClass();
+    			
+    			//This should always has value if resolver resolved in correct order
+    			Object parentObj = persistedValueLookup.get(parentClass);
+    			
+    			Field parentField = directDep.getTo().getField();
+    			Field childField = directDep.getFrom().getField();
+    			
+    			try {
+    				Object theValue = parentField.get(parentObj);
+    				valuesToOverride.put(childField, theValue);
+    			} catch (Exception e) {
+    				throw new RuntimeException(e);
+    			}
+    		}
+    		
+    		return valuesToOverride;
+    	}
 	
 	private Field findIdField(Class<?> entityClass) {
 		Field[] fields = entityClass.getDeclaredFields();

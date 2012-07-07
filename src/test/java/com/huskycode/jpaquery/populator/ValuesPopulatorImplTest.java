@@ -1,13 +1,12 @@
 package com.huskycode.jpaquery.populator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.huskycode.jpaquery.link.Attribute;
-import com.huskycode.jpaquery.link.AttributeImpl;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 
 public class ValuesPopulatorImplTest {
@@ -16,15 +15,11 @@ public class ValuesPopulatorImplTest {
 		ValuesPopulatorImpl populator = ValuesPopulatorImpl.getInstance();
 		
 		Long expectedValue = 1L;
-		Attribute<Customer, Long> customerIdAttr = AttributeImpl.newInstance(Customer.class,
-														Customer.class.getDeclaredField("customerId"));
-		AttributeValue<Customer, Long> customerIdValue = AttributeValue.newInstance(customerIdAttr, expectedValue);
-		List<AttributeValue<Customer, ?>> attributeValues
-			= new ArrayList<AttributeValue<Customer, ?>>();
-		attributeValues.add(customerIdValue);
-		
+		Map<Field, Object> overrideValues = new HashMap<Field, Object>();
+		overrideValues.put(Customer.class.getDeclaredField("customerId"), expectedValue);
+
 		Customer customer = new Customer();
-		populator.populateValue(customer, attributeValues);	
+		populator.populateValue(customer, overrideValues);	
 		
 		Assert.assertEquals(expectedValue, customer.getCustomerId());	
 	}

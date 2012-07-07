@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.jpaquery.link.Link;
+import javax.persistence.EntityManager;
+
 import com.huskycode.jpaquery.persister.Persister;
 import com.huskycode.jpaquery.persister.PersisterImpl;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
@@ -9,8 +10,6 @@ import com.huskycode.jpaquery.solver.Solver;
 import com.huskycode.jpaquery.solver.SolverImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-
-import javax.persistence.EntityManager;
 
 /**
  * @author Varokas Panusuwan

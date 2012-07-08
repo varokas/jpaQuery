@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.solver;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
+import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 
 /**
@@ -9,5 +10,7 @@ import com.huskycode.jpaquery.types.tree.CreationPlan;
  * @author varokaspanusuwan
  */
 public interface Solver {
+	@Deprecated
 	<E> CreationPlan solveFor(Class<E> entityClass, DependenciesDefinition deps);
+	<E> CreationPlan solveFor(CommandNode command, DependenciesDefinition deps);
 }

@@ -71,5 +71,11 @@ public class CommandNodeFactory {
 				return false;
 			return true;
 		}
+
+		@Override
+		public String toString() {
+			return "CommandNodeImpl [entity=" + entity.getSimpleName() + ", children="
+					+ children + "]";
+		}
 	}
 }

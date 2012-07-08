@@ -12,17 +12,27 @@ import java.util.List;
  */
 public class CreationPlan {
 	private List<Class<?>> classes;
+	private ActionGraph actionGraph;
 	
-	private CreationPlan(List<Class<?>> classes) {
-        this.classes = classes;
-	}
+	private CreationPlan() {}
 	
 	public static CreationPlan newInstance(List<Class<?>> classes) {
-        CreationPlan tree = new CreationPlan(classes);
-		return tree;
+        CreationPlan plan = new CreationPlan();
+        plan.classes = classes;
+		return plan;
+	}
+	
+	public static CreationPlan newInstance(ActionGraph actionGraph) {
+		CreationPlan plan = new CreationPlan();
+		plan.actionGraph = actionGraph;
+		return plan;
 	}
 
 	public List<Class<?>> getClasses() {
 		return this.classes;
+	}
+	
+	public ActionGraph getActionGraph() {
+		return this.actionGraph;
 	}
 }

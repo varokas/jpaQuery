@@ -1,8 +1,8 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.acceptancetest.jpaquery.annotation.VisibleForTesting;
 import com.huskycode.jpaquery.link.Link;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,23 +19,27 @@ public class DependenciesDefinition {
     private final Map<Class<?>, List<Link<?,?,?>>> entityDirectLinkDependencyMap;
     private final Map<Class<?>, Set<Class<?>>> entityDirectEntityDependencyMap;
     private final Map<Class<?>, Set<Class<?>>> entityAllEntityDependencyMap;
+    private Map<Class<?>, Map<Class<?>, List<Link<?,?,?>>>> childFieldToParentMap;
 
     private DependenciesDefinition(Link<?,?,?>[] links) {
         this.entityDirectLinkDependencyMap = new HashMap<Class<?>, List<Link<?, ?, ?>>>();
         this.entityDirectEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.entityAllEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
+        this.childFieldToParentMap = new HashMap<Class<?>, Map<Class<?>,List<Link<?,?,?>>>>();
         for (Link<?,?,?> link : links) {
             Class<?> eFrom = link.getFrom().getEntityClass();
             Class<?> eTo = link.getTo().getEntityClass();
-            List<Link<?,?,?>> eFromLinks = getOrCreate(entityDirectLinkDependencyMap, eFrom, ListOfLinkFactory.INSTANCE);
-            Set<Class<?>> eFromEntityClasses = getOrCreate(entityDirectEntityDependencyMap, eFrom, SetOfClassFactory.INSTANCE);
-            eFromLinks.add(link);
-            eFromEntityClasses.add(eTo);
+            getOrCreate(entityDirectLinkDependencyMap, eFrom, ListOfLinkFactory.INSTANCE).add(link);
+            getOrCreate(entityDirectEntityDependencyMap, eFrom, SetOfClassFactory.INSTANCE).add(eTo);
+            getOrCreate(getOrCreate(childFieldToParentMap, eFrom, MapOfClassLinkListFactory.INSTANCE),
+            				eTo, ListOfLinkFactory.INSTANCE).add(link);
+            				
+       
         }
         this.links = links;
         buildAllDependentEntitiesMap();
     }
-    
+
     private void buildAllDependentEntitiesMap() {
     	for (Class<?> key : this.entityDirectEntityDependencyMap.keySet()) {
     		Set<Class<?>> value = getAllParentDependentEntities(key);
@@ -104,6 +108,27 @@ public class DependenciesDefinition {
         }
         
         return SetOfClassFactory.INSTANCE.newInstance();
+    }
+    
+    public List<Link<?,?,?>> getDependencyLinks(Class<?> from, Class<?> to) {
+    	Map<Class<?>, List<Link<?,?,?>>> parentLinkMap = this.childFieldToParentMap.get(from);
+    	if (parentLinkMap != null && parentLinkMap.containsKey(to)) {
+    		return parentLinkMap.get(to);
+    	}
+    	
+    	return new ArrayList<Link<?,?,?>>(0);
+    }
+    	
+    
+    private static class MapOfClassLinkListFactory implements ValueContainerFactory<Map<Class<?>, List<Link<?,?,?>>>> {
+
+    	private static final MapOfClassLinkListFactory INSTANCE = new MapOfClassLinkListFactory();
+    	
+		@Override
+		public Map<Class<?>, List<Link<?,?,?>>> newInstance() {
+			return new HashMap<Class<?>, List<Link<?,?,?>>>();
+		}
+    	
     }
     
     private static class ListOfLinkFactory implements ValueContainerFactory<List<Link<?,?,?>>> {

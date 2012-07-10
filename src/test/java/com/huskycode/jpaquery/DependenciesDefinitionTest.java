@@ -68,6 +68,17 @@ public class DependenciesDefinitionTest {
 		Assert.assertTrue("Shuold have Address as parent dependency", pizzaOrderAllDependencies.contains(Address.class));
 		Assert.assertTrue("Shuold have Vehicle as parent dependency", pizzaOrderAllDependencies.contains(Vehicle.class));
 	}	
+	
+	@Test
+	public void testGetChildParentLinkDependency() {
+		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
+		
+		List<Link<?,?,?>> links = dependenciesDefinition.getDependencyLinks(PizzaOrder.class, Customer.class);
+		
+		Assert.assertEquals(1, links.size());
+		Assert.assertEquals(PizzaOrder.class, links.get(0).getFrom().getEntityClass());
+		Assert.assertEquals(Customer.class, links.get(0).getTo().getEntityClass());
+	}
 
     static class A {
 

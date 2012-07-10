@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
+import com.huskycode.jpaquery.command.CommandNodeFactory;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
@@ -27,11 +28,8 @@ public class SolverImpl implements Solver {
 	@Override
 	public <E> CreationPlan solveFor(Class<E> entityClass,
 			DependenciesDefinition deps) {
-		ActionGraph actionGraph = ActionGraph.newInstance();
-		List<EntityAndDependencySet> entitiesDependencyCounts = getAllDependentEntitiesWithDependencySet(entityClass, deps);
-		InOrderEntityDependencyData inOrderEntityAndDependencyList = new InOrderEntityDependencyData(entitiesDependencyCounts, actionGraph);
-		
-		return CreationPlan.newInstance(toEntityList(inOrderEntityAndDependencyList.getInOrderEntityAndDependencyList()));
+		CommandNode command = CommandNodeFactory.n(entityClass);
+		return solveFor(command, deps);
 	}
 	
 
@@ -66,14 +64,7 @@ public class SolverImpl implements Solver {
 									int currentIndex) {
 		EntityAndDependencySet currentEntity = entityDepencyData.getEntityAndDependencySetByIndex(currentIndex);
 		if (currentEntity != null) {
-			EntityNode thisNode;
-			if (command.getEntity().equals(currentEntity.getEntityClass())) {
-				thisNode = EntityNode.newInstance(currentEntity.getEntityClass());
-				thisNode.setCommand(command);
-				actionGraph.addEntityNode(thisNode);
-			} else {
-				thisNode = entityDepencyData.getDummyEntity(currentEntity.getEntityClass());
-			}
+			EntityNode thisNode = createEntityNode(command, currentEntity, entityDepencyData, actionGraph);
 			linkDependencyFromContext(thisNode,
 								     currentEntity.getDirectDependencySet(),
 									 context,
@@ -97,8 +88,25 @@ public class SolverImpl implements Solver {
 				createActionGraph(command, actionGraph, entityDepencyData, context, currentIndex+1);
 			}
 			
+		} else {
+			throw new InvalidCommandHierarchy();
 		}
 
+	}
+	
+	private EntityNode createEntityNode(CommandNode command,
+										EntityAndDependencySet currentEntity,
+										InOrderEntityDependencyData entityDepencyData,
+										ActionGraph actionGraph) {
+		EntityNode thisNode;
+		if (command.getEntity().equals(currentEntity.getEntityClass())) {
+			thisNode = EntityNode.newInstance(currentEntity.getEntityClass());
+			thisNode.setCommand(command);
+			actionGraph.addEntityNode(thisNode);
+		} else {
+			thisNode = entityDepencyData.getDummyEntity(currentEntity.getEntityClass());
+		}
+		return thisNode;
 	}
 
 	private void linkDependencyFromContext(EntityNode thisNode,

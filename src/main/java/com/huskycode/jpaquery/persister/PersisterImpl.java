@@ -11,11 +11,14 @@ import javax.persistence.Id;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
+import com.huskycode.jpaquery.populator.CannotSetValueException;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.populator.ValuesPopulator;
 import com.huskycode.jpaquery.populator.ValuesPopulatorImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
+import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 
 /**
@@ -55,15 +58,18 @@ public class PersisterImpl implements Persister {
         List<Object> objects = new ArrayList<Object>();
         
         //TODO: This won't work for multiple classes case for sure.
-        Map<Class<?>, Object> persistedValueLookup = new HashMap<Class<?>, Object>();
+        //Map<Class<?>, Object> persistedValueLookup = new HashMap<Class<?>, Object>();
+        PropogatedValueStore valueStore = new PropogatedValueStore();
         
-        for(Class<?> c: plan.getClasses()) {
+        //for(Class<?> c: plan.getClasses()) {
+        for (EntityNode node : plan.getPlan()) {
+        	Class<?> c = node.getEntityClass();
             Object obj = beanCreator.newInstance(c);
             randomValuePopulator.populateValue(obj);
             
             Field idField = findIdField(c);
 
-            Map<Field, Object> valuesToPopulate = getValuesToPopulate(obj, c, persistedValueLookup);
+            Map<Field, Object> valuesToPopulate = valueStore.get(node);//getValuesToPopulate(obj, c, persistedValueLookup);
             if(idField != null) {
             	valuesToPopulate.put(idField, null); //Reset id field to null for JPA to autogen id.
             }
@@ -73,13 +79,31 @@ public class PersisterImpl implements Persister {
             em.persist(obj);
             
             objects.add(obj);
-            persistedValueLookup.put(c, obj);
+            storeFieldValueToPopulate(obj, node, valueStore);
         }
 
         return PersistedResult.newInstance(objects);
     }
     
-    private Map<Field, Object> getValuesToPopulate(Object obj, Class<?> c,
+    private void storeFieldValueToPopulate(Object obj, EntityNode parent,
+			PropogatedValueStore valueStore) {
+		for (EntityNode child : parent.getChilds()) {
+			List<Link<?,?,?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
+			for (Link<?,?,?> link : links) {
+				Field parentField = link.getTo().getField();
+				parentField.setAccessible(true);
+				try {
+					valueStore.putValue(child, link.getFrom().getField(), parentField.get(obj));
+				} catch (IllegalArgumentException e) {
+					throw new CannotSetValueException(e);
+				} catch (IllegalAccessException e) {
+					throw new CannotSetValueException(e);
+				}
+			}
+		}
+	}
+
+	private Map<Field, Object> getValuesToPopulate(Object obj, Class<?> c,
     		Map<Class<?>, Object> persistedValueLookup) {
     	
     		Map<Field, Object> valuesToOverride = new HashMap<Field, Object>();

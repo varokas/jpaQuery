@@ -56,12 +56,9 @@ public class PersisterImpl implements Persister {
     @Override
     public PersistedResult persistValues(CreationPlan plan) {
         List<Object> objects = new ArrayList<Object>();
-        
-        //TODO: This won't work for multiple classes case for sure.
-        //Map<Class<?>, Object> persistedValueLookup = new HashMap<Class<?>, Object>();
+
         PropogatedValueStore valueStore = new PropogatedValueStore();
         
-        //for(Class<?> c: plan.getClasses()) {
         for (EntityNode node : plan.getPlan()) {
         	Class<?> c = node.getEntityClass();
             Object obj = beanCreator.newInstance(c);
@@ -69,7 +66,7 @@ public class PersisterImpl implements Persister {
             
             Field idField = findIdField(c);
 
-            Map<Field, Object> valuesToPopulate = valueStore.get(node);//getValuesToPopulate(obj, c, persistedValueLookup);
+            Map<Field, Object> valuesToPopulate = valueStore.get(node);
             if(idField != null) {
             	valuesToPopulate.put(idField, null); //Reset id field to null for JPA to autogen id.
             }
@@ -91,43 +88,21 @@ public class PersisterImpl implements Persister {
 			List<Link<?,?,?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
 			for (Link<?,?,?> link : links) {
 				Field parentField = link.getTo().getField();
-				parentField.setAccessible(true);
-				try {
-					valueStore.putValue(child, link.getFrom().getField(), parentField.get(obj));
-				} catch (IllegalArgumentException e) {
-					throw new CannotSetValueException(e);
-				} catch (IllegalAccessException e) {
-					throw new CannotSetValueException(e);
-				}
+				valueStore.putValue(child, link.getFrom().getField(), getValue(obj, parentField));
 			}
 		}
 	}
-
-	private Map<Field, Object> getValuesToPopulate(Object obj, Class<?> c,
-    		Map<Class<?>, Object> persistedValueLookup) {
-    	
-    		Map<Field, Object> valuesToOverride = new HashMap<Field, Object>();
-    	
-    		List<Link<?, ?, ?>> directDependencies = deps.getDirectDependency(c);
-    		for(Link<?, ?, ?> directDep : directDependencies) {
-    			Class<?> parentClass = directDep.getTo().getEntityClass();
-    			
-    			//This should always has value if resolver resolved in correct order
-    			Object parentObj = persistedValueLookup.get(parentClass);
-    			
-    			Field parentField = directDep.getTo().getField();
-    			Field childField = directDep.getFrom().getField();
-    			
-    			try {
-    				Object theValue = parentField.get(parentObj);
-    				valuesToOverride.put(childField, theValue);
-    			} catch (Exception e) {
-    				throw new RuntimeException(e);
-    			}
-    		}
-    		
-    		return valuesToOverride;
-    	}
+    
+    private Object getValue(Object obj, Field field) {
+    	field.setAccessible(true);
+		try {
+			return field.get(obj);
+		} catch (IllegalArgumentException e) {
+			throw new CannotSetValueException(e);
+		} catch (IllegalAccessException e) {
+			throw new CannotSetValueException(e);
+		}
+    }
 	
 	private Field findIdField(Class<?> entityClass) {
 		Field[] fields = entityClass.getDeclaredFields();

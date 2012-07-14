@@ -1,5 +1,7 @@
 package com.huskycode.jpaquery.persister;
 
+import com.huskycode.jpaquery.persister.exception.EntityInstantiationException;
+
 /**
  * @author Varokas Panusuwan
  */

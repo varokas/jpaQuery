@@ -3,6 +3,8 @@ package com.huskycode.jpaquery.persister;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.huskycode.jpaquery.persister.exception.EntityInstantiationException;
+
 /**
  * @author Varokas Panusuwan
  */

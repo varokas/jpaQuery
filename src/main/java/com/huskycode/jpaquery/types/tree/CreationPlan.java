@@ -70,6 +70,10 @@ public class CreationPlan {
 		}
 		return max;
 	}
+	
+	public ActionGraph getActionGraph() {
+		return this.actionGraph;
+	}
 
 	public List<EntityNode> getPlan() {
 		return plan;

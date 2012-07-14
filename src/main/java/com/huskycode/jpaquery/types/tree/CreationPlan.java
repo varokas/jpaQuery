@@ -14,7 +14,6 @@ import java.util.List;
  * @author Varokas Panusuwan
  */
 public class CreationPlan {
-	private List<Class<?>> classes;
 	private ActionGraph actionGraph;
 	private final List<EntityNode> plan;
 
@@ -70,10 +69,6 @@ public class CreationPlan {
 			}
 		}
 		return max;
-	}
-
-	public List<Class<?>> getClasses() {
-		return this.classes;
 	}
 	
 	public ActionGraph getActionGraph() {

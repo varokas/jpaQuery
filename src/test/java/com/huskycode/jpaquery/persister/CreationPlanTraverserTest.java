@@ -1,7 +1,13 @@
-package com.huskycode.jpaquery.types.tree;
+package com.huskycode.jpaquery.persister;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+
+import com.huskycode.jpaquery.populator.CreationPlanTraverser;
+import com.huskycode.jpaquery.types.tree.ActionGraph;
+import com.huskycode.jpaquery.types.tree.CreationPlan;
+import com.huskycode.jpaquery.types.tree.EntityNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,17 +15,14 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 
-public class CreationPlanTest {
+public class CreationPlanTraverserTest {
+	
+	private CreationPlanTraverser creationPlanTraverser;
 
-//	@SuppressWarnings("rawtypes")
-//	@Test
-//	public void testCreateWithRoot() {
-//		ActionGraph actionGraph = ActionGraph.newInstance();
-//        actionGraph.addEntityNode(EntityNode.newInstance(Object.class));
-//		CreationPlan plan = CreationPlan.newInstance(actionGraph);
-//        Assert.assertThat(plan.getClasses(), is(sameInstance(plan)));
-//
-//    }
+	@Before
+	public void before() {
+		creationPlanTraverser = new CreationPlanTraverser();
+	}
 	
 	@Test
 	public void testPlanIsCreatedCorrectlyInOrderOfDependency() {
@@ -51,7 +54,7 @@ public class CreationPlanTest {
 		
 		//create action plan
 		CreationPlan plan = CreationPlan.newInstance(actionG);
-		List<EntityNode> planSteps = plan.getPlan();
+		List<EntityNode> planSteps = creationPlanTraverser.getEntityNodes(plan);
 		
 		//verify
 		Assert.assertEquals(4, planSteps.size());

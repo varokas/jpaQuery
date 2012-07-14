@@ -13,6 +13,7 @@ import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
 import com.huskycode.jpaquery.populator.CannotSetValueException;
+import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.populator.ValuesPopulator;
@@ -31,6 +32,7 @@ public class PersisterImpl implements Persister {
     private DependenciesDefinition deps;
     
     private ValuesPopulator valuesPopulator = ValuesPopulatorImpl.getInstance();
+    private CreationPlanTraverser creationPlanTraverser = new CreationPlanTraverser();
 	
 	private PersisterImpl(EntityManager em, DependenciesDefinition deps) {
 		this.em = em;
@@ -59,7 +61,7 @@ public class PersisterImpl implements Persister {
 
         PropogatedValueStore valueStore = new PropogatedValueStore();
         
-        for (EntityNode node : plan.getPlan()) {
+        for (EntityNode node : creationPlanTraverser.getEntityNodes(plan)) {
         	Class<?> c = node.getEntityClass();
             
         	Object obj = createNodeInDatabase(valueStore, node, c);

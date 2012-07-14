@@ -61,19 +61,8 @@ public class PersisterImpl implements Persister {
         
         for (EntityNode node : plan.getPlan()) {
         	Class<?> c = node.getEntityClass();
-            Object obj = beanCreator.newInstance(c);
-            randomValuePopulator.populateValue(obj);
             
-            Field idField = findIdField(c);
-
-            Map<Field, Object> valuesToPopulate = valueStore.get(node);
-            if(idField != null) {
-            	valuesToPopulate.put(idField, null); //Reset id field to null for JPA to autogen id.
-            }
-            
-            valuesPopulator.populateValue(obj, valuesToPopulate);
-            
-            em.persist(obj);
+        	Object obj = createNodeInDatabase(valueStore, node, c);
             
             objects.add(obj);
             storeFieldValueToPopulate(obj, node, valueStore);
@@ -81,6 +70,31 @@ public class PersisterImpl implements Persister {
 
         return PersistedResult.newInstance(objects);
     }
+
+	private Object createNodeInDatabase(PropogatedValueStore valueStore,
+			EntityNode node, Class<?> c) {
+		Object obj = beanCreator.newInstance(c);
+		
+		Map<Field, Object> valuesToPopulate = getValuesToOverride(
+				valueStore, node, c);
+		
+		randomValuePopulator.populateValue(obj);
+		valuesPopulator.populateValue(obj, valuesToPopulate);
+		
+		em.persist(obj);
+		return obj;
+	}
+
+	private Map<Field, Object> getValuesToOverride(
+			PropogatedValueStore valueStore, EntityNode node, Class<?> c) {
+		Field idField = findIdField(c);
+
+		Map<Field, Object> valuesToPopulate = valueStore.get(node);
+		if(idField != null) {
+			valuesToPopulate.put(idField, null); //Reset id field to null for JPA to autogen id.
+		}
+		return valuesToPopulate;
+	}
     
     private void storeFieldValueToPopulate(Object obj, EntityNode parent,
 			PropogatedValueStore valueStore) {

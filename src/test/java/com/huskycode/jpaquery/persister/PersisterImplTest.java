@@ -2,6 +2,7 @@ package com.huskycode.jpaquery.persister;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
+import com.huskycode.jpaquery.persister.util.BeanUtil;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.solver.SolverImpl;
@@ -38,7 +39,6 @@ import static org.mockito.Mockito.verify;
 
 public class PersisterImplTest {
 	private PersisterImpl persister;
-	private BeanCreator beanCreator;
 	private RandomValuePopulator randomValuePopulator;
 	private EntityManager em;
 	private DependenciesDefinition deps;
@@ -62,11 +62,10 @@ public class PersisterImplTest {
 				return null;
 			}
 		}).when(em).persist(Mockito.any());
-		beanCreator = new BeanCreator();
 		randomValuePopulator = Mockito.mock(RandomValuePopulator.class);
 		deps = new PizzaDeps().getDepsUsingField();
 		
-	    persister = new PersisterImpl(em, beanCreator, randomValuePopulator, deps);
+	    persister = new PersisterImpl(em, randomValuePopulator, deps);
 	}
 	
 	@Test
@@ -111,7 +110,7 @@ public class PersisterImplTest {
 								n(Customer.class, n(PizzaOrder.class)));
 		CreationPlan creationPlan = SolverImpl.newInstance().solveFor(command, dependenciesDefinition);
 		
-		PersisterImpl persister = new PersisterImpl(em, beanCreator, new RandomValuePopulatorImpl(), dependenciesDefinition);
+		PersisterImpl persister = new PersisterImpl(em, new RandomValuePopulatorImpl(), dependenciesDefinition);
 		
 		//execute
 		PersistedResult result = persister.persistValues(creationPlan);

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
+import com.huskycode.jpaquery.persister.util.BeanUtil;
 import com.huskycode.jpaquery.populator.CannotSetValueException;
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
@@ -27,7 +28,6 @@ import com.huskycode.jpaquery.types.tree.PersistedResult;
  */
 public class PersisterImpl implements Persister {
 	private EntityManager em;
-	private BeanCreator beanCreator;
     private RandomValuePopulator randomValuePopulator;
     private DependenciesDefinition deps;
     
@@ -40,17 +40,15 @@ public class PersisterImpl implements Persister {
 	}
 	
 	//VisibleForTesting
-	PersisterImpl(EntityManager em, BeanCreator beanCreator,
+	PersisterImpl(EntityManager em,
 			RandomValuePopulator randomValuePopulator, 
 			DependenciesDefinition deps) {
 		this(em, deps);
-		this.beanCreator = beanCreator;
 		this.randomValuePopulator = randomValuePopulator;
 	}
 	
 	public static PersisterImpl newInstance(EntityManager em, DependenciesDefinition deps) {
 		PersisterImpl persisterImpl = new PersisterImpl(em, deps);
-		persisterImpl.beanCreator = new BeanCreator();
 		persisterImpl.randomValuePopulator = new RandomValuePopulatorImpl();
 		return persisterImpl;
 	}
@@ -75,7 +73,7 @@ public class PersisterImpl implements Persister {
 
 	private Object createNodeInDatabase(PropogatedValueStore valueStore,
 			EntityNode node, Class<?> c) {
-		Object obj = beanCreator.newInstance(c);
+		Object obj = BeanUtil.newInstance(c);
 		
 		Map<Field, Object> valuesToPopulate = getValuesToOverride(
 				valueStore, node, c);

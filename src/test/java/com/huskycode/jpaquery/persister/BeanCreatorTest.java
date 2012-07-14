@@ -4,16 +4,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.huskycode.jpaquery.persister.exception.EntityInstantiationException;
+import com.huskycode.jpaquery.persister.util.BeanUtil;
 
 /**
  * @author Varokas Panusuwan
  */
 public class BeanCreatorTest {
-	private BeanCreator beanCreator;
+	private BeanUtil beanCreator;
 	
 	@Before
 	public void before() {
-		beanCreator = new BeanCreator();
+		beanCreator = new BeanUtil();
 	}
 	
     @Test(expected = EntityInstantiationException.class)

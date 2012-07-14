@@ -1,12 +1,12 @@
-package com.huskycode.jpaquery.persister;
+package com.huskycode.jpaquery.persister.util;
 
 import com.huskycode.jpaquery.persister.exception.EntityInstantiationException;
 
 /**
  * @author Varokas Panusuwan
  */
-public class BeanCreator {
-	public <E> E newInstance(Class<E> beanClass) {
+public class BeanUtil {
+	public static <E> E newInstance(Class<E> beanClass) {
         try {
             return beanClass.newInstance();
         } catch (InstantiationException e) {

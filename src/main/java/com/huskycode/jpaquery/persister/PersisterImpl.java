@@ -2,7 +2,6 @@ package com.huskycode.jpaquery.persister;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class PersisterImpl implements Persister {
     public PersistedResult persistValues(CreationPlan plan) {
         List<Object> objects = new ArrayList<Object>();
 
-        PropogatedValueStore valueStore = new PropogatedValueStore();
+        PropogatedValueStore<EntityNode, Field, Object> valueStore = PropogatedValueStore.newInstance();
         
         for (EntityNode node : plan.getPlan()) {
         	Class<?> c = node.getEntityClass();
@@ -83,7 +82,7 @@ public class PersisterImpl implements Persister {
     }
     
     private void storeFieldValueToPopulate(Object obj, EntityNode parent,
-			PropogatedValueStore valueStore) {
+    		PropogatedValueStore<EntityNode, Field, Object> valueStore) {
 		for (EntityNode child : parent.getChilds()) {
 			List<Link<?,?,?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
 			for (Link<?,?,?> link : links) {

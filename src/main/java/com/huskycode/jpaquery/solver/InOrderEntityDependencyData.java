@@ -69,6 +69,10 @@ public class InOrderEntityDependencyData {
 		return getSubList(ancestorIndex+1, descendantIndex);
 	}
 	
+	public int getOrderIndexOf(Class<?> entityClass) {
+		return this.entityIndex.get(entityClass);
+	}
+	
 	private List<EntityAndDependencySet> getSubList(int start, int end) {
 		List<EntityAndDependencySet> result = new ArrayList<SolverImpl.EntityAndDependencySet>();
 		for (int i = start; i < end; i++) {

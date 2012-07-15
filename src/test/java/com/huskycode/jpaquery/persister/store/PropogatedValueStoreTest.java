@@ -6,11 +6,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Map;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,12 +17,12 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
  * @author Varokas Panusuwan
  */
 public class PropogatedValueStoreTest {
-	private PropogatedValueStore valueStore = new PropogatedValueStore();
+	private PropogatedValueStore<EntityNode, Field, Object> valueStore;
 	private EntityNode node;
 	
 	@Before
 	public void before() {
-		valueStore = new PropogatedValueStore();
+		valueStore = PropogatedValueStore.newInstance();
 		node = EntityNode.newInstance(Integer.class);
 	}
 	

@@ -1,10 +1,8 @@
 package com.huskycode.jpaquery.persister.store;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.huskycode.jpaquery.types.tree.EntityNode;
+import java.util.Map.Entry;
 
 /**
  * Store a value to propagate into each entity node. For performance 
@@ -14,27 +12,43 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
  * 
  *  @author Varokas Panusuwan
  */
-public class PropogatedValueStore {
+public class PropogatedValueStore<T, K, V> {
 	
-	private final Map<EntityNodeInstanceWrapper, Map<Field, Object>> dataStore 
-	 	= new HashMap<EntityNodeInstanceWrapper, Map<Field, Object>>();
-
-	public Object putValue(EntityNode entityNode, Field f, Object value) {
-		EntityNodeInstanceWrapper key = createKey(entityNode);
-		Map<Field, Object> map = getValueOrCreateIfNotExist(key);
-		
-		return map.put(f, value);
+	private final Map<InstanceWrapper<T>, Map<K, V>> dataStore 
+	 	= new HashMap<InstanceWrapper<T>, Map<K, V>>();
+	
+	private PropogatedValueStore() {}
+	
+	private PropogatedValueStore(PropogatedValueStore<T, K, V> data) {
+		for (Entry<InstanceWrapper<T>, Map<K, V>> entry : data.dataStore.entrySet()) {
+			getValueOrCreateIfNotExist(entry.getKey()).putAll(entry.getValue());
+		}
 	}
 	
-	public Map<Field, Object> get(EntityNode entityNode) {
-		EntityNodeInstanceWrapper key = createKey(entityNode);
+	public static <T, K, V> PropogatedValueStore<T, K, V> newInstance() {
+		return new PropogatedValueStore<T, K, V>();
+	}
+	
+	public static <T, K, V> PropogatedValueStore<T, K, V> newInstance(PropogatedValueStore<T, K, V> data) {
+		return new PropogatedValueStore<T, K, V>(data);
+	}
+
+	public Object putValue(T t, K k, V value) {
+		InstanceWrapper<T> key = createKey(t);
+		Map<K, V> map = getValueOrCreateIfNotExist(key);
+		
+		return map.put(k, value);
+	}
+	
+	public Map<K, V> get(T t) {
+		InstanceWrapper<T> key = createKey(t);
 		return getValueOrCreateIfNotExist(key);
 	}
 	
-	private Map<Field, Object> getValueOrCreateIfNotExist(EntityNodeInstanceWrapper key) {
-		Map<Field, Object> retVal = dataStore.get(key);
+	private Map<K, V> getValueOrCreateIfNotExist(InstanceWrapper<T> key) {
+		Map<K, V> retVal = dataStore.get(key);
 		if(retVal == null) {
-			HashMap<Field, Object> newValue = new HashMap<Field, Object>();
+			HashMap<K, V> newValue = new HashMap<K, V>();
 			dataStore.put(key, newValue);
 			return newValue;
 		} else {
@@ -42,28 +56,27 @@ public class PropogatedValueStore {
 		}
 	}
 	
-	private EntityNodeInstanceWrapper createKey(EntityNode entityNode) { 
-		return new EntityNodeInstanceWrapper(entityNode);
+	private InstanceWrapper<T> createKey(T t) { 
+		return new InstanceWrapper<T>(t);
 	}
 	
 	/**
 	 * A wrapper for an instance of EntityNode
 	 */
-	private class EntityNodeInstanceWrapper {
-		private final EntityNode entityNode;
+	private class InstanceWrapper<T> {
+		private final T t;
 
-		public EntityNodeInstanceWrapper(EntityNode entityNode) {
-			super();
-			this.entityNode = entityNode;
+		public InstanceWrapper(T t) {
+			this.t = t;
 		}
 
-		public EntityNode getEntityNode() {
-			return entityNode;
+		public T get() {
+			return t;
 		}
 
 		@Override
 		public int hashCode() {
-			return entityNode.hashCode();
+			return t.hashCode();
 		}
 
 		@Override
@@ -74,8 +87,8 @@ public class PropogatedValueStore {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			EntityNodeInstanceWrapper other = (EntityNodeInstanceWrapper) obj;
-			return (entityNode == other.entityNode);
+			InstanceWrapper<T> other = (InstanceWrapper<T>) obj;
+			return (this.t == other.t);
 		} 
 	}
 }

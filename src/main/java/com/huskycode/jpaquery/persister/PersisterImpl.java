@@ -87,7 +87,7 @@ public class PersisterImpl implements Persister {
 
 	private Map<Field, Object> getValuesToOverride(
 			PropogatedValueStore valueStore, EntityNode node, Class<?> c) {
-		Field idField = findIdField(c);
+		Field idField = BeanUtil.findIdField(c);
 
 		Map<Field, Object> valuesToPopulate = valueStore.get(node);
 		if(idField != null) {
@@ -102,29 +102,8 @@ public class PersisterImpl implements Persister {
 			List<Link<?,?,?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
 			for (Link<?,?,?> link : links) {
 				Field parentField = link.getTo().getField();
-				valueStore.putValue(child, link.getFrom().getField(), getValue(obj, parentField));
+				valueStore.putValue(child, link.getFrom().getField(), BeanUtil.getValue(obj, parentField));
 			}
 		}
-	}
-    
-    private Object getValue(Object obj, Field field) {
-    	field.setAccessible(true);
-		try {
-			return field.get(obj);
-		} catch (IllegalArgumentException e) {
-			throw new CannotSetValueException(e);
-		} catch (IllegalAccessException e) {
-			throw new CannotSetValueException(e);
-		}
-    }
-	
-	private Field findIdField(Class<?> entityClass) {
-		Field[] fields = entityClass.getDeclaredFields();
-		for(Field field : fields) {
-			if(field.getAnnotation(Id.class) != null) {
-				return field;
-			}
-		}
-		return null;
 	}
 }

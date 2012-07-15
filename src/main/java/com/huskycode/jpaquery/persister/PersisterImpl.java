@@ -2,18 +2,15 @@ package com.huskycode.jpaquery.persister;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Id;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
 import com.huskycode.jpaquery.persister.util.BeanUtil;
-import com.huskycode.jpaquery.populator.CannotSetValueException;
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;

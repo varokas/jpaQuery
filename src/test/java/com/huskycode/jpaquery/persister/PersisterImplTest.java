@@ -1,8 +1,27 @@
 package com.huskycode.jpaquery.persister;
 
+import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.lang.reflect.Field;
+import java.util.Random;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
-import com.huskycode.jpaquery.persister.util.BeanUtil;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.solver.SolverImpl;
@@ -17,25 +36,6 @@ import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-
-import java.lang.reflect.Field;
-import java.util.Random;
-
-import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class PersisterImplTest {
 	private PersisterImpl persister;

@@ -57,9 +57,7 @@ public class PersisterImpl implements Persister {
         PropogatedValueStore valueStore = new PropogatedValueStore();
         
         for (EntityNode node : creationPlanTraverser.getEntityNodes(plan)) {
-        	Class<?> c = node.getEntityClass();
-            
-        	Object obj = createNodeInDatabase(valueStore, node, c);
+        	Object obj = createNodeInDatabase(valueStore, node);
             
             objects.add(obj);
             storeFieldValueToPopulate(obj, node, valueStore);
@@ -69,7 +67,8 @@ public class PersisterImpl implements Persister {
     }
 
 	private Object createNodeInDatabase(PropogatedValueStore valueStore,
-			EntityNode node, Class<?> c) {
+			EntityNode node) {
+		Class<?> c = node.getEntityClass();
 		Object obj = BeanUtil.newInstance(c);
 		
 		Map<Field, Object> valuesToPopulate = getValuesToOverride(

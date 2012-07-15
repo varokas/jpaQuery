@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Id;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
+import com.huskycode.jpaquery.annotation.VisibleForTesting;
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactory;
+import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactoryImpl;
 import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
-import com.huskycode.jpaquery.populator.CannotSetValueException;
+import com.huskycode.jpaquery.persister.util.BeanUtil;
+import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
 import com.huskycode.jpaquery.populator.ValuesPopulator;
@@ -25,30 +28,20 @@ import com.huskycode.jpaquery.types.tree.PersistedResult;
  */
 public class PersisterImpl implements Persister {
 	private EntityManager em;
-	private BeanCreator beanCreator;
-    private RandomValuePopulator randomValuePopulator;
     private DependenciesDefinition deps;
     
-    private ValuesPopulator valuesPopulator = ValuesPopulatorImpl.getInstance();
+    private CreationPlanTraverser creationPlanTraverser = new CreationPlanTraverser();
+    private EntityPersisterFactory entityPersisterFactory = new EntityPersisterFactoryImpl();
 	
-	private PersisterImpl(EntityManager em, DependenciesDefinition deps) {
+    @VisibleForTesting
+	PersisterImpl(EntityManager em, DependenciesDefinition deps) {
 		this.em = em;
 		this.deps = deps;
 	}
 	
-	//VisibleForTesting
-	PersisterImpl(EntityManager em, BeanCreator beanCreator,
-			RandomValuePopulator randomValuePopulator, 
-			DependenciesDefinition deps) {
-		this(em, deps);
-		this.beanCreator = beanCreator;
-		this.randomValuePopulator = randomValuePopulator;
-	}
 	
 	public static PersisterImpl newInstance(EntityManager em, DependenciesDefinition deps) {
 		PersisterImpl persisterImpl = new PersisterImpl(em, deps);
-		persisterImpl.beanCreator = new BeanCreator();
-		persisterImpl.randomValuePopulator = new RandomValuePopulatorImpl();
 		return persisterImpl;
 	}
 
@@ -58,21 +51,11 @@ public class PersisterImpl implements Persister {
 
         PropogatedValueStore<EntityNode, Field, Object> valueStore = PropogatedValueStore.newInstance();
         
-        for (EntityNode node : plan.getPlan()) {
-        	Class<?> c = node.getEntityClass();
-            Object obj = beanCreator.newInstance(c);
-            randomValuePopulator.populateValue(obj);
-            
-            Field idField = findIdField(c);
-
-            Map<Field, Object> valuesToPopulate = valueStore.get(node);
-            if(idField != null) {
-            	valuesToPopulate.put(idField, null); //Reset id field to null for JPA to autogen id.
-            }
-            
-            valuesPopulator.populateValue(obj, valuesToPopulate);
-            
-            em.persist(obj);
+        for (EntityNode node : creationPlanTraverser.getEntityNodes(plan)) {
+        	Map<Field, Object> overrideFields = valueStore.get(node);
+        	Object obj = entityPersisterFactory
+        			.createEntityPersister(node, deps, em)
+        			.persistNode(node, overrideFields);
             
             objects.add(obj);
             storeFieldValueToPopulate(obj, node, valueStore);
@@ -80,6 +63,8 @@ public class PersisterImpl implements Persister {
 
         return PersistedResult.newInstance(objects);
     }
+
+
     
     private void storeFieldValueToPopulate(Object obj, EntityNode parent,
     		PropogatedValueStore<EntityNode, Field, Object> valueStore) {
@@ -87,29 +72,8 @@ public class PersisterImpl implements Persister {
 			List<Link<?,?,?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
 			for (Link<?,?,?> link : links) {
 				Field parentField = link.getTo().getField();
-				valueStore.putValue(child, link.getFrom().getField(), getValue(obj, parentField));
+				valueStore.putValue(child, link.getFrom().getField(), BeanUtil.getValue(obj, parentField));
 			}
 		}
-	}
-    
-    private Object getValue(Object obj, Field field) {
-    	field.setAccessible(true);
-		try {
-			return field.get(obj);
-		} catch (IllegalArgumentException e) {
-			throw new CannotSetValueException(e);
-		} catch (IllegalAccessException e) {
-			throw new CannotSetValueException(e);
-		}
-    }
-	
-	private Field findIdField(Class<?> entityClass) {
-		Field[] fields = entityClass.getDeclaredFields();
-		for(Field field : fields) {
-			if(field.getAnnotation(Id.class) != null) {
-				return field;
-			}
-		}
-		return null;
 	}
 }

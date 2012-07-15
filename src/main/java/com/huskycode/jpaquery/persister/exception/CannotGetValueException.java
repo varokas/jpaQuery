@@ -1,4 +1,4 @@
-package com.huskycode.jpaquery.persister;
+package com.huskycode.jpaquery.persister.exception;
 
 public class CannotGetValueException extends RuntimeException {
 

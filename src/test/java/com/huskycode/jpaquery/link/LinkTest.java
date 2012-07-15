@@ -23,8 +23,6 @@ public class LinkTest extends AbstractEntityManagerWired {
     public void testLinkDefinition() throws NoSuchFieldException {
         assertThat(link.getFrom().getEntityClass(), equalTo(ClassA.class));
         assertThat(link.getTo().getEntityClass(), equalTo(ClassB.class));
-        assertThat(link.getFrom().getType(), equalTo(Integer.class));
-        assertThat(link.getTo().getType(), equalTo(Integer.class));
         assertThat(link.getFrom().getField(), equalTo(BaseClass.class.getDeclaredField("foreignId")));
         assertThat(link.getTo().getField(), equalTo(BaseClass.class.getDeclaredField("id")));
     }

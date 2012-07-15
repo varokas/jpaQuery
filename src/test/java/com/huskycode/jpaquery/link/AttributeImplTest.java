@@ -23,8 +23,6 @@ public class AttributeImplTest {
 
         Assert.assertEquals(c, attr.getEntityClass());
         Assert.assertEquals(c.getDeclaredField("a"), attr.getField());
-        Assert.assertEquals(int.class, attr.getType());
-
     }
 
     @Test

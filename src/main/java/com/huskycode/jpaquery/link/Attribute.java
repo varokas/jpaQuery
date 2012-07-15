@@ -12,5 +12,4 @@ import java.lang.reflect.Field;
 public interface Attribute<E, T> {
     Class<E> getEntityClass();
     Field getField();
-    Class<T> getType();
 }

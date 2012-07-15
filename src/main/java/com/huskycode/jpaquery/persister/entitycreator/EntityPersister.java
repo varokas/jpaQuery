@@ -15,6 +15,7 @@ public interface EntityPersister {
 	 * Persist the node type, given the fields to override.
 	 * @param node
 	 * @param overrideFields
+	 * @return 
 	 */
-	public void persistNode(EntityNode node, Map<Field, Object> overrideFields);
+	public Object persistNode(EntityNode node, Map<Field, Object> overrideFields);
 }

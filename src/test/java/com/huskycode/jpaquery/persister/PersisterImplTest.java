@@ -39,7 +39,6 @@ import com.huskycode.jpaquery.types.tree.PersistedResult;
 
 public class PersisterImplTest {
 	private PersisterImpl persister;
-	private RandomValuePopulator randomValuePopulator;
 	private EntityManager em;
 	private DependenciesDefinition deps;
 	private Random any = new Random();
@@ -62,10 +61,9 @@ public class PersisterImplTest {
 				return null;
 			}
 		}).when(em).persist(Mockito.any());
-		randomValuePopulator = Mockito.mock(RandomValuePopulator.class);
 		deps = new PizzaDeps().getDepsUsingField();
 		
-	    persister = new PersisterImpl(em, randomValuePopulator, deps);
+	    persister = new PersisterImpl(em, deps);
 	}
 	
 	@Test
@@ -79,16 +77,16 @@ public class PersisterImplTest {
 		assertThat(persistedTree.getPersistedObjects().get(0), CoreMatchers.instanceOf(ClassA.class));
 	}
 	
-	@Test
-	public void testPersistValueCallsRandomValue() throws IllegalAccessException {
-		ActionGraph actionGraph = ActionGraph.newInstance();
-	    actionGraph.addEntityNode(EntityNode.newInstance(ClassA.class));
-        CreationPlan plan = CreationPlan.newInstance(actionGraph);
-		
-		persister.persistValues(plan);
-		
-		Mockito.verify(randomValuePopulator, Mockito.times(1)).populateValue(Mockito.any(ClassA.class));
-	}
+//	@Test
+//	public void testPersistValueCallsRandomValue() throws IllegalAccessException {
+//		ActionGraph actionGraph = ActionGraph.newInstance();
+//	    actionGraph.addEntityNode(EntityNode.newInstance(ClassA.class));
+//        CreationPlan plan = CreationPlan.newInstance(actionGraph);
+//		
+//		persister.persistValues(plan);
+//		
+//		Mockito.verify(randomValuePopulator, Mockito.times(1)).populateValue(Mockito.any(ClassA.class));
+//	}
 	
 	@Test
 	public void testPersistValuePersistAGivenClass() throws IllegalAccessException {
@@ -110,7 +108,7 @@ public class PersisterImplTest {
 								n(Customer.class, n(PizzaOrder.class)));
 		CreationPlan creationPlan = SolverImpl.newInstance().solveFor(command, dependenciesDefinition);
 		
-		PersisterImpl persister = new PersisterImpl(em, new RandomValuePopulatorImpl(), dependenciesDefinition);
+		PersisterImpl persister = new PersisterImpl(em, dependenciesDefinition);
 		
 		//execute
 		PersistedResult result = persister.persistValues(creationPlan);

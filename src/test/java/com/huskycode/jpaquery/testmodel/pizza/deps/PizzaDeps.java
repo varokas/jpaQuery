@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.testmodel.pizza.deps;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
+import com.huskycode.jpaquery.DepsBuilder;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Address_;
@@ -19,7 +20,7 @@ import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 public class PizzaDeps {
 	@SuppressWarnings("unchecked")
 	public DependenciesDefinition getDeps() {
-		return DependenciesDefinition.fromLinks(new Link[] { 
+		return new DepsBuilder().withLinks(new Link[] { 
 			Link.from(Customer.class, Customer_.customerAddressId)
 				.to(Address.class, Address_.addressId),
 			Link.from(Employee.class, Employee_.employeeAddressId)
@@ -33,7 +34,7 @@ public class PizzaDeps {
 				.to(Employee.class, Employee_.employeeId),
 			Link.from(PizzaOrder.class, PizzaOrder_.vehicleId)
 				.to(Vehicle.class, Vehicle_.vehicleId),
-		});
+		}).build();
 	}
 	
 	/**
@@ -45,7 +46,7 @@ public class PizzaDeps {
 	@SuppressWarnings("unchecked")
 	public DependenciesDefinition getDepsUsingField() {
 		try {
-			return DependenciesDefinition.fromLinks(new Link[] { 
+			return new DepsBuilder().withLinks(new Link[] { 
 				Link.from(Customer.class, Customer.class.getDeclaredField("customerAddressId"))
 					.to(Address.class, Address.class.getDeclaredField("addressId")),
 				Link.from(Employee.class, Employee.class.getDeclaredField("employeeAddressId"))
@@ -59,7 +60,7 @@ public class PizzaDeps {
 					.to(Employee.class, Employee.class.getDeclaredField("employeeId")),
 				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("vehicleId"))
 					.to(Vehicle.class, Vehicle.class.getDeclaredField("vehicleId"))
-			});
+			}).build();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

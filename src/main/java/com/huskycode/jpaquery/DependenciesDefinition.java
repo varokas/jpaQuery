@@ -7,6 +7,8 @@ import com.huskycode.jpaquery.util.Factory;
 import com.huskycode.jpaquery.util.ListFactory;
 import com.huskycode.jpaquery.util.SetFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,8 +28,10 @@ public class DependenciesDefinition {
     private final Map<Class<?>, Set<Class<?>>> entityAllParentEntityDependencyMap;
     private final Map<Class<?>, Set<Class<?>>> entityAllChildEntityDependencyMap;
     private Map<Class<?>, Map<Class<?>, List<Link<?,?,?>>>> childFieldToParentMap;
+	private Set<Class<?>> enumTables;
 
-    private DependenciesDefinition(Link<?,?,?>[] links) {
+	/** Uses DepBuilder to create this class. */
+    DependenciesDefinition(Link<?,?,?>[] links, List<Class<?>> enumTables) {
         this.entityDirectLinkDependencyMap = new HashMap<Class<?>, List<Link<?, ?, ?>>>();
         this.entityDirectParentEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.entityDirectChildEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
@@ -43,6 +47,7 @@ public class DependenciesDefinition {
             getOrCreateList(getOrCreateMap(childFieldToParentMap, eFrom), eTo).add(link);          				     
         }
         this.links = links;
+        this.enumTables = new HashSet<Class<?>>(enumTables);
         buildAllDependentEntitiesMap();
     }
 
@@ -75,11 +80,6 @@ public class DependenciesDefinition {
 		visited.remove(entityClass);
 		return visited;
 	}
-
-    public static DependenciesDefinition fromLinks(Link<?,?,?>[] links) {
-        DependenciesDefinition deps = new DependenciesDefinition(links);
-        return deps;
-    }
 
     public Link<?,?,?>[] getLinks() {
         return links;
@@ -141,4 +141,8 @@ public class DependenciesDefinition {
     
     private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
     private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
+
+	public Set<Class<?>> getEnumTables() {
+		return enumTables;
+	}
 }

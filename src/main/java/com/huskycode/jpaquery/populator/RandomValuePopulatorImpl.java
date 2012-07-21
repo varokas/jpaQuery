@@ -43,12 +43,12 @@ public class RandomValuePopulatorImpl implements RandomValuePopulator {
     }
 
     private <E> List<Field> getAllFieldsInHierarchy(E entity) {
-        Queue<Class> working = new LinkedList<Class>();
+        Queue<Class<?>> working = new LinkedList<Class<?>>();
         List<Field> allFields = new LinkedList<Field>();
         working.add(entity.getClass());
         while(working.size() > 0) {
-            Class c = working.poll();
-            Class sper = c.getSuperclass();
+            Class<?> c = working.poll();
+            Class<?> sper = c.getSuperclass();
             if (c.getSuperclass() != null) {
                 working.add(sper);
             }

@@ -30,8 +30,7 @@ public class DependenciesDefinitionTest {
         SingularAttribute pointB = Mockito.mock(SingularAttribute.class);
         Link anyLink = Link.from(Object.class, pointA).to(Object.class, pointB);
 
-        DependenciesDefinition deps =
-                DependenciesDefinition.fromLinks(new Link[] { anyLink });
+        DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
 
         Assert.assertThat(deps.getLinks().length, CoreMatchers.is(1));
         Assert.assertThat(deps.getLinks()[0],
@@ -43,10 +42,9 @@ public class DependenciesDefinitionTest {
         SingularAttribute pointA = Mockito.mock(SingularAttribute.class);
         SingularAttribute pointB = Mockito.mock(SingularAttribute.class);
         Link anyLink = Link.from(A.class, pointA).to(B.class, pointB);
-        DependenciesDefinition dependenciesDefinition =
-                DependenciesDefinition.fromLinks(new Link[] { anyLink });
+        DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
 
-        List<Link<?,?,?>> dependencies = dependenciesDefinition.getDirectDependency(A.class);
+        List<Link<?,?,?>> dependencies = deps.getDirectDependency(A.class);
 
         Assert.assertEquals(1, dependencies.size());
 

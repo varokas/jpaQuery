@@ -11,6 +11,7 @@ import org.junit.Test;
 import junit.framework.Assert;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
+import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
@@ -58,5 +59,21 @@ public class CommandInterpretorTest {
 		Assert.assertEquals(2, inOrderData.getOrderIndexOf(inOderEntities.get(2)));
 		Assert.assertEquals(3, inOrderData.getOrderIndexOf(inOderEntities.get(3)));
 		Assert.assertEquals(4, inOrderData.getOrderIndexOf(inOderEntities.get(4)));
+	}
+	
+	@Test
+	public void testCreatePlanReturnCorrectlyForMultiParentCommands() {
+		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
+		CommandNode sharedChild = n(PizzaOrder.class);
+		commands = ns(n(Customer.class, sharedChild),
+								n(Employee.class, sharedChild));
+		CommandInterpretor interpretor = CommandInterpretor.getInstance();
+		plan = interpretor.createPlan(commands, dependenciesDefinition);
+		
+		List<CommandNode> commandNodePlan = plan.getPlan();
+		
+		Assert.assertEquals(3, commandNodePlan.size());
+		Assert.assertEquals(sharedChild, commandNodePlan.get(2));
+		
 	}
 }

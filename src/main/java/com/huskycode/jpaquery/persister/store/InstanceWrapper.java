@@ -1,5 +1,11 @@
 package com.huskycode.jpaquery.persister.store;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import com.huskycode.jpaquery.util.ListFactory;
+
 /**
  * A wrapper for an instance of EntityNode
  */
@@ -33,5 +39,13 @@ public class InstanceWrapper<T> {
 			return false;
 		InstanceWrapper<T> other = (InstanceWrapper<T>) obj;
 		return (this.t == other.t);
-	} 
+	}
+	
+	public static <T> List<T> toInstanceList(Collection<InstanceWrapper<T>> col) {
+		List<T> result = new ArrayList<T>(col.size());
+		for (InstanceWrapper<T> w : col) {
+			result.add(w.get());
+		}
+		return result;
+	}
 }

@@ -8,7 +8,6 @@ public class EntityNode {
 	private final Class<?> entityClass;
 	private final Set<EntityNode> parent;
 	private final Set<EntityNode> childs;
-	private int level;
 
 	private CommandNode command;
 	
@@ -18,15 +17,6 @@ public class EntityNode {
 		this.entityClass = entityClass;
 		this.childs = new HashSet<EntityNode>();
 		this.parent = new HashSet<EntityNode>();
-		this.level = 0;
-	}
-	
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
 	}
 
 	public static EntityNode newInstance(Class<?> entityClass) {

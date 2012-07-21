@@ -39,7 +39,7 @@ public class AttributeImpl<E, T> implements Attribute<E, T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AttributeImpl attribute = (AttributeImpl) o;
+        AttributeImpl<?,?> attribute = (AttributeImpl<?,?>) o;
 
         if (!cls.equals(attribute.cls)) return false;
         if (!field.equals(attribute.field)) return false;

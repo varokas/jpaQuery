@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.persister;
 
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
+import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
@@ -21,9 +22,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
-import com.huskycode.jpaquery.command.CommandNode;
-import com.huskycode.jpaquery.populator.RandomValuePopulator;
-import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.solver.SolverImpl;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
@@ -77,17 +76,6 @@ public class PersisterImplTest {
 		assertThat(persistedTree.getPersistedObjects().get(0), CoreMatchers.instanceOf(ClassA.class));
 	}
 	
-//	@Test
-//	public void testPersistValueCallsRandomValue() throws IllegalAccessException {
-//		ActionGraph actionGraph = ActionGraph.newInstance();
-//	    actionGraph.addEntityNode(EntityNode.newInstance(ClassA.class));
-//        CreationPlan plan = CreationPlan.newInstance(actionGraph);
-//		
-//		persister.persistValues(plan);
-//		
-//		Mockito.verify(randomValuePopulator, Mockito.times(1)).populateValue(Mockito.any(ClassA.class));
-//	}
-	
 	@Test
 	public void testPersistValuePersistAGivenClass() throws IllegalAccessException {
 		ActionGraph actionGraph = ActionGraph.newInstance();
@@ -103,10 +91,10 @@ public class PersisterImplTest {
 	public void testPersistValuesCreateAndPersistAllEntityWithCorrectForeignKeysFromParents() {
 		//set up
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CommandNode command = n(Address.class,
+		CommandNodes commands = ns(n(Address.class,
 								n(Customer.class, n(PizzaOrder.class)),
-								n(Customer.class, n(PizzaOrder.class)));
-		CreationPlan creationPlan = SolverImpl.newInstance().solveFor(command, dependenciesDefinition);
+								n(Customer.class, n(PizzaOrder.class))));
+		CreationPlan creationPlan = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
 		PersisterImpl persister = new PersisterImpl(em, dependenciesDefinition);
 		

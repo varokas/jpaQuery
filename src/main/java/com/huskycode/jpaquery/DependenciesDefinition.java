@@ -1,14 +1,18 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.jpaquery.link.Link;
+import static com.huskycode.jpaquery.util.MapUtil.*;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.util.Factory;
+import com.huskycode.jpaquery.util.ListFactory;
+import com.huskycode.jpaquery.util.SetFactory;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -17,33 +21,42 @@ import java.util.Set;
 public class DependenciesDefinition {
     private final Link<?,?,?>[] links;
     private final Map<Class<?>, List<Link<?,?,?>>> entityDirectLinkDependencyMap;
-    private final Map<Class<?>, Set<Class<?>>> entityDirectEntityDependencyMap;
-    private final Map<Class<?>, Set<Class<?>>> entityAllEntityDependencyMap;
+    private final Map<Class<?>, Set<Class<?>>> entityDirectParentEntityDependencyMap;
+    private final Map<Class<?>, Set<Class<?>>> entityDirectChildEntityDependencyMap;
+    private final Map<Class<?>, Set<Class<?>>> entityAllParentEntityDependencyMap;
+    private final Map<Class<?>, Set<Class<?>>> entityAllChildEntityDependencyMap;
     private Map<Class<?>, Map<Class<?>, List<Link<?,?,?>>>> childFieldToParentMap;
 
     private DependenciesDefinition(Link<?,?,?>[] links) {
         this.entityDirectLinkDependencyMap = new HashMap<Class<?>, List<Link<?, ?, ?>>>();
-        this.entityDirectEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
-        this.entityAllEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
+        this.entityDirectParentEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
+        this.entityDirectChildEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
+        this.entityAllParentEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
+        this.entityAllChildEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.childFieldToParentMap = new HashMap<Class<?>, Map<Class<?>,List<Link<?,?,?>>>>();
         for (Link<?,?,?> link : links) {
             Class<?> eFrom = link.getFrom().getEntityClass();
-            Class<?> eTo = link.getTo().getEntityClass();
-            getOrCreate(entityDirectLinkDependencyMap, eFrom, ListOfLinkFactory.INSTANCE).add(link);
-            getOrCreate(entityDirectEntityDependencyMap, eFrom, SetOfClassFactory.INSTANCE).add(eTo);
-            getOrCreate(getOrCreate(childFieldToParentMap, eFrom, MapOfClassLinkListFactory.INSTANCE),
-            				eTo, ListOfLinkFactory.INSTANCE).add(link);
-            				
-       
+            Class<?> eTo = link.getTo().getEntityClass();       
+            getOrCreateList(entityDirectLinkDependencyMap, eFrom).add(link);
+            getOrCreateSet(entityDirectParentEntityDependencyMap, eFrom).add(eTo);
+            getOrCreateSet(entityDirectChildEntityDependencyMap, eTo).add(eFrom);
+            getOrCreateList(getOrCreateMap(childFieldToParentMap, eFrom), eTo).add(link);          				     
         }
         this.links = links;
         buildAllDependentEntitiesMap();
     }
 
     private void buildAllDependentEntitiesMap() {
-    	for (Class<?> key : this.entityDirectEntityDependencyMap.keySet()) {
+    	for (Class<?> key : this.entityDirectParentEntityDependencyMap.keySet()) {
     		Set<Class<?>> value = getAllParentDependentEntities(key);
-    		this.entityAllEntityDependencyMap.put(key, value);
+    		this.entityAllParentEntityDependencyMap.put(key, value);
+    	}
+    	
+    	for (Entry<Class<?>, Set<Class<?>>> entry : this.entityAllParentEntityDependencyMap.entrySet()) {
+    		Class<?> child = entry.getKey();
+    		for (Class<?> parent : entry.getValue()) {
+    			getOrCreateSet(this.entityAllChildEntityDependencyMap, parent).add(child);
+    		}
     	}
     }
 
@@ -55,22 +68,13 @@ public class DependenciesDefinition {
 			Class<?> e = queue.removeFirst();
 			if (!visited.contains(e)) {
 				visited.add(e);
-				queue.addAll(getDirectDependencyEntity(e));
+				queue.addAll(getDirectParentDependencyEntity(e));
 			}
 		}
 		//remove itself
 		visited.remove(entityClass);
 		return visited;
 	}
-    
-    private <T> T getOrCreate(Map<Class<?>, T> map, Class<?> key, ValueContainerFactory<T> factory) {
-    	T value = map.get(key);
-    	if (value == null) {
-    		value = factory.newInstance();
-    		map.put(key, value);
-    	}
-    	return value;
-    }
 
     public static DependenciesDefinition fromLinks(Link<?,?,?>[] links) {
         DependenciesDefinition deps = new DependenciesDefinition(links);
@@ -91,23 +95,39 @@ public class DependenciesDefinition {
         	return this.entityDirectLinkDependencyMap.get(entityClass);
         }
         
-        return ListOfLinkFactory.INSTANCE.newInstance();
+        return LIST_OF_LINK_FACTORY.newInstace();
     }
     
-    public Set<Class<?>>  getDirectDependencyEntity(Class<?> entityClass) {
-    	if (this.entityDirectEntityDependencyMap.containsKey(entityClass)) {
-        	return this.entityDirectEntityDependencyMap.get(entityClass);
+    public Set<Class<?>>  getDirectParentDependencyEntity(Class<?> entityClass) {
+    	if (this.entityDirectParentEntityDependencyMap.containsKey(entityClass)) {
+        	return this.entityDirectParentEntityDependencyMap.get(entityClass);
         }
         
-        return SetOfClassFactory.INSTANCE.newInstance();
+        return SET_OF_CLASS_FACTORY.newInstace();
     }
     
-    public Set<Class<?>>  getAllDependencyEntity(Class<?> entityClass) {
-    	if (this.entityAllEntityDependencyMap.containsKey(entityClass)) {
-        	return entityAllEntityDependencyMap.get(entityClass);
+    public Set<Class<?>>  getDirectChildDependencyEntity(Class<?> entityClass) {
+    	if (this.entityDirectChildEntityDependencyMap.containsKey(entityClass)) {
+        	return this.entityDirectChildEntityDependencyMap.get(entityClass);
         }
         
-        return SetOfClassFactory.INSTANCE.newInstance();
+        return SET_OF_CLASS_FACTORY.newInstace();
+    }
+    
+    public Set<Class<?>>  getAllParentDependencyEntity(Class<?> entityClass) {
+    	if (this.entityAllParentEntityDependencyMap.containsKey(entityClass)) {
+        	return entityAllParentEntityDependencyMap.get(entityClass);
+        }
+        
+        return SET_OF_CLASS_FACTORY.newInstace();
+    }
+    
+    public Set<Class<?>>  getAllChildDependencyEntity(Class<?> entityClass) {
+    	if (this.entityAllChildEntityDependencyMap.containsKey(entityClass)) {
+        	return entityAllChildEntityDependencyMap.get(entityClass);
+        }
+        
+        return SET_OF_CLASS_FACTORY.newInstace();
     }
     
     public List<Link<?,?,?>> getDependencyLinks(Class<?> from, Class<?> to) {
@@ -116,45 +136,9 @@ public class DependenciesDefinition {
     		return parentLinkMap.get(to);
     	}
     	
-    	return new ArrayList<Link<?,?,?>>(0);
-    }
-    	
-    
-    private static class MapOfClassLinkListFactory implements ValueContainerFactory<Map<Class<?>, List<Link<?,?,?>>>> {
-
-    	private static final MapOfClassLinkListFactory INSTANCE = new MapOfClassLinkListFactory();
-    	
-		@Override
-		public Map<Class<?>, List<Link<?,?,?>>> newInstance() {
-			return new HashMap<Class<?>, List<Link<?,?,?>>>();
-		}
-    	
+    	return LIST_OF_LINK_FACTORY.newInstace();
     }
     
-    private static class ListOfLinkFactory implements ValueContainerFactory<List<Link<?,?,?>>> {
-    	
-    	private static final ListOfLinkFactory INSTANCE = new ListOfLinkFactory();
-
-		@Override
-		public List<Link<?, ?, ?>> newInstance() {
-			return new ArrayList<Link<?,?,?>>();
-		}
-    	
-    }
-    
-    private static class SetOfClassFactory implements ValueContainerFactory<Set<Class<?>>> {
-    	
-    	private static final SetOfClassFactory INSTANCE = new SetOfClassFactory();
-    	
-		@Override
-		public Set<Class<?>> newInstance() {
-			return new HashSet<Class<?>>();
-		}
-    	
-    }
-    
-    private interface ValueContainerFactory<T> {
-    	T newInstance();
-    }
-    
+    private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
+    private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
 }

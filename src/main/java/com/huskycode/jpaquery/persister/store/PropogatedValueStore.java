@@ -1,9 +1,8 @@
 package com.huskycode.jpaquery.persister.store;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import com.huskycode.jpaquery.util.MapUtil;
 /**
  * Store a value to propagate into each entity node. For performance 
  * reason, we are going to use equality by each entity node instance. 
@@ -14,81 +13,31 @@ import java.util.Map.Entry;
  */
 public class PropogatedValueStore<T, K, V> {
 	
-	private final Map<InstanceWrapper<T>, Map<K, V>> dataStore 
-	 	= new HashMap<InstanceWrapper<T>, Map<K, V>>();
-	
+	private final InstanceValueStore<T, Map<K, V>> dataStore 
+	 	= InstanceValueStore.newInstance();
+
 	private PropogatedValueStore() {}
-	
-	private PropogatedValueStore(PropogatedValueStore<T, K, V> data) {
-		for (Entry<InstanceWrapper<T>, Map<K, V>> entry : data.dataStore.entrySet()) {
-			getValueOrCreateIfNotExist(entry.getKey()).putAll(entry.getValue());
-		}
-	}
 	
 	public static <T, K, V> PropogatedValueStore<T, K, V> newInstance() {
 		return new PropogatedValueStore<T, K, V>();
 	}
-	
-	public static <T, K, V> PropogatedValueStore<T, K, V> newInstance(PropogatedValueStore<T, K, V> data) {
-		return new PropogatedValueStore<T, K, V>(data);
-	}
 
 	public Object putValue(T t, K k, V value) {
-		InstanceWrapper<T> key = createKey(t);
-		Map<K, V> map = getValueOrCreateIfNotExist(key);
+		Map<K, V> map = getValueOrCreateIfNotExist(t);
 		
 		return map.put(k, value);
 	}
 	
+	public void putValue(T t, Map<K, V> values) {
+		Map<K, V> map = getValueOrCreateIfNotExist(t);
+		map.putAll(values);
+	}
+	
 	public Map<K, V> get(T t) {
-		InstanceWrapper<T> key = createKey(t);
-		return getValueOrCreateIfNotExist(key);
+		return getValueOrCreateIfNotExist(t);
 	}
 	
-	private Map<K, V> getValueOrCreateIfNotExist(InstanceWrapper<T> key) {
-		Map<K, V> retVal = dataStore.get(key);
-		if(retVal == null) {
-			HashMap<K, V> newValue = new HashMap<K, V>();
-			dataStore.put(key, newValue);
-			return newValue;
-		} else {
-			return retVal;
-		}
-	}
-	
-	private InstanceWrapper<T> createKey(T t) { 
-		return new InstanceWrapper<T>(t);
-	}
-	
-	/**
-	 * A wrapper for an instance of EntityNode
-	 */
-	private class InstanceWrapper<T> {
-		private final T t;
-
-		public InstanceWrapper(T t) {
-			this.t = t;
-		}
-
-		public T get() {
-			return t;
-		}
-
-		@Override
-		public int hashCode() {
-			return t.hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			InstanceWrapper<T> other = (InstanceWrapper<T>) obj;
-			return (this.t == other.t);
-		} 
+	private Map<K, V> getValueOrCreateIfNotExist(T key) {
+		return MapUtil.getOrCreateMap(this.dataStore, key);
 	}
 }

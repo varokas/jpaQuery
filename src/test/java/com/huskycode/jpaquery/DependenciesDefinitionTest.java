@@ -56,12 +56,12 @@ public class DependenciesDefinitionTest {
 	public void testGetAllDependentEntities() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
 		
-		Set<Class<?>> customerAllDependencies = dependenciesDefinition.getAllDependencyEntity(Customer.class);
+		Set<Class<?>> customerAllDependencies = dependenciesDefinition.getAllParentDependencyEntity(Customer.class);
 		Assert.assertEquals(1, customerAllDependencies.size());
 		Assert.assertTrue("Shuold have Address as parent dependency", customerAllDependencies.contains(Address.class));
 		
 		
-		Set<Class<?>> pizzaOrderAllDependencies = dependenciesDefinition.getAllDependencyEntity(PizzaOrder.class);
+		Set<Class<?>> pizzaOrderAllDependencies = dependenciesDefinition.getAllParentDependencyEntity(PizzaOrder.class);
 		Assert.assertEquals(4, pizzaOrderAllDependencies.size());
 		Assert.assertTrue("Shuold have Customer as parent dependency", pizzaOrderAllDependencies.contains(Customer.class));
 		Assert.assertTrue("Shuold have Employee as parent dependency", pizzaOrderAllDependencies.contains(Employee.class));

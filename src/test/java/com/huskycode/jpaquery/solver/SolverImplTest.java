@@ -19,6 +19,7 @@ import org.mockito.internal.matchers.Or;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
+import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
@@ -31,19 +32,15 @@ import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
+import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
+
 
 public class SolverImplTest {
-	private SolverImpl solverImpl;
-
-	@Before
-	public void before() {
-		solverImpl = SolverImpl.newInstance();
-	}
 	
 	@Test
 	public void testSolveForClassWithEmptyDepsReturnsOnlyRoot() {
-		CommandNode command = n(ClassA.class);
-		CreationPlan result = solverImpl.solveFor(command, DependenciesDefinition.fromLinks(new Link[0]));
+		CommandNodes commands = ns(n(ClassA.class));
+		CreationPlan result = SolverImpl.newInstance(DependenciesDefinition.fromLinks(new Link[0])).solveFor(commands);
 		
 		assertThat(result.getActionGraph().getAllNodes().size(), is(1));
 		assertEquals(result.getActionGraph().getAllNodes().get(0).getEntityClass(), ClassA.class);
@@ -52,8 +49,8 @@ public class SolverImplTest {
 	@Test
 	public void testSolveForClassWithDependenciesForOneCommand() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CommandNode command = n(PizzaOrder.class);
-		CreationPlan result = solverImpl.solveFor(command, dependenciesDefinition);
+		CommandNodes commands = ns(n(PizzaOrder.class));
+		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
 		assertThat(result.getActionGraph().getAllNodes().size(), is(5));
 		Set<Class<?>> expectedEntitiesInActionGraph = new HashSet<Class<?>>();
@@ -84,7 +81,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
 				Assert.assertEquals(0, n.getChilds().size());
 				Assert.assertEquals(3, n.getParent().size());
-				Assert.assertSame(command, n.getCommand());
+				Assert.assertSame(commands.get().get(0), n.getCommand());
 			}
 		}
 		
@@ -94,9 +91,9 @@ public class SolverImplTest {
 	@Test
 	public void testSolveForClassWithDependenciesForOneHierachyCommand() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CommandNode command = n(Address.class,
-								n(PizzaOrder.class));
-		CreationPlan result = solverImpl.solveFor(command, dependenciesDefinition);
+		CommandNodes commands = ns(n(Address.class,
+									n(PizzaOrder.class)));
+		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		assertThat(result.getActionGraph().getAllNodes().size(), is(5));
 		Set<Class<?>> expectedEntitiesInActionGraph = new HashSet<Class<?>>();
 		expectedEntitiesInActionGraph.add(Address.class);
@@ -110,7 +107,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(Address.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
 				Assert.assertEquals(0, n.getParent().size());
-				Assert.assertSame(command, n.getCommand());
+				Assert.assertSame(commands.get().get(0), n.getCommand());
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
@@ -127,7 +124,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
 				Assert.assertEquals(0, n.getChilds().size());
 				Assert.assertEquals(3, n.getParent().size());
-				Assert.assertSame(command.getChildren().get(0), n.getCommand());
+				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 			}
 		}
 		
@@ -137,10 +134,10 @@ public class SolverImplTest {
 	@Test
 	public void testSolveForClassWithDependenciesForTwoHierachyCommand() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CommandNode command = n(Address.class,
+		CommandNodes commands = ns(n(Address.class,
 								n(PizzaOrder.class),
-								n(PizzaOrder.class));
-		CreationPlan result = solverImpl.solveFor(command, dependenciesDefinition);
+								n(PizzaOrder.class)));
+		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
 		assertThat(result.getActionGraph().getAllNodes().size(), is(6));
 		
@@ -149,7 +146,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(Address.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
 				Assert.assertEquals(0, n.getParent().size());
-				Assert.assertSame(command, n.getCommand());
+				Assert.assertSame(commands.get().get(0), n.getCommand());
 				count++;
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
@@ -168,14 +165,14 @@ public class SolverImplTest {
 				count++;
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)
-					&& command.getChildren().get(0) == n.getCommand()) {
+					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
 				Assert.assertEquals(3, n.getParent().size());
 				count++;
 			}
 			
 			if (n.getEntityClass().equals(PizzaOrder.class)
-					&& command.getChildren().get(1) == n.getCommand()) {
+					&& commands.get().get(0).getChildren().get(1) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
 				Assert.assertEquals(3, n.getParent().size());
 				count++;
@@ -188,10 +185,10 @@ public class SolverImplTest {
 	@Test
 	public void testSolveForClassWithDependenciesForThreeHierachyCommand() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CommandNode command = n(Address.class,
+		CommandNodes commands = ns(n(Address.class,
 								n(Customer.class, n(PizzaOrder.class)),
-								n(Customer.class, n(PizzaOrder.class)));
-		CreationPlan result = solverImpl.solveFor(command, dependenciesDefinition);
+								n(Customer.class, n(PizzaOrder.class))));
+		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
 		assertThat(result.getActionGraph().getAllNodes().size(), is(7));
 		
@@ -205,7 +202,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(Address.class)) {
 				Assert.assertEquals(3, n.getChilds().size());
 				Assert.assertEquals(0, n.getParent().size());
-				Assert.assertSame(command, n.getCommand());
+				Assert.assertSame(commands.get().get(0), n.getCommand());
 				count++;
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
@@ -214,14 +211,14 @@ public class SolverImplTest {
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
-					&& command.getChildren().get(0) == n.getCommand()) {
+					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(1, n.getChilds().size());
 				Assert.assertEquals(1, n.getParent().size());
 				customer1 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
-					&& command.getChildren().get(1) == n.getCommand()) {
+					&& commands.get().get(0).getChildren().get(1) == n.getCommand()) {
 				Assert.assertEquals(1, n.getChilds().size());
 				Assert.assertEquals(1, n.getParent().size());
 				customer2 = n;
@@ -234,7 +231,7 @@ public class SolverImplTest {
 				count++;
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)
-					&& command.getChildren().get(0).getChildren().get(0) == n.getCommand()) {
+					&& commands.get().get(0).getChildren().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
 				Assert.assertEquals(3, n.getParent().size());
 				pizzaOrder1 = n;
@@ -242,7 +239,7 @@ public class SolverImplTest {
 			}
 			
 			if (n.getEntityClass().equals(PizzaOrder.class)
-					&& command.getChildren().get(1).getChildren().get(0) == n.getCommand()) {
+					&& commands.get().get(0).getChildren().get(1).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
 				Assert.assertEquals(3, n.getParent().size());
 				pizzaOrder2 = n;

@@ -50,8 +50,8 @@ public class JPAQueryContext {
     }
 
     public <E> PersistedResult create(Class<E> entityClass) {
-            Solver solver = SolverImpl.newInstance();
-            CreationPlan creationPlan = solver.solveFor(entityClass, dependenciesDefinition);
+            Solver solver = SolverImpl.newInstance(dependenciesDefinition);
+            CreationPlan creationPlan = solver.solveFor(entityClass);
             
             Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
             return persister.persistValues(creationPlan);

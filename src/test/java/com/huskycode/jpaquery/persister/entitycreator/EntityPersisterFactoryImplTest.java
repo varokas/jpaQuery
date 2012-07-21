@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
+import com.huskycode.jpaquery.DepsBuilder;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
@@ -27,7 +28,7 @@ public class EntityPersisterFactoryImplTest {
 	public void before() {
 		factory = new EntityPersisterFactoryImpl();
 		anyNode = EntityNode.newInstance(Integer.class);
-		anyDeps = DependenciesDefinition.fromLinks(new Link[0]);
+		anyDeps = new DepsBuilder().build();
 		em = Mockito.mock(EntityManager.class);
 	}
 	

@@ -81,11 +81,6 @@ public class DependenciesDefinition {
 		return visited;
 	}
 
-    public static DependenciesDefinition fromLinks(Link<?,?,?>[] links) {
-        DependenciesDefinition deps = new DependenciesDefinition(links, new ArrayList<Class<?>>());
-        return deps;
-    }
-
     public Link<?,?,?>[] getLinks() {
         return links;
     }

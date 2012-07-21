@@ -21,20 +21,24 @@ public class DepsBuilder {
 		enumTables = new LinkedList<Class<?>>();
 	}
 
-	public void withLink(Link<?,?,?> link) {
+	public DepsBuilder withLink(Link<?,?,?> link) {
 		links.add(link);
+		return this;
 	}
 	
-	public void withLinks(Link<?, ?, ?>[] linkArray) {
+	public DepsBuilder withLinks(Link<?, ?, ?>[] linkArray) {
 		links.addAll(Arrays.asList(linkArray));
+		return this;
 	}
 	
-	public void withEnumTable(Class<?> e) {
+	public DepsBuilder withEnumTable(Class<?> e) {
 		enumTables.add(e);
+		return this;
 	}
 	
-	public void withEnumTables(Class<?>[] es) {
+	public DepsBuilder withEnumTables(Class<?>[] es) {
 		enumTables.addAll(Arrays.asList(es));
+		return this;
 	}
 
 	public DependenciesDefinition build() {

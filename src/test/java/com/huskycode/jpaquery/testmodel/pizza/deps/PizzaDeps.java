@@ -1,5 +1,7 @@
 package com.huskycode.jpaquery.testmodel.pizza.deps;
 
+import javax.persistence.EntityManager;
+
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.DepsBuilder;
 import com.huskycode.jpaquery.link.Link;
@@ -64,5 +66,10 @@ public class PizzaDeps {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void populateInitialData(EntityManager entityManager) {
+		// TODO Auto-generated method stub
+		
 	}
 }

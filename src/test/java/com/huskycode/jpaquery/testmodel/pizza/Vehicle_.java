@@ -5,5 +5,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @StaticMetamodel(Vehicle.class)
 public class Vehicle_ {
-	public static volatile SingularAttribute<Employee, Long> vehicleId;
+	public static volatile SingularAttribute<Vehicle, Long> vehicleId;
+	
+	public static volatile SingularAttribute<Vehicle, String> vehicleLicenseNumber;
+	public static volatile SingularAttribute<Vehicle, String> vehicleDetails;
 }

@@ -5,15 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
+import com.huskycode.jpaquery.testmodel.pizza.Address;
+import com.huskycode.jpaquery.testmodel.pizza.Customer;
+import com.huskycode.jpaquery.testmodel.pizza.Employee;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
 
 public class CreationPlanTraverserTest {
 	
@@ -62,11 +62,6 @@ public class CreationPlanTraverserTest {
 		Assert.assertSame(bNeedA, planSteps.get(1));
 		Assert.assertSame(cNeedAandB, planSteps.get(2));
 		Assert.assertSame(dNeedBandC, planSteps.get(3));
-		
-		Assert.assertEquals(0, a.getLevel());
-		Assert.assertEquals(1, bNeedA.getLevel());
-		Assert.assertEquals(2, cNeedAandB.getLevel());
-		Assert.assertEquals(3, dNeedBandC.getLevel());
 	}
 
 }

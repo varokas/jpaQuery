@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.huskycode.jpaquery.util.MapUtil;
+
 public class DirectedGraph<T> {
-	Map<NodeWarper<T>, List<NodeWarper<T>>> childrenMap = new HashMap<NodeWarper<T>, List<NodeWarper<T>>>();
-	Map<NodeWarper<T>, List<NodeWarper<T>>> parentMap = new HashMap<NodeWarper<T>, List<NodeWarper<T>>>();
+	Map<NodeWarper<T>, Set<NodeWarper<T>>> childrenMap = new HashMap<NodeWarper<T>, Set<NodeWarper<T>>>();
+	Map<NodeWarper<T>, Set<NodeWarper<T>>> parentMap = new HashMap<NodeWarper<T>, Set<NodeWarper<T>>>();
 	Set<NodeWarper<T>> allNodes = new HashSet<NodeWarper<T>>();
 	Map<NodeWarper<T>, NodeWarper<T>> actualNodesMap = new HashMap<NodeWarper<T>, NodeWarper<T>>();
 	private DirectedGraph() {}
@@ -27,8 +29,8 @@ public class DirectedGraph<T> {
 	public void addRelation(T from, T to) {
 		NodeWarper<T> child = getOrCreateNode(from);
 		NodeWarper<T> parent = getOrCreateNode(to);
-		getOrCreate(childrenMap, parent).add(child);
-		getOrCreate(parentMap, child).add(parent);
+		MapUtil.getOrCreateSet(childrenMap, parent).add(child);
+		MapUtil.getOrCreateSet(parentMap, child).add(parent);
 		allNodes.add(child);
 		allNodes.add(parent);
 	}
@@ -109,15 +111,6 @@ public class DirectedGraph<T> {
 		}
 		
 		return result;
-	}
-	
-	private  <K, V> List<V> getOrCreate(Map<K, List<V>> map, K key) {
-		List<V> value = map.get(key);
-		if (value == null) {
-			value = new ArrayList<V>();
-			map.put(key, value);
-		}
-		return value;	
 	}
 
 	private static class NodeComparatorWithTieBreaker<T> implements Comparator<Node<T>> {

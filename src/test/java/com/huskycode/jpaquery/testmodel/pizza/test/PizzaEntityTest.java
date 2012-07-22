@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.testmodel.pizza.Address_;

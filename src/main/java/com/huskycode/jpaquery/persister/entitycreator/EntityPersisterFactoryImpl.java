@@ -12,6 +12,11 @@ public class EntityPersisterFactoryImpl implements EntityPersisterFactory {
 	@Override
 	public EntityPersister createEntityPersister(EntityNode entityNode,
 			DependenciesDefinition deps, EntityManager em) {
-		return new NewRowEntityPersister(em);
+		if(deps.getEnumTables().contains(entityNode.getEntityClass())) {
+			return new EnumTableEntityPersister(em);
+		}
+		else {	
+			return new NewRowEntityPersister(em);
+		}
 	}
 }

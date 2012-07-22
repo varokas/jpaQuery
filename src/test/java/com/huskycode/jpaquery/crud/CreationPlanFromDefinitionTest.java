@@ -24,7 +24,7 @@ public class CreationPlanFromDefinitionTest {
 	@Test
 	public void testCreatePlanFromDefinition() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-		CreationPlanFromDefinition creator = new CreationPlanFromDefinition();
+		CreationPlanFromDefinition creator = CreationPlanFromDefinition.getInstance();
 		
 		CreationPlan plan = creator.from(dependenciesDefinition);
 		

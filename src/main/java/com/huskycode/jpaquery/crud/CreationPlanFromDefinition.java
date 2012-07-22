@@ -12,6 +12,15 @@ import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
 public class CreationPlanFromDefinition {
+
+	private static final CreationPlanFromDefinition INSTANCE = new CreationPlanFromDefinition();
+	
+	private CreationPlanFromDefinition() {}
+	
+	public static CreationPlanFromDefinition getInstance() {
+		return INSTANCE;
+	}
+	
 	public CreationPlan from (DependenciesDefinition deps) {
 		ActionGraph actionGraph = ActionGraph.newInstance();
 		Set<Class<?>> allEntities = getAllEntities(deps);

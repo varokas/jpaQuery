@@ -2,10 +2,12 @@ package com.huskycode.jpaquery.solver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
@@ -77,12 +79,12 @@ public class SolverImpl implements Solver {
 			ListIterator<Class<?>> entityClassIterator = MapUtil.getOrCreate(commandNodeIteratorMap, currentCommand, entityListIteratorFactory);
 			Class<?> currentEntityClass = entityClassIterator.getCurrent();
 			Map<Class<?>, EntityNode> currentContext = context.get(currentCommand);
-			
 			while (!currentCommand.getEntity().equals(currentEntityClass)) {
 				Set<Class<?>> parents = getDirectParentDependency(currentEntityClass);
 				if (parents.size() == 0
 						|| !CollectionUtil.containAny(parents, currentContext.keySet())) {
-					if (!dummyContainer.contain(currentEntityClass)) {
+					if (!dummyContainer.contain(currentEntityClass)
+							&& shouldCreate(currentEntityClass, currentCommand, context)) {
 						EntityNode thisNode = dummyContainer.create(currentEntityClass);
 						actionGraph.addEntityNode(thisNode);
 					}
@@ -115,6 +117,19 @@ public class SolverImpl implements Solver {
 			}			
 		}
 	}
+	
+	private boolean shouldCreate(Class<?> currentEntity, CommandNode command, PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
+		if (command.getChildren().size() > 0) {
+			for (CommandNode child : command.getChildren()) {
+				if(!context.get(child).keySet().contains(currentEntity)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
+		
+	}
 
 	private Set<Class<?>> getDirectParentDependency(Class<?> currentEntityClass) {
 		return deps.getDirectParentDependencyEntity(currentEntityClass);
@@ -138,7 +153,12 @@ public class SolverImpl implements Solver {
 										Map<Class<?>, EntityNode> parentContext,
 										PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
 		for (CommandNode child : children) {
-			context.get(child).putAll(parentContext);
+			for (Entry<Class<?>, EntityNode> entry : parentContext.entrySet()) {
+				Map<Class<?>, EntityNode> childContext = context.get(child);
+				if (!childContext.containsKey(entry.getKey())) {
+					childContext.put(entry.getKey(), entry.getValue());
+				}
+			}
 		}
 	}
 	

@@ -12,6 +12,7 @@ import java.util.Set;
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodes;
+import com.huskycode.jpaquery.persister.store.InstanceWrapper;
 import com.huskycode.jpaquery.util.MapUtil;
 
 public class CommandInterpretor {
@@ -158,7 +159,7 @@ public class CommandInterpretor {
 	}
 	
 	private static class AllCommandNodePopulatorCommandVisitor implements CommandVisitor {
-		private final List<CommandNode> allCommandNode = new ArrayList<CommandNode>();
+		private final Set<InstanceWrapper<CommandNode>> allCommandNode = new HashSet<InstanceWrapper<CommandNode>>();
 
 		@Override
 		public void visit(CommandNode parent, CommandNode child) {
@@ -166,12 +167,12 @@ public class CommandInterpretor {
 		}
 		
 		public List<CommandNode> get() {
-			return allCommandNode;
+			return InstanceWrapper.toInstanceList(allCommandNode);
 		}
 
 		@Override
 		public void visit(CommandNode node) {
-			allCommandNode.add(node);
+			allCommandNode.add(InstanceWrapper.newInstance(node));
 		}
 	}
 	

@@ -1,20 +1,27 @@
 package com.huskycode.jpaquery.solver;
 
-import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
-import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.matchers.Or;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.DepsBuilder;
+import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodes;
+import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
@@ -25,14 +32,16 @@ import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
+import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
+import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
+
 
 public class SolverImplTest {
 	
 	@Test
 	public void testSolveForClassWithEmptyDepsReturnsOnlyRoot() {
 		CommandNodes commands = ns(n(ClassA.class));
-		CreationPlan result = SolverImpl.newInstance(
-				new DepsBuilder().build()).solveFor(commands);
+		CreationPlan result = SolverImpl.newInstance(new DepsBuilder().build()).solveFor(commands);
 		
 		assertThat(result.getActionGraph().getAllNodes().size(), is(1));
 		assertEquals(result.getActionGraph().getAllNodes().get(0).getEntityClass(), ClassA.class);

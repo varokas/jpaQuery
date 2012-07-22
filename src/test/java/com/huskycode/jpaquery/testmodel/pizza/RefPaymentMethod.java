@@ -8,7 +8,16 @@ public class RefPaymentMethod {
 	@Id
 	private String paymentMethodCode;
 	
-	private String paymentMethodDescription;
+	private String paymentMethodDescription;	
+
+	public RefPaymentMethod() {
+	}
+
+	public RefPaymentMethod(String paymentMethodCode,
+			String paymentMethodDescription) {
+		this.paymentMethodCode = paymentMethodCode;
+		this.paymentMethodDescription = paymentMethodDescription;
+	}
 
 	public String getPaymentMethodCode() {
 		return paymentMethodCode;

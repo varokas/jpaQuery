@@ -10,6 +10,14 @@ public class RefVehicleType {
 	
 	private String vehicleTypeDescription;
 
+	public RefVehicleType() {
+	}
+
+	public RefVehicleType(String vehicleTypeCode, String vehicleTypeDescription) {
+		this.vehicleTypeCode = vehicleTypeCode;
+		this.vehicleTypeDescription = vehicleTypeDescription;
+	}
+
 	public String getVehicleTypeCode() {
 		return vehicleTypeCode;
 	}

@@ -9,6 +9,18 @@ public class RefDeliveryStatus {
 	private String deliveryStatusCode;
 	
 	private String deliveryStatusDescription;
+	
+	
+	
+
+	public RefDeliveryStatus() {
+	}
+
+	public RefDeliveryStatus(String deliveryStatusCode,
+			String deliveryStatusDescription) {
+		this.deliveryStatusCode = deliveryStatusCode;
+		this.deliveryStatusDescription = deliveryStatusDescription;
+	}
 
 	public String getDeliveryStatusCode() {
 		return deliveryStatusCode;

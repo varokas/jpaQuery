@@ -9,9 +9,20 @@ public class RefTopping {
 	private String toppingCode;
 	
 	private Double toppingPrice;
-	private Double toppingDescription;
+	private String toppingDescription;
 	
 	
+	
+	public RefTopping() {
+	}
+
+	public RefTopping(String toppingCode, Double toppingPrice,
+			String toppingDescription) {
+		this.toppingCode = toppingCode;
+		this.toppingPrice = toppingPrice;
+		this.toppingDescription = toppingDescription;
+	}
+
 	public String getToppingCode() {
 		return toppingCode;
 	}
@@ -25,10 +36,10 @@ public class RefTopping {
 	public void setToppingPrice(Double toppingPrice) {
 		this.toppingPrice = toppingPrice;
 	}
-	public Double getToppingDescription() {
+	public String getToppingDescription() {
 		return toppingDescription;
 	}
-	public void setToppingDescription(Double toppingDescription) {
+	public void setToppingDescription(String toppingDescription) {
 		this.toppingDescription = toppingDescription;
 	}
 	

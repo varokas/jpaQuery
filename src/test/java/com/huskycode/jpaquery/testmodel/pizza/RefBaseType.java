@@ -11,6 +11,16 @@ public class RefBaseType {
 	private Double baseTypePrice;
 	private String baseTypeDescription;
 	
+	public RefBaseType() {
+	}
+	
+	public RefBaseType(String baseTypeCode, Double baseTypePrice,
+			String baseTypeDescription) {
+		this.baseTypeCode = baseTypeCode;
+		this.baseTypePrice = baseTypePrice;
+		this.baseTypeDescription = baseTypeDescription;
+	}
+
 	public String getBaseTypeCode() {
 		return baseTypeCode;
 	}

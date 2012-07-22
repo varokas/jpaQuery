@@ -1,5 +1,7 @@
 package com.huskycode.jpaquery.testmodel.pizza.deps;
 
+import javax.persistence.EntityManager;
+
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.DepsBuilder;
 import com.huskycode.jpaquery.link.Link;
@@ -11,6 +13,11 @@ import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.Employee_;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder_;
+import com.huskycode.jpaquery.testmodel.pizza.RefBaseType;
+import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
+import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
+import com.huskycode.jpaquery.testmodel.pizza.RefTopping;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 
@@ -64,5 +71,24 @@ public class PizzaDeps {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void populateInitialData(EntityManager em) {
+		em.merge(new RefBaseType("TH", 1.0, "Thin"));
+		em.merge(new RefBaseType("DD", 1.2, "Deep Dish"));
+		
+		em.merge(new RefPaymentMethod("Cash","Cash"));
+		em.merge(new RefPaymentMethod("CC","Credit Card"));
+		em.merge(new RefPaymentMethod("Check","Check"));
+		
+		em.merge(new RefDeliveryStatus("Completed","Successfully Delivered to customer"));
+		em.merge(new RefDeliveryStatus("Returned","Customer returned the order"));
+		
+		em.merge(new RefTopping("PA", 1.0, "Pine Apple"));
+		em.merge(new RefTopping("Ham", 1.5, "Ham"));
+		
+		em.merge(new RefVehicleType("Bike", "Bicycle"));
+		em.merge(new RefVehicleType("MBike", "Motorbike"));
+		em.merge(new RefVehicleType("Van", "Van"));
 	}
 }

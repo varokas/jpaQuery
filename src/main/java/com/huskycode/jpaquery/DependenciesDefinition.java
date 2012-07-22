@@ -7,8 +7,6 @@ import com.huskycode.jpaquery.util.Factory;
 import com.huskycode.jpaquery.util.ListFactory;
 import com.huskycode.jpaquery.util.SetFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Random;
 
 import javax.persistence.EntityManager;
@@ -22,6 +23,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
+import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.solver.SolverImpl;
 import com.huskycode.jpaquery.testmodel.ClassA;
@@ -35,6 +37,8 @@ import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
+import com.huskycode.jpaquery.util.ClassMap;
+import com.huskycode.jpaquery.util.Maps;
 
 public class PersisterImplTest {
 	private PersisterImpl persister;
@@ -158,6 +162,32 @@ public class PersisterImplTest {
 			Assert.assertEquals(customer2.getCustomerId().longValue(), order1.getCustomerId());
 			Assert.assertEquals(customer1.getCustomerId().longValue(), order2.getCustomerId());
 		}
+	}
+	
+	@Test
+	public void testSpecifiedValuesFromCommandGetPopulateCorrectly() throws NoSuchFieldException, SecurityException {
+		ActionGraph actionGraph = ActionGraph.newInstance();
+		Field field = Address.class.getDeclaredField("city");
+		String expectedValue = "anyCity";
+		EntityNode entityNode = EntityNode.newInstance(Address.class);
+		entityNode.setCommand(mockCommandNodeWithReturnValues(field, expectedValue));
+	    actionGraph.addEntityNode(entityNode);
+        CreationPlan plan = CreationPlan.newInstance(actionGraph);
+		
+        PersistedResult result = persister.persistValues(plan);
+
+		Assert.assertNotNull(result);
+		ClassMap classMap = ClassMap.mapByClass(result.getPersistedObjects());
+		List<Address> addresses = classMap.getForClass(Address.class);
+		Assert.assertNotNull(addresses);
+		Assert.assertEquals(1, addresses.size());
+		Assert.assertEquals(expectedValue, addresses.get(0).getCity());
+	}
+	
+	private <V> CommandNode mockCommandNodeWithReturnValues(Field f, Object value) {
+		CommandNode command = Mockito.mock(CommandNode.class);
+		Mockito.when(command.getFieldValues()).thenReturn(Maps.of(f, value));
+		return command;
 	}
 	
 	private Field findIdField(Class<?> entityClass) {

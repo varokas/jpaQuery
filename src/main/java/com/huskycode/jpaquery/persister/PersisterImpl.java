@@ -2,6 +2,7 @@ package com.huskycode.jpaquery.persister;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import javax.persistence.EntityManager;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.annotation.VisibleForTesting;
+import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactory;
 import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactoryImpl;
@@ -52,7 +54,7 @@ public class PersisterImpl implements Persister {
         PropogatedValueStore<EntityNode, Field, Object> valueStore = PropogatedValueStore.newInstance();
         
         for (EntityNode node : creationPlanTraverser.getEntityNodes(plan)) {
-        	Map<Field, Object> overrideFields = valueStore.get(node);
+        	Map<Field, Object> overrideFields = getOverrideFields(node, valueStore);
         	Object obj = entityPersisterFactory
         			.createEntityPersister(node, deps, em)
         			.persistNode(node, overrideFields);
@@ -64,7 +66,15 @@ public class PersisterImpl implements Persister {
         return PersistedResult.newInstance(objects);
     }
 
-
+    private Map<Field, Object> getOverrideFields(EntityNode node, 
+    						PropogatedValueStore<EntityNode, Field, Object> valueStore) {
+    	Map<Field, Object> overrideFields = new HashMap<Field, Object>();
+    	if (node.getCommand() != null) {
+    		overrideFields.putAll(node.getCommand().getFieldValues());
+    	}
+    	overrideFields.putAll(valueStore.get(node));
+    	return overrideFields;
+    }
     
     private void storeFieldValueToPopulate(Object obj, EntityNode parent,
     		PropogatedValueStore<EntityNode, Field, Object> valueStore) {

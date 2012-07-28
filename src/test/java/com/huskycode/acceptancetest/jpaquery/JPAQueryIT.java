@@ -2,19 +2,16 @@ package com.huskycode.acceptancetest.jpaquery;
 
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
+import static com.huskycode.jpaquery.util.ClassMap.mapByClass;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +24,7 @@ import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
+import com.huskycode.jpaquery.util.ClassMap;
 import com.huskycode.jpaquery.util.MapUtil;
 
 /**
@@ -114,21 +112,5 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
         assertThat(pizzaOrder.get(1).getTakenByEmployeeId(), is(employee.getEmployeeId()));
 	}
 	
-	public class ClassMap extends HashMap<Class<?>, List<Object>> {
-		private static final long serialVersionUID = 1L;
 	
-		@SuppressWarnings("unchecked")
-		public <E> List<E> getForClass(Class<E> clazz) {
-			return (List<E>) this.get(clazz);
-		}
-	}
-	
-	private ClassMap mapByClass(List<Object> objects) {
-		ClassMap map = new ClassMap();
-		for(Object obj : objects) {
-			MapUtil.getOrCreateList(map, obj.getClass()).add(obj);
-		}
-		
-		return map;
-	}
 }

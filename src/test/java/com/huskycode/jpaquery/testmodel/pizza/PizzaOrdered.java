@@ -16,25 +16,25 @@ import javax.persistence.IdClass;
 @IdClass(PizzaOrderedKey.class)
 public class PizzaOrdered {
 	@Id
-	private long orderId;
-	private int pizzaSequenceNumber;
+	private Long orderId;
+	private Integer pizzaSequenceNumber;
 	
-	private long baseTypeCode;
+	private String baseTypeCode;
 	private double totalPizzaPrice;
 
-	public long getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(long orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
 
-	public int getPizzaSequenceNumber() {
+	public Integer getPizzaSequenceNumber() {
 		return pizzaSequenceNumber;
 	}
 
-	public void setPizzaSequenceNumber(int pizzaSequenceNumber) {
+	public void setPizzaSequenceNumber(Integer pizzaSequenceNumber) {
 		this.pizzaSequenceNumber = pizzaSequenceNumber;
 	}
 
@@ -46,11 +46,11 @@ public class PizzaOrdered {
 		this.totalPizzaPrice = totalPizzaPrice;
 	}
 
-	public long getBaseTypeCode() {
+	public String getBaseTypeCode() {
 		return baseTypeCode;
 	}
 
-	public void setBaseTypeCode(long baseTypeCode) {
+	public void setBaseTypeCode(String baseTypeCode) {
 		this.baseTypeCode = baseTypeCode;
 	}
 	

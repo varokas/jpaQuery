@@ -54,7 +54,7 @@ public class CreationPlanFromDefinitionTest {
 				Assert.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assert.assertEquals(2, n.getChilds().size());
 				Assert.assertEquals(4, n.getParent().size());
 			}
 		}

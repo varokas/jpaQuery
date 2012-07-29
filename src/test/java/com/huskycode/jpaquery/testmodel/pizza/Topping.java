@@ -16,36 +16,44 @@ import javax.persistence.IdClass;
 @Entity
 @IdClass(ToppingKey.class)
 public class Topping {
-	@Id @Column private long orderId;
-	@Column private int pizzaSequenceNumber;
-	@Column private int toppingSequenceNumber;
+	@Id @Column private Long orderId;
+	@Column private Integer pizzaSequenceNumber;
+	@Column private Integer toppingSequenceNumber;
 	
 	private String toppingCode;
 	
 	private String toppingName;
 
-	public long getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(long orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
 
-	public int getPizzaSequenceNumber() {
+	public Integer getPizzaSequenceNumber() {
 		return pizzaSequenceNumber;
 	}
 
-	public void setPizzaSequenceNumber(int pizzaSequenceNumber) {
+	public void setPizzaSequenceNumber(Integer pizzaSequenceNumber) {
 		this.pizzaSequenceNumber = pizzaSequenceNumber;
 	}
 
-	public int getToppingSequenceNumber() {
+	public Integer getToppingSequenceNumber() {
 		return toppingSequenceNumber;
 	}
 
-	public void setToppingSequenceNumber(int toppingSequenceNumber) {
+	public void setToppingSequenceNumber(Integer toppingSequenceNumber) {
 		this.toppingSequenceNumber = toppingSequenceNumber;
+	}
+
+	public String getToppingCode() {
+		return toppingCode;
+	}
+
+	public void setToppingCode(String toppingCode) {
+		this.toppingCode = toppingCode;
 	}
 
 	public String getToppingName() {
@@ -56,13 +64,6 @@ public class Topping {
 		this.toppingName = toppingName;
 	}
 
-	public String getToppingCode() {
-		return toppingCode;
-	}
+	
 
-	public void setToppingCode(String toppingCode) {
-		this.toppingCode = toppingCode;
-	}
-	
-	
 }

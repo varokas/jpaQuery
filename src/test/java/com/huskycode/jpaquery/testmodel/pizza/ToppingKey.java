@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 public class ToppingKey implements Serializable {
 	private static final long serialVersionUID = 1L;	
 	
-	@Column private long orderId;
-	@Column private int pizzaSequenceNumber;
-	@Column private int toppingSequenceNumber;
+	@Column private Long orderId;
+	@Column private Integer pizzaSequenceNumber;
+	@Column private Integer toppingSequenceNumber;
 }

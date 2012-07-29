@@ -37,7 +37,7 @@ public class Link<E1,E2,T> {
         private final Attribute<E1, T> from;
 
         private From(Class<E1> fromEntity, SingularAttribute<?,T> from) {
-            this(fromEntity, (Field)from.getJavaMember());
+            this(fromEntity, getJavaMember(from));
         }
 
         public From(Class<E1> fromEntity, Field field) {
@@ -49,7 +49,23 @@ public class Link<E1,E2,T> {
         }
 
 		public Link to(Class<E2> toEntity, SingularAttribute<?, T> to) {
-            return to(toEntity, (Field)to.getJavaMember());
+            return to(toEntity, getJavaMember(to));
         }
     }
+    
+	private static <T> Field getJavaMember(SingularAttribute<?, T> to) {
+		//A Hack for Composite Key
+		Class<?> declaredJavaType = to.getDeclaringType().getJavaType();
+		
+		Field originalField = (Field)to.getJavaMember();
+		if(originalField.getDeclaringClass().equals(declaredJavaType)) {
+			return originalField;
+		} else {
+			try {
+				return declaredJavaType.getDeclaredField(originalField.getName());
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 }

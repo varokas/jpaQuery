@@ -10,8 +10,8 @@ public class PizzaOrderedKey implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column
-	private long orderId;
+	private Long orderId;
 	
 	@Column
-	private int pizzaSequenceNumber;
+	private Integer pizzaSequenceNumber;
 }

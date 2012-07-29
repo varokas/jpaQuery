@@ -68,6 +68,9 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
 	
 	@Test 
     public void testCreateFromDependencyDefinition() {
+		pizzaDeps = new PizzaDeps();
+		context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
+		
 		PersistedResult result = context.createFromDependencyDefinition();
 		 
 		Address address = result.getForClass(Address.class).get(0);
@@ -84,6 +87,9 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
 	
 	@Test 
     public void testCreateFromCommands() {
+		pizzaDeps = new PizzaDeps();
+		context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
+		
 		CommandNodes commands = ns(n(Address.class,
 									n(PizzaOrder.class),
 									n(PizzaOrder.class)));

@@ -1,6 +1,9 @@
 package com.huskycode.jpaquery;
 
+import com.huskycode.jpaquery.link.AttributeImpl;
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.testmodel.ClassA;
+import com.huskycode.jpaquery.testmodel.ClassB;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
@@ -19,6 +22,7 @@ import org.mockito.Mockito;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,9 +33,7 @@ import java.util.Set;
 public class DependenciesDefinitionTest {
     @Test
     public void shouldBeAbleToDefineDependenciesByLinks() {
-        SingularAttribute pointA = Mockito.mock(SingularAttribute.class);
-        SingularAttribute pointB = Mockito.mock(SingularAttribute.class);
-        Link anyLink = Link.from(Object.class, pointA).to(Object.class, pointB);
+        Link anyLink = createMockLink(A.class.getDeclaredFields()[0], B.class.getDeclaredFields()[0]);
 
         DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
 
@@ -42,15 +44,21 @@ public class DependenciesDefinitionTest {
 
     @Test
     public void shouldGetAllDirectDependency() {
-        SingularAttribute pointA = Mockito.mock(SingularAttribute.class);
-        SingularAttribute pointB = Mockito.mock(SingularAttribute.class);
-        Link anyLink = Link.from(A.class, pointA).to(B.class, pointB);
+        Link anyLink = createMockLink(A.class.getDeclaredFields()[0], B.class.getDeclaredFields()[0]);
+        
         DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
 
         List<Link<?,?,?>> dependencies = deps.getDirectDependency(A.class);
 
         Assert.assertEquals(1, dependencies.size());
 
+    }
+    
+    private Link createMockLink(Field fieldFrom, Field fieldTo) {
+    	Link link = Mockito.mock(Link.class);
+    	Mockito.when(link.getFrom()).thenReturn(AttributeImpl.newInstance(fieldFrom.getDeclaringClass(), fieldFrom));
+    	Mockito.when(link.getTo()).thenReturn(AttributeImpl.newInstance(fieldTo.getDeclaringClass(), fieldTo));
+    	return link;
     }
     
 	@Test
@@ -87,10 +95,10 @@ public class DependenciesDefinitionTest {
 	}
 
     static class A {
-
+    	int aField;
     }
 
     static class B {
-
+    	int bField;
     }
 }

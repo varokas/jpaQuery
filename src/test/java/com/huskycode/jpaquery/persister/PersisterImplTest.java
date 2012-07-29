@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -88,6 +89,7 @@ public class PersisterImplTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testPersistValuesCreateAndPersistAllEntityWithCorrectForeignKeysFromParents() {
 		//set up
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();

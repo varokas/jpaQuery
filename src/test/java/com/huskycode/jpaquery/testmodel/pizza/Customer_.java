@@ -10,6 +10,8 @@ public class Customer_ {
 	public static volatile SingularAttribute<Customer, Long> customerId;
 	public static volatile SingularAttribute<Customer, Long> customerAddressId;
 	
+	public static volatile SingularAttribute<Customer, String> paymentMethodCode;
+	
 	public static volatile SingularAttribute<Customer, String> customerName;	
 	public static volatile SingularAttribute<Customer, String> customerPhone;
 	public static volatile SingularAttribute<Customer, Date> dateOfFirstOrder;

@@ -9,4 +9,5 @@ public class Vehicle_ {
 	
 	public static volatile SingularAttribute<Vehicle, String> vehicleLicenseNumber;
 	public static volatile SingularAttribute<Vehicle, String> vehicleDetails;
+	public static volatile SingularAttribute<Vehicle, String> vehicleTypeCode;
 }

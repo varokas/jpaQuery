@@ -23,7 +23,7 @@ public class PizzaOrder {
 	private long customerId;
 	private long takenByEmployeeId;
 	private long deliveredByEmployeeId;
-	//private long deliveryStatusCode;
+	private String deliveryStatusCode;
 	private long vehicleId;
 	
 	private Date dateTimeOrderTaken;
@@ -85,4 +85,11 @@ public class PizzaOrder {
 	public void setOtherOrderDetails(String otherOrderDetails) {
 		this.otherOrderDetails = otherOrderDetails;
 	}
+	public String getDeliveryStatusCode() {
+		return deliveryStatusCode;
+	}
+	public void setDeliveryStatusCode(String deliveryStatusCode) {
+		this.deliveryStatusCode = deliveryStatusCode;
+	}
+	
 }

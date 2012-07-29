@@ -19,7 +19,7 @@ public class PizzaOrdered {
 	private long orderId;
 	private int pizzaSequenceNumber;
 	
-	//private long baseTypeCode;
+	private long baseTypeCode;
 	private double totalPizzaPrice;
 
 	public long getOrderId() {
@@ -44,6 +44,14 @@ public class PizzaOrdered {
 
 	public void setTotalPizzaPrice(double totalPizzaPrice) {
 		this.totalPizzaPrice = totalPizzaPrice;
+	}
+
+	public long getBaseTypeCode() {
+		return baseTypeCode;
+	}
+
+	public void setBaseTypeCode(long baseTypeCode) {
+		this.baseTypeCode = baseTypeCode;
 	}
 	
 	

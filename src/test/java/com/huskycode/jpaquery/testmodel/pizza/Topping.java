@@ -20,7 +20,7 @@ public class Topping {
 	@Column private int pizzaSequenceNumber;
 	@Column private int toppingSequenceNumber;
 	
-	//private int toppingCode;
+	private String toppingCode;
 	
 	private String toppingName;
 
@@ -54,6 +54,14 @@ public class Topping {
 
 	public void setToppingName(String toppingName) {
 		this.toppingName = toppingName;
+	}
+
+	public String getToppingCode() {
+		return toppingCode;
+	}
+
+	public void setToppingCode(String toppingCode) {
+		this.toppingCode = toppingCode;
 	}
 	
 	

@@ -53,7 +53,7 @@ public class SolverImplTest {
 		CommandNodes commands = ns(n(PizzaOrder.class));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(5));
+		assertThat(result.getActionGraph().getAllNodes().size(), is(8));
 		Set<Class<?>> expectedEntitiesInActionGraph = new HashSet<Class<?>>();
 		expectedEntitiesInActionGraph.add(Address.class);
 		expectedEntitiesInActionGraph.add(Vehicle.class);
@@ -69,11 +69,11 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
@@ -81,7 +81,7 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0), n.getCommand());
 			}
 		}
@@ -95,7 +95,7 @@ public class SolverImplTest {
 		CommandNodes commands = ns(n(Address.class,
 									n(PizzaOrder.class)));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
-		assertThat(result.getActionGraph().getAllNodes().size(), is(5));
+		assertThat(result.getActionGraph().getAllNodes().size(), is(8));
 		Set<Class<?>> expectedEntitiesInActionGraph = new HashSet<Class<?>>();
 		expectedEntitiesInActionGraph.add(Address.class);
 		expectedEntitiesInActionGraph.add(Vehicle.class);
@@ -112,11 +112,11 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
@@ -124,7 +124,7 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 			}
 		}
@@ -140,7 +140,7 @@ public class SolverImplTest {
 								n(PizzaOrder.class)));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(6));
+		assertThat(result.getActionGraph().getAllNodes().size(), is(9));
 		
 		int count = 0;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
@@ -152,12 +152,12 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
@@ -168,14 +168,14 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				count++;
 			}
 			
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(1) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				count++;
 			}
 		}
@@ -191,7 +191,7 @@ public class SolverImplTest {
 								n(Customer.class, n(PizzaOrder.class))));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(7));
+		assertThat(result.getActionGraph().getAllNodes().size(), is(10));
 		
 		int count = 0;
 		EntityNode employeeNode = null;
@@ -208,20 +208,20 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 				customer1 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(0).getChildren().get(1) == n.getCommand()) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 				customer2 = n;
 				count++;
 			}
@@ -234,7 +234,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				pizzaOrder1 = n;
 				count++;
 			}
@@ -242,7 +242,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(1).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				pizzaOrder2 = n;
 				count++;
 			}
@@ -270,7 +270,7 @@ public class SolverImplTest {
 								n(Customer.class, n(PizzaOrder.class)));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(7));
+		assertThat(result.getActionGraph().getAllNodes().size(), is(10));
 		
 		int count = 0;
 		EntityNode employeeNode = null;
@@ -286,20 +286,20 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(0) == n.getCommand()) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 				customer1 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(1) == n.getCommand()) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 				customer2 = n;
 				count++;
 			}
@@ -312,7 +312,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				pizzaOrder1 = n;
 				count++;
 			}
@@ -320,7 +320,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(1).getChildren().get(0) == n.getCommand()) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				pizzaOrder2 = n;
 				count++;
 			}
@@ -350,7 +350,7 @@ public class SolverImplTest {
 		
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(5));
+		assertThat(result.getActionGraph().getAllNodes().size(), is(8));
 		
 		int count = 0;
 		EntityNode employee = null;
@@ -364,12 +364,12 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 				Assert.assertEquals(commands.get().get(0), n.getCommand());
 				customer = n;
 				count++;
@@ -383,7 +383,7 @@ public class SolverImplTest {
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
 				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 				pizzaOrder = n;
 				count++;

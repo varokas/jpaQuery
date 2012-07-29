@@ -23,7 +23,7 @@ public class Customer {
 	private Long customerId;
 	
 	private long customerAddressId;
-	//private long paymentMethodCode
+	private String paymentMethodCode;
 	private String customerName;
 	private String customerPhone;
 	private Date dateOfFirstOrder;
@@ -65,6 +65,10 @@ public class Customer {
 	public void setOtherCustomerDetails(String otherCustomerDetails) {
 		this.otherCustomerDetails = otherCustomerDetails;
 	}
-	
-	
+	public String getPaymentMethodCode() {
+		return paymentMethodCode;
+	}
+	public void setPaymentMethodCode(String paymentMethodCode) {
+		this.paymentMethodCode = paymentMethodCode;
+	}
 }

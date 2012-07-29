@@ -1,7 +1,6 @@
 package com.huskycode.jpaquery.crud;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +27,7 @@ public class CreationPlanFromDefinitionTest {
 		
 		CreationPlan plan = creator.from(dependenciesDefinition);
 		
-		Assert.assertThat(plan.getActionGraph().getAllNodes().size(), is(5));
+		Assert.assertThat(plan.getActionGraph().getAllNodes().size(), is(12));
 		Set<Class<?>> expectedEntitiesInActionGraph = new HashSet<Class<?>>();
 		expectedEntitiesInActionGraph.add(Address.class);
 		expectedEntitiesInActionGraph.add(Vehicle.class);
@@ -44,19 +43,19 @@ public class CreationPlanFromDefinitionTest {
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assert.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assert.assertEquals(2, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
 				Assert.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(3, n.getParent().size());
+				Assert.assertEquals(1, n.getChilds().size());
+				Assert.assertEquals(4, n.getParent().size());
 			}
 		}
 		

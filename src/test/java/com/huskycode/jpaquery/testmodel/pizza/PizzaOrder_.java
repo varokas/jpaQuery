@@ -13,6 +13,8 @@ public class PizzaOrder_ {
 	public static volatile SingularAttribute<PizzaOrder, Long> deliveredByEmployeeId;
 	public static volatile SingularAttribute<PizzaOrder, Long> vehicleId;
 	
+	public static volatile SingularAttribute<PizzaOrder, String> deliveryStatusCode;
+	
 	public static volatile SingularAttribute<PizzaOrder, Date> dateTimeOrderTaken;
 	public static volatile SingularAttribute<PizzaOrder, Date> dateTimeOrderDelivered;
 	public static volatile SingularAttribute<PizzaOrder, Double> totalOrderPrice;

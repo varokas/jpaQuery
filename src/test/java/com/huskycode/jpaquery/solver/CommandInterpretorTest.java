@@ -2,13 +2,14 @@ package com.huskycode.jpaquery.solver;
 
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
@@ -17,6 +18,9 @@ import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
+import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
+import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 
@@ -45,20 +49,30 @@ public class CommandInterpretorTest {
 	@Test
 	public void testCreatePlanReturnCorrectInOrderEntityData() {
 		InOrderEntityData inOrderData = plan.getInOrderEntityData();
-		List<Class<?>> inOderEntities = inOrderData.getInOrderEntityList();
 
-		Assert.assertEquals(5, inOrderData.getInOrderEntityList().size());
-		Assert.assertTrue(inOrderData.getOrderIndexOf(Address.class) < 2);
-		Assert.assertTrue(inOrderData.getOrderIndexOf(Vehicle.class) < 2);
-		Assert.assertTrue(inOrderData.getOrderIndexOf(Customer.class) > 1);
-		Assert.assertTrue(inOrderData.getOrderIndexOf(Employee.class) > 1);
-		Assert.assertTrue(inOrderData.getOrderIndexOf(PizzaOrder.class) == 4);
+		Assert.assertEquals(8, inOrderData.getInOrderEntityList().size());
+		int refPaymentMethodIndex = inOrderData.getOrderIndexOf(RefPaymentMethod.class);
+		int refDeliveryStatusIndex = inOrderData.getOrderIndexOf(RefDeliveryStatus.class);
+		int refVehicleTypeIndex = inOrderData.getOrderIndexOf(RefVehicleType.class);
 		
-		Assert.assertEquals(0, inOrderData.getOrderIndexOf(inOderEntities.get(0)));
-		Assert.assertEquals(1, inOrderData.getOrderIndexOf(inOderEntities.get(1)));
-		Assert.assertEquals(2, inOrderData.getOrderIndexOf(inOderEntities.get(2)));
-		Assert.assertEquals(3, inOrderData.getOrderIndexOf(inOderEntities.get(3)));
-		Assert.assertEquals(4, inOrderData.getOrderIndexOf(inOderEntities.get(4)));
+		int addressIndex = inOrderData.getOrderIndexOf(Address.class);
+		int vehicleIndex = inOrderData.getOrderIndexOf(Vehicle.class);
+		
+		int customerIndex = inOrderData.getOrderIndexOf(Customer.class);
+		int employeeIndex = inOrderData.getOrderIndexOf(Employee.class);
+		int pizzaOrderIndex = inOrderData.getOrderIndexOf(PizzaOrder.class);
+		
+		assertTrue(customerIndex > addressIndex);
+		assertTrue(customerIndex > refPaymentMethodIndex);
+		
+		assertTrue(employeeIndex > addressIndex);
+		
+		assertTrue(vehicleIndex > refVehicleTypeIndex);
+		
+		assertTrue(pizzaOrderIndex > refDeliveryStatusIndex);
+		assertTrue(pizzaOrderIndex > customerIndex);
+		assertTrue(pizzaOrderIndex > employeeIndex);
+		assertTrue(pizzaOrderIndex > vehicleIndex);
 	}
 	
 	@Test

@@ -33,14 +33,11 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
     private PizzaDeps pizzaDeps;
     private JPAQueryContext context;
     
-    @Before
-    public void before() {
-    	pizzaDeps = new PizzaDeps();
-    	context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
-    }
-	
 	@Test
     public void testCreateClassWithNoDeps() {
+    	pizzaDeps = new PizzaDeps();
+    	context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
+		
         PersistedResult result = context.create(Address.class);
         
         assertThat(result.getPersistedObjects().size(), is(1));
@@ -51,7 +48,10 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
     }
 	
 	@Test 
-    public void testCreateClassWithDeps() {        
+    public void testCreateClassWithDeps() {     
+    	pizzaDeps = new PizzaDeps();
+    	context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
+		
         PersistedResult result = context.create(PizzaOrder.class);
         
         ClassMap resultMap = mapByClass(result.getPersistedObjects());

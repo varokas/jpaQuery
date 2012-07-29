@@ -13,11 +13,20 @@ import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.Employee_;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder_;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrdered;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrdered_;
 import com.huskycode.jpaquery.testmodel.pizza.RefBaseType;
+import com.huskycode.jpaquery.testmodel.pizza.RefBaseType_;
 import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
+import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus_;
 import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
+import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod_;
 import com.huskycode.jpaquery.testmodel.pizza.RefTopping;
+import com.huskycode.jpaquery.testmodel.pizza.RefTopping_;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType_;
+import com.huskycode.jpaquery.testmodel.pizza.Topping;
+import com.huskycode.jpaquery.testmodel.pizza.Topping_;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 
@@ -41,7 +50,28 @@ public class PizzaDeps {
 				.to(Employee.class, Employee_.employeeId),
 			Link.from(PizzaOrder.class, PizzaOrder_.vehicleId)
 				.to(Vehicle.class, Vehicle_.vehicleId),
-		}).build();
+			Link.from(PizzaOrdered.class, PizzaOrdered_.orderId)
+				.to(PizzaOrder.class, PizzaOrder_.orderId),
+				
+			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
+				.to(RefVehicleType.class, RefVehicleType_.vehicleTypeCode),
+			Link.from(Customer.class, Customer_.paymentMethodCode)
+				.to(RefPaymentMethod.class, RefPaymentMethod_.paymentMethodCode),
+			Link.from(PizzaOrder.class, PizzaOrder_.deliveryStatusCode)
+				.to(RefDeliveryStatus.class, RefDeliveryStatus_.deliveryStatusCode),
+			Link.from(PizzaOrdered.class, PizzaOrdered_.baseTypeCode)
+				.to(RefBaseType.class, RefBaseType_.baseTypeCode),
+			Link.from(Topping.class, Topping_.toppingCode)
+				.to(RefTopping.class, RefTopping_.toppingCode)
+		})
+		.withEnumTables(new Class<?>[] {
+			RefVehicleType.class, 
+			RefPaymentMethod.class,
+			RefDeliveryStatus.class,
+			RefBaseType.class,
+			RefTopping.class
+		})
+		.build();
 	}
 	
 	/**
@@ -66,8 +96,29 @@ public class PizzaDeps {
 				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("deliveredByEmployeeId"))
 					.to(Employee.class, Employee.class.getDeclaredField("employeeId")),
 				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("vehicleId"))
-					.to(Vehicle.class, Vehicle.class.getDeclaredField("vehicleId"))
-			}).build();
+					.to(Vehicle.class, Vehicle.class.getDeclaredField("vehicleId")),
+				Link.from(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("orderId"))
+					.to(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("orderId")),
+					
+				Link.from(Vehicle.class, Vehicle.class.getDeclaredField("vehicleTypeCode"))
+					.to(RefVehicleType.class, RefVehicleType_.class.getDeclaredField("vehicleTypeCode")),
+				Link.from(Customer.class, Customer.class.getDeclaredField("paymentMethodCode"))
+					.to(RefPaymentMethod.class, RefPaymentMethod_.class.getDeclaredField("paymentMethodCode")),
+				Link.from(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("deliveryStatusCode"))
+					.to(RefDeliveryStatus.class, RefDeliveryStatus_.class.getDeclaredField("deliveryStatusCode")),
+				Link.from(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("baseTypeCode"))
+					.to(RefBaseType.class, RefBaseType_.class.getDeclaredField("baseTypeCode")),
+				Link.from(Topping.class, Topping_.class.getDeclaredField("toppingCode"))
+					.to(RefTopping.class, RefTopping_.class.getDeclaredField("toppingCode"))
+			})
+			.withEnumTables(new Class<?>[] {
+				RefVehicleType.class,
+				RefPaymentMethod.class,
+				RefDeliveryStatus.class,
+				RefBaseType.class, 
+				RefTopping.class
+			})
+			.build();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

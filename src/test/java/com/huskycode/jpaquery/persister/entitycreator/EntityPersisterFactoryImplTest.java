@@ -17,6 +17,7 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
 public class EntityPersisterFactoryImplTest {
 
 	private Class<Integer> aClass = Integer.class;
+	private enum AnEnum { AValue };
 	private EntityPersisterFactoryImpl factory;
 	private EntityNode anyNode;
 	private EntityManager em;
@@ -37,12 +38,22 @@ public class EntityPersisterFactoryImplTest {
 	}
 	
 	@Test
-	public void testCreateEntityPersisterReturnNewRowEntityPersister() {
+	public void testCreateEntityPersisterReturnEnumTableIfSpecificAndNotEnumClass() {
 		DependenciesDefinition depsWithMatchingEnumTable = 
 				new DepsBuilder().withEnumTable(aClass).build();
 		
 		Assert.assertThat(factory.createEntityPersister(anyNode, depsWithMatchingEnumTable, em),
 				is(instanceOf(EnumTableEntityPersister.class)));
+	}
+	
+	@Test
+	public void testCreateEntityPersisterReturnEnumClassIfDeclaredSo() {
+		anyNode = EntityNode.newInstance(AnEnum.class);
+		DependenciesDefinition depsWithMatchingEnumClass = 
+				new DepsBuilder().withEnumTable(AnEnum.class).build();
+		
+		Assert.assertThat(factory.createEntityPersister(anyNode, depsWithMatchingEnumClass, em),
+				is(instanceOf(EnumClassEntityPersister.class)));
 	}
 
 }

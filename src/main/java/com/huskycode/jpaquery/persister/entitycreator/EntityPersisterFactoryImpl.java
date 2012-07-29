@@ -12,8 +12,14 @@ public class EntityPersisterFactoryImpl implements EntityPersisterFactory {
 	@Override
 	public EntityPersister createEntityPersister(EntityNode entityNode,
 			DependenciesDefinition deps, EntityManager em) {
-		if(deps.getEnumTables().contains(entityNode.getEntityClass())) {
-			return new EnumTableEntityPersister(em);
+		Class<?> entityClass = entityNode.getEntityClass();
+		if(deps.getEnumTables().contains(entityClass)) {
+			if(entityClass.isEnum()) {
+				return new EnumClassEntityPersister();
+			}
+			else {
+				return new EnumTableEntityPersister(em);
+			}
 		}
 		else {	
 			return new NewRowEntityPersister(em);

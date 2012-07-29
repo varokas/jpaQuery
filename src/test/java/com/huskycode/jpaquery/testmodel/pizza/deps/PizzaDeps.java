@@ -25,7 +25,6 @@ import com.huskycode.jpaquery.testmodel.pizza.RefTopping;
 import com.huskycode.jpaquery.testmodel.pizza.RefTopping_;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleTypeEnum;
-import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType_;
 import com.huskycode.jpaquery.testmodel.pizza.Topping;
 import com.huskycode.jpaquery.testmodel.pizza.Topping_;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
@@ -54,7 +53,7 @@ public class PizzaDeps {
 			Link.from(PizzaOrdered.class, PizzaOrdered_.orderId)
 				.to(PizzaOrder.class, PizzaOrder_.orderId),
 			Link.from(Topping.class, Topping_.orderId)
-				.to(PizzaOrder.class, PizzaOrder_.orderId),
+				.to(PizzaOrdered.class, PizzaOrdered_.orderId),
 				
 			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
 				.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
@@ -102,7 +101,7 @@ public class PizzaDeps {
 				Link.from(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("orderId"))
 					.to(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("orderId")),
 				Link.from(Topping.class, Topping_.class.getDeclaredField("orderId"))
-					.to(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("orderId")),
+					.to(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("orderId")),
 					
 				Link.from(Vehicle.class, Vehicle.class.getDeclaredField("vehicleTypeCode"))
 					.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),

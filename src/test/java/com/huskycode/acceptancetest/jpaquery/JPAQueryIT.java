@@ -119,11 +119,11 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
 		context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
 		
 		String expectedCityName = "Seattle";
-		
-		CommandNodes commands = ns(n(Address.class).withValues(Maps.of((Field)Address_.city.getJavaMember(), expectedCityName)),
-									n(PizzaOrder.class));
+
+		CommandNodes commands = ns(n(Address.class)
+									.withValues(Maps.of((Field)Address_.city.getJavaMember(), expectedCityName))
+									.with(n(PizzaOrder.class)));
 		PersistedResult result = context.create(commands);
-		 
 		assertThat(result.getForClass(Address.class).get(0).getCity(), is(expectedCityName));
 	}
 	

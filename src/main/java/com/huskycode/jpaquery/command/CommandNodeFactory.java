@@ -12,13 +12,12 @@ import java.util.Map;
  * 
  * @author Varokas Panusuwan
  */
-public class CommandNodeFactory {
-	static CommandNodeImpl n(Class<?> entity) {
-		return new CommandNodeImpl(entity, new ArrayList<CommandNode>());
-	}
-	
+public class CommandNodeFactory {	
+
 	public static CommandNodeImpl n(Class<?> entity, CommandNode... children) {
-		return new CommandNodeImpl(entity, Arrays.asList(children));
+		ArrayList<CommandNode> list = new ArrayList<CommandNode>();
+		list.addAll(Arrays.asList(children));
+		return new CommandNodeImpl(entity, list);
 	}
 	
 	/**
@@ -58,8 +57,8 @@ public class CommandNodeFactory {
 		}
 
 		@Override
-		public CommandNodeImpl with(CommandNode... children) {
-			this.children.addAll(Arrays.asList(children));
+		public CommandNodeImpl with(CommandNode... childrens) {
+			this.children.addAll(Arrays.asList(childrens));
 			return this;
 		}
 

@@ -11,7 +11,6 @@ import static org.junit.Assert.assertThat;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,6 @@ import com.huskycode.jpaquery.testmodel.pizza.PizzaOrdered;
 import com.huskycode.jpaquery.testmodel.pizza.Topping;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-import com.huskycode.jpaquery.util.MapUtil;
 import com.huskycode.jpaquery.util.Maps;
 
 /**

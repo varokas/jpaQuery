@@ -1,32 +1,28 @@
 package com.huskycode.jpaquery.solver;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItems;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.Or;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.DepsBuilder;
 import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodes;
-import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
+import com.huskycode.jpaquery.testmodel.pizza.RefBaseType;
+import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
+import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
@@ -60,6 +56,9 @@ public class SolverImplTest {
 		expectedEntitiesInActionGraph.add(Customer.class);
 		expectedEntitiesInActionGraph.add(Employee.class);
 		expectedEntitiesInActionGraph.add(PizzaOrder.class);
+		expectedEntitiesInActionGraph.add(RefVehicleType.class);
+		expectedEntitiesInActionGraph.add(RefPaymentMethod.class);
+		expectedEntitiesInActionGraph.add(RefDeliveryStatus.class);
 		
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			expectedEntitiesInActionGraph.remove(n.getEntityClass());
@@ -84,6 +83,15 @@ public class SolverImplTest {
 				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0), n.getCommand());
 			}
+			if (n.getEntityClass().equals(RefVehicleType.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+			}
+			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+			}
+			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+			}
 		}
 		
 		Assert.assertEquals("Could not resolved for all entity types", 0, expectedEntitiesInActionGraph.size());
@@ -102,6 +110,9 @@ public class SolverImplTest {
 		expectedEntitiesInActionGraph.add(Customer.class);
 		expectedEntitiesInActionGraph.add(Employee.class);
 		expectedEntitiesInActionGraph.add(PizzaOrder.class);
+		expectedEntitiesInActionGraph.add(RefVehicleType.class);
+		expectedEntitiesInActionGraph.add(RefPaymentMethod.class);
+		expectedEntitiesInActionGraph.add(RefDeliveryStatus.class);
 		
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			expectedEntitiesInActionGraph.remove(n.getEntityClass());
@@ -127,6 +138,15 @@ public class SolverImplTest {
 				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 			}
+			if (n.getEntityClass().equals(RefVehicleType.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+			}
+			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+			}
+			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+			}
 		}
 		
 		Assert.assertEquals("Could not resolved for all entity types", 0, expectedEntitiesInActionGraph.size());
@@ -139,8 +159,8 @@ public class SolverImplTest {
 								n(PizzaOrder.class),
 								n(PizzaOrder.class)));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
-		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(9));
+		int expectedCount = 9;
+		assertThat(result.getActionGraph().getAllNodes().size(), is(expectedCount));
 		
 		int count = 0;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
@@ -178,9 +198,21 @@ public class SolverImplTest {
 				Assert.assertEquals(4, n.getParent().size());
 				count++;
 			}
+			if (n.getEntityClass().equals(RefVehicleType.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+				count++;
+			}
+			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+				count++;
+			}
+			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
+				Assert.assertEquals(2, n.getChilds().size());
+				count++;
+			}
 		}
 		
-		Assert.assertEquals("Could not resolved for all entity types", 6, count);
+		Assert.assertEquals("Could not resolved for all entity types", expectedCount, count);
 	}
 	
 	@Test
@@ -190,8 +222,8 @@ public class SolverImplTest {
 								n(Customer.class, n(PizzaOrder.class)),
 								n(Customer.class, n(PizzaOrder.class))));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
-		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(10));
+		int expectedCount = 10;
+		assertThat(result.getActionGraph().getAllNodes().size(), is(expectedCount));
 		
 		int count = 0;
 		EntityNode employeeNode = null;
@@ -199,6 +231,10 @@ public class SolverImplTest {
 		EntityNode customer2 = null;
 		EntityNode pizzaOrder1 = null;
 		EntityNode pizzaOrder2 = null;
+		EntityNode vehical = null;
+		EntityNode vehicalType = null;
+		EntityNode deliveryStatus = null;
+		EntityNode paymentMethod = null;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			if (n.getEntityClass().equals(Address.class)) {
 				Assert.assertEquals(3, n.getChilds().size());
@@ -209,6 +245,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
 				Assert.assertEquals(1, n.getParent().size());
+				vehical = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
@@ -246,20 +283,33 @@ public class SolverImplTest {
 				pizzaOrder2 = n;
 				count++;
 			}
+			if (n.getEntityClass().equals(RefVehicleType.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+				vehicalType = n;
+				count++;
+			}
+			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
+				Assert.assertEquals(2, n.getChilds().size());
+				paymentMethod = n;
+				count++;
+			}
+			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
+				Assert.assertEquals(2, n.getChilds().size());
+				deliveryStatus = n;
+				count++;
+			}
 		}
 		
-		Assert.assertEquals("Could not resolved for all entity types", 7, count);
-		
-		Assert.assertEquals(2, employeeNode.getChilds().size());
+		Assert.assertEquals("Could not resolved for all entity types", expectedCount, count);
 		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder1));
 		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder2));
-		
-		Assert.assertEquals(1, customer1.getChilds().size());
 		Assert.assertTrue("Does not contain correct pizza order", customer1.getChilds().contains(pizzaOrder1));
-
-		Assert.assertEquals(1, customer2.getChilds().size());
 		Assert.assertTrue("Does not contain correct pizza order", customer2.getChilds().contains(pizzaOrder2));
-		
+		Assert.assertTrue("Does not contain correct vehical", vehicalType.getChilds().contains(vehical));
+		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder1));
+		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder2));
+		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer1));
+		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer2));
 	}
 	
 	
@@ -269,8 +319,8 @@ public class SolverImplTest {
 		CommandNodes commands = ns(n(Customer.class, n(PizzaOrder.class)),
 								n(Customer.class, n(PizzaOrder.class)));
 		CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
-		
-		assertThat(result.getActionGraph().getAllNodes().size(), is(10));
+		int expectedCount = 10;
+		assertThat(result.getActionGraph().getAllNodes().size(), is(expectedCount));
 		
 		int count = 0;
 		EntityNode employeeNode = null;
@@ -278,6 +328,10 @@ public class SolverImplTest {
 		EntityNode customer2 = null;
 		EntityNode pizzaOrder1 = null;
 		EntityNode pizzaOrder2 = null;
+		EntityNode vehical = null;
+		EntityNode vehicalType = null;
+		EntityNode deliveryStatus = null;
+		EntityNode paymentMethod = null;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			if (n.getEntityClass().equals(Address.class)) {
 				Assert.assertEquals(3, n.getChilds().size());
@@ -287,6 +341,7 @@ public class SolverImplTest {
 			if (n.getEntityClass().equals(Vehicle.class)) {
 				Assert.assertEquals(2, n.getChilds().size());
 				Assert.assertEquals(1, n.getParent().size());
+				vehical = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
@@ -324,20 +379,33 @@ public class SolverImplTest {
 				pizzaOrder2 = n;
 				count++;
 			}
+			if (n.getEntityClass().equals(RefVehicleType.class)) {
+				Assert.assertEquals(1, n.getChilds().size());
+				vehicalType = n;
+				count++;
+			}
+			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
+				Assert.assertEquals(2, n.getChilds().size());
+				paymentMethod = n;
+				count++;
+			}
+			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
+				Assert.assertEquals(2, n.getChilds().size());
+				deliveryStatus = n;
+				count++;
+			}
 		}
 		
-		Assert.assertEquals("Could not resolved for all entity types", 7, count);
-	
-		Assert.assertEquals(2, employeeNode.getChilds().size());
+		Assert.assertEquals("Could not resolved for all entity types", expectedCount, count);
 		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder1));
 		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder2));
-		
-		Assert.assertEquals(1, customer1.getChilds().size());
 		Assert.assertTrue("Does not contain correct pizza order", customer1.getChilds().contains(pizzaOrder1));
-
-		Assert.assertEquals(1, customer2.getChilds().size());
 		Assert.assertTrue("Does not contain correct pizza order", customer2.getChilds().contains(pizzaOrder2));
-		
+		Assert.assertTrue("Does not contain correct vehical", vehicalType.getChilds().contains(vehical));
+		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder1));
+		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder2));
+		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer1));
+		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer2));
 	}
 	
 

@@ -21,6 +21,14 @@ public class BeanUtil {
         }
 	}
 	
+	public static Field getFieldByName(Class<?> clazz, String fieldName) {
+		try {
+			return clazz.getDeclaredField(fieldName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public static Object getValue(Object obj, Field field) {
     	field.setAccessible(true);
 		try {

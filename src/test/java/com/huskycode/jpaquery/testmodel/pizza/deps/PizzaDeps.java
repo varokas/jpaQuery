@@ -24,6 +24,7 @@ import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod_;
 import com.huskycode.jpaquery.testmodel.pizza.RefTopping;
 import com.huskycode.jpaquery.testmodel.pizza.RefTopping_;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleTypeEnum;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType_;
 import com.huskycode.jpaquery.testmodel.pizza.Topping;
 import com.huskycode.jpaquery.testmodel.pizza.Topping_;
@@ -56,7 +57,7 @@ public class PizzaDeps {
 				.to(PizzaOrder.class, PizzaOrder_.orderId),
 				
 			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
-				.to(RefVehicleType.class, RefVehicleType_.vehicleTypeCode),
+				.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
 			Link.from(Customer.class, Customer_.paymentMethodCode)
 				.to(RefPaymentMethod.class, RefPaymentMethod_.paymentMethodCode),
 			Link.from(PizzaOrder.class, PizzaOrder_.deliveryStatusCode)
@@ -67,7 +68,6 @@ public class PizzaDeps {
 				.to(RefTopping.class, RefTopping_.toppingCode)
 		})
 		.withEnumTables(new Class<?>[] {
-			RefVehicleType.class, 
 			RefPaymentMethod.class,
 			RefDeliveryStatus.class,
 			RefBaseType.class,
@@ -105,7 +105,7 @@ public class PizzaDeps {
 					.to(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("orderId")),
 					
 				Link.from(Vehicle.class, Vehicle.class.getDeclaredField("vehicleTypeCode"))
-					.to(RefVehicleType.class, RefVehicleType_.class.getDeclaredField("vehicleTypeCode")),
+					.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
 				Link.from(Customer.class, Customer.class.getDeclaredField("paymentMethodCode"))
 					.to(RefPaymentMethod.class, RefPaymentMethod_.class.getDeclaredField("paymentMethodCode")),
 				Link.from(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("deliveryStatusCode"))
@@ -116,7 +116,6 @@ public class PizzaDeps {
 					.to(RefTopping.class, RefTopping_.class.getDeclaredField("toppingCode"))
 			})
 			.withEnumTables(new Class<?>[] {
-				RefVehicleType.class,
 				RefPaymentMethod.class,
 				RefDeliveryStatus.class,
 				RefBaseType.class, 

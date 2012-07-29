@@ -1,29 +1,29 @@
 package com.huskycode.acceptancetest.jpaquery;
 
+import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
+import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.JPAQueryContext;
+import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
+import com.huskycode.jpaquery.util.MapUtil;
 
 /**
  * @author Varokas Panusuwan
@@ -54,12 +54,10 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
 		
         PersistedResult result = context.create(PizzaOrder.class);
         
-        ClassMap resultMap = mapByClass(result.getPersistedObjects());
-        
-        Address address = resultMap.getForClass(Address.class);
-        Employee employee = resultMap.getForClass(Employee.class);
-        Customer customer = resultMap.getForClass(Customer.class);
-        PizzaOrder pizzaOrder = resultMap.getForClass(PizzaOrder.class);
+        Address address = result.getForClass(Address.class).get(0);
+        Employee employee = result.getForClass(Employee.class).get(0);
+        Customer customer = result.getForClass(Customer.class).get(0);
+        PizzaOrder pizzaOrder = result.getForClass(PizzaOrder.class).get(0);
         
         assertThat(employee.getEmployeeAddressId(), is(address.getAddressId()));
         assertThat(customer.getCustomerAddressId(), is(address.getAddressId()));
@@ -68,21 +66,43 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
         assertThat(pizzaOrder.getTakenByEmployeeId(), is(employee.getEmployeeId()));
     }
 	
-	public class ClassMap extends HashMap<Class<?>, Object> {
-		private static final long serialVersionUID = 1L;
-	
-		@SuppressWarnings("unchecked")
-		public <E> E getForClass(Class<E> clazz) {
-			return (E) this.get(clazz);
-		}
+	@Test 
+    public void testCreateFromDependencyDefinition() {
+		PersistedResult result = context.createFromDependencyDefinition();
+		 
+		Address address = result.getForClass(Address.class).get(0);
+        Employee employee = result.getForClass(Employee.class).get(0);
+        Customer customer = result.getForClass(Customer.class).get(0);
+        PizzaOrder pizzaOrder = result.getForClass(PizzaOrder.class).get(0);
+        
+        assertThat(employee.getEmployeeAddressId(), is(address.getAddressId()));
+        assertThat(customer.getCustomerAddressId(), is(address.getAddressId()));
+        assertThat(pizzaOrder.getCustomerId(), is(customer.getCustomerId()));
+        assertThat(pizzaOrder.getDeliveredByEmployeeId(), is(employee.getEmployeeId()));
+        assertThat(pizzaOrder.getTakenByEmployeeId(), is(employee.getEmployeeId()));
 	}
 	
-	private ClassMap mapByClass(List<Object> objects) {
-		ClassMap map = new ClassMap();
-		for(Object obj : objects) {
-			map.put(obj.getClass(), obj);
-		}
-		
-		return map;
+	@Test 
+    public void testCreateFromCommands() {
+		CommandNodes commands = ns(n(Address.class,
+									n(PizzaOrder.class),
+									n(PizzaOrder.class)));
+		PersistedResult result = context.create(commands);
+		 
+		Address address = result.getForClass(Address.class).get(0);
+        Employee employee = result.getForClass(Employee.class).get(0);
+        Customer customer = result.getForClass(Customer.class).get(0);
+        List<PizzaOrder> pizzaOrder = result.getForClass(PizzaOrder.class);
+        
+        assertThat(employee.getEmployeeAddressId(), is(address.getAddressId()));
+        assertThat(customer.getCustomerAddressId(), is(address.getAddressId()));
+        assertThat(pizzaOrder.get(0).getCustomerId(), is(customer.getCustomerId()));
+        assertThat(pizzaOrder.get(0).getDeliveredByEmployeeId(), is(employee.getEmployeeId()));
+        assertThat(pizzaOrder.get(0).getTakenByEmployeeId(), is(employee.getEmployeeId()));
+        assertThat(pizzaOrder.get(1).getCustomerId(), is(customer.getCustomerId()));
+        assertThat(pizzaOrder.get(1).getDeliveredByEmployeeId(), is(employee.getEmployeeId()));
+        assertThat(pizzaOrder.get(1).getTakenByEmployeeId(), is(employee.getEmployeeId()));
 	}
+	
+	
 }

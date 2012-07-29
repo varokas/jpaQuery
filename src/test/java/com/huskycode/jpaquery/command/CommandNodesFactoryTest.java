@@ -30,7 +30,7 @@ public class CommandNodesFactoryTest {
 		assertEquals(1, commandNodes.get().size());
 		assertEquals(Address.class, commandNodes.get().get(0).getEntity());
 		assertThat(commandNodes.get().get(0).getChildren().size(), is(1));
-		assertThat(commandNodes.get().get(0).getChildren().get(0), is(n(Customer.class)));
+		assertEquals(commandNodes.get().get(0).getChildren().get(0).getEntity(), Customer.class);
 	}
 
 

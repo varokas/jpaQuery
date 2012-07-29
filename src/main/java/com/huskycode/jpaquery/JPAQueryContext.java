@@ -2,6 +2,8 @@ package com.huskycode.jpaquery;
 
 import javax.persistence.EntityManager;
 
+import com.huskycode.jpaquery.command.CommandNodes;
+import com.huskycode.jpaquery.crud.CreationPlanFromDefinition;
 import com.huskycode.jpaquery.persister.Persister;
 import com.huskycode.jpaquery.persister.PersisterImpl;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
@@ -55,6 +57,20 @@ public class JPAQueryContext {
             
             Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
             return persister.persistValues(creationPlan);
+    }
+    
+    public <E> PersistedResult create(CommandNodes commands) {
+        Solver solver = SolverImpl.newInstance(dependenciesDefinition);
+        CreationPlan creationPlan = solver.solveFor(commands);
+        
+        Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
+        return persister.persistValues(creationPlan);
+    }
+    
+    public <E> PersistedResult createFromDependencyDefinition() {
+    	CreationPlanFromDefinition creator = CreationPlanFromDefinition.getInstance();
+    	Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
+        return persister.persistValues(creator.from(dependenciesDefinition));
     }
     
     public EntityManager getEntityManager() {

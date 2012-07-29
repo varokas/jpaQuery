@@ -37,7 +37,6 @@ import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-import com.huskycode.jpaquery.util.ClassMap;
 import com.huskycode.jpaquery.util.Maps;
 
 public class PersisterImplTest {
@@ -177,8 +176,7 @@ public class PersisterImplTest {
         PersistedResult result = persister.persistValues(plan);
 
 		Assert.assertNotNull(result);
-		ClassMap classMap = ClassMap.mapByClass(result.getPersistedObjects());
-		List<Address> addresses = classMap.getForClass(Address.class);
+		List<Address> addresses = result.getForClass(Address.class);
 		Assert.assertNotNull(addresses);
 		Assert.assertEquals(1, addresses.size());
 		Assert.assertEquals(expectedValue, addresses.get(0).getCity());

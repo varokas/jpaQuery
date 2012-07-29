@@ -22,7 +22,7 @@ import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.RefBaseType;
 import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
 import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
-import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleTypeEnum;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
@@ -56,7 +56,7 @@ public class SolverImplTest {
 		expectedEntitiesInActionGraph.add(Customer.class);
 		expectedEntitiesInActionGraph.add(Employee.class);
 		expectedEntitiesInActionGraph.add(PizzaOrder.class);
-		expectedEntitiesInActionGraph.add(RefVehicleType.class);
+		expectedEntitiesInActionGraph.add(RefVehicleTypeEnum.class);
 		expectedEntitiesInActionGraph.add(RefPaymentMethod.class);
 		expectedEntitiesInActionGraph.add(RefDeliveryStatus.class);
 		
@@ -83,7 +83,7 @@ public class SolverImplTest {
 				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0), n.getCommand());
 			}
-			if (n.getEntityClass().equals(RefVehicleType.class)) {
+			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
@@ -110,7 +110,7 @@ public class SolverImplTest {
 		expectedEntitiesInActionGraph.add(Customer.class);
 		expectedEntitiesInActionGraph.add(Employee.class);
 		expectedEntitiesInActionGraph.add(PizzaOrder.class);
-		expectedEntitiesInActionGraph.add(RefVehicleType.class);
+		expectedEntitiesInActionGraph.add(RefVehicleTypeEnum.class);
 		expectedEntitiesInActionGraph.add(RefPaymentMethod.class);
 		expectedEntitiesInActionGraph.add(RefDeliveryStatus.class);
 		
@@ -138,7 +138,7 @@ public class SolverImplTest {
 				Assert.assertEquals(4, n.getParent().size());
 				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 			}
-			if (n.getEntityClass().equals(RefVehicleType.class)) {
+			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
@@ -198,7 +198,7 @@ public class SolverImplTest {
 				Assert.assertEquals(4, n.getParent().size());
 				count++;
 			}
-			if (n.getEntityClass().equals(RefVehicleType.class)) {
+			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
 				count++;
 			}
@@ -283,7 +283,7 @@ public class SolverImplTest {
 				pizzaOrder2 = n;
 				count++;
 			}
-			if (n.getEntityClass().equals(RefVehicleType.class)) {
+			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
 				vehicalType = n;
 				count++;
@@ -379,7 +379,7 @@ public class SolverImplTest {
 				pizzaOrder2 = n;
 				count++;
 			}
-			if (n.getEntityClass().equals(RefVehicleType.class)) {
+			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
 				Assert.assertEquals(1, n.getChilds().size());
 				vehicalType = n;
 				count++;

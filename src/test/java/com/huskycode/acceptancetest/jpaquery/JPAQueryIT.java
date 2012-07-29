@@ -8,6 +8,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.junit.Before;
@@ -18,12 +19,14 @@ import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.JPAQueryContext;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
+import com.huskycode.jpaquery.testmodel.pizza.Address_;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 import com.huskycode.jpaquery.util.MapUtil;
+import com.huskycode.jpaquery.util.Maps;
 
 /**
  * @author Varokas Panusuwan
@@ -108,6 +111,20 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
         assertThat(pizzaOrder.get(1).getCustomerId(), is(customer.getCustomerId()));
         assertThat(pizzaOrder.get(1).getDeliveredByEmployeeId(), is(employee.getEmployeeId()));
         assertThat(pizzaOrder.get(1).getTakenByEmployeeId(), is(employee.getEmployeeId()));
+	}
+	
+	@Test 
+    public void testCreateWithSpecifiedValue() {
+		pizzaDeps = new PizzaDeps();
+		context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
+		
+		String expectedCityName = "Seattle";
+		
+		CommandNodes commands = ns(n(Address.class).withValues(Maps.of((Field)Address_.city.getJavaMember(), expectedCityName)),
+									n(PizzaOrder.class));
+		PersistedResult result = context.create(commands);
+		 
+		assertThat(result.getForClass(Address.class).get(0).getCity(), is(expectedCityName));
 	}
 	
 	

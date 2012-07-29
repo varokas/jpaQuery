@@ -20,8 +20,9 @@ import com.huskycode.jpaquery.populator.ValuesPopulatorImpl;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
 /**
- * This is a persister that works on an enum. We are not going to 
- * persist anything to the database, but 
+ * This is a persister that works on a table that acts as enum. 
+ * We are not going to persist anything to the database, but 
+ * we will get this first row of that enum to use.
  * 
  * @author varokas
  */

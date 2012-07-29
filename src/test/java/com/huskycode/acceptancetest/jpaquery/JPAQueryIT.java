@@ -11,7 +11,6 @@ import static org.junit.Assert.assertThat;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +22,10 @@ import com.huskycode.jpaquery.testmodel.pizza.Address_;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
+import com.huskycode.jpaquery.testmodel.pizza.PizzaOrdered;
+import com.huskycode.jpaquery.testmodel.pizza.Topping;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
-import com.huskycode.jpaquery.util.MapUtil;
 import com.huskycode.jpaquery.util.Maps;
 
 /**
@@ -127,5 +127,18 @@ public class JPAQueryIT extends AbstractEntityManagerWired {
 		assertThat(result.getForClass(Address.class).get(0).getCity(), is(expectedCityName));
 	}
 	
-	
+	@Test 
+    public void testMultipleLinkBetweenTwoClasses() {
+		pizzaDeps = new PizzaDeps();
+		context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());
+		
+		CommandNodes commands = ns(n(Topping.class));
+		PersistedResult result = context.create(commands);
+		
+		PizzaOrdered resultPizzaOrdered = result.getForClass(PizzaOrdered.class).get(0);
+		Topping resultTopping = result.getForClass(Topping.class).get(0);
+		
+		assertThat(resultTopping.getOrderId(), is(resultPizzaOrdered.getOrderId()));
+		assertThat(resultTopping.getPizzaSequenceNumber(), is(resultPizzaOrdered.getPizzaSequenceNumber()));
+	}
 }

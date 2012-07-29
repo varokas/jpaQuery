@@ -11,6 +11,7 @@ import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
 import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleTypeEnum;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 
@@ -80,7 +81,7 @@ public class DependenciesDefinitionTest {
 		
 		Assert.assertTrue("Shuold have RefPaymentMethod as parent dependency", pizzaOrderAllDependencies.contains(RefPaymentMethod.class));
 		Assert.assertTrue("Shuold have RefDeliveryStatus as parent dependency", pizzaOrderAllDependencies.contains(RefDeliveryStatus.class));
-		Assert.assertTrue("Shuold have RefVehicleType as parent dependency", pizzaOrderAllDependencies.contains(RefVehicleType.class));
+		Assert.assertTrue("Shuold have RefVehicleType as parent dependency", pizzaOrderAllDependencies.contains(RefVehicleTypeEnum.class));
 	}	
 	
 	@Test

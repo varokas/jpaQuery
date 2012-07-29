@@ -21,6 +21,7 @@ import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
 import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
+import com.huskycode.jpaquery.testmodel.pizza.RefVehicleTypeEnum;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 
@@ -53,7 +54,7 @@ public class CommandInterpretorTest {
 		Assert.assertEquals(8, inOrderData.getInOrderEntityList().size());
 		int refPaymentMethodIndex = inOrderData.getOrderIndexOf(RefPaymentMethod.class);
 		int refDeliveryStatusIndex = inOrderData.getOrderIndexOf(RefDeliveryStatus.class);
-		int refVehicleTypeIndex = inOrderData.getOrderIndexOf(RefVehicleType.class);
+		int refVehicleTypeIndex = inOrderData.getOrderIndexOf(RefVehicleTypeEnum.class);
 		
 		int addressIndex = inOrderData.getOrderIndexOf(Address.class);
 		int vehicleIndex = inOrderData.getOrderIndexOf(Vehicle.class);

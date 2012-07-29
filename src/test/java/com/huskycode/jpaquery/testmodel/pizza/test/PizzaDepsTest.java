@@ -22,7 +22,7 @@ public class PizzaDepsTest {
 	public void testCreateDependenciesFromFieldSuccessfully() {
 		DependenciesDefinition deps = pizzaDeps.getDepsUsingField();
 		
-		assertThat(deps.getLinks().length, is(13));
+		assertThat(deps.getLinks().length, is(14));
 	}
 
 }

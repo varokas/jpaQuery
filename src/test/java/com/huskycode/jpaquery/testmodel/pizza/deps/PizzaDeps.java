@@ -54,6 +54,8 @@ public class PizzaDeps {
 				.to(PizzaOrder.class, PizzaOrder_.orderId),
 			Link.from(Topping.class, Topping_.orderId)
 				.to(PizzaOrdered.class, PizzaOrdered_.orderId),
+			Link.from(Topping.class, Topping_.pizzaSequenceNumber)
+				.to(PizzaOrdered.class, PizzaOrdered_.pizzaSequenceNumber),
 				
 			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
 				.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
@@ -102,6 +104,8 @@ public class PizzaDeps {
 					.to(PizzaOrder.class, PizzaOrder_.class.getDeclaredField("orderId")),
 				Link.from(Topping.class, Topping_.class.getDeclaredField("orderId"))
 					.to(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("orderId")),
+				Link.from(Topping.class, Topping_.class.getDeclaredField("pizzaSequenceNumber"))
+					.to(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("pizzaSequenceNumber")),
 					
 				Link.from(Vehicle.class, Vehicle.class.getDeclaredField("vehicleTypeCode"))
 					.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),

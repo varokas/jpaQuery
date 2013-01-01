@@ -17,8 +17,8 @@
   	</licenses>
 	<scm>
 		<url>https://github.com/varokas/jpaQuery.git</url>
-		<developerConnection>scm:git://github.com/varokas/jpaQuery.git</developerConnection>
-		<connection>scm:git://github.com/varokas/jpaQuery.git</connection>
+		<developerConnection>scm:git:git://github.com/varokas/jpaQuery.git</developerConnection>
+		<connection>scm:git:git://github.com/varokas/jpaQuery.git</connection>
 	</scm>
 	<description>JPAQuery: Library for Database Testing</description>
 	<developers>

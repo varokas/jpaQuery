@@ -5,21 +5,46 @@
 	<groupId>com.huskycode</groupId>
 	<artifactId>jpaQuery</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>JBehave Stories</name>
+	<name>JPA Query</name>
+	<packaging>jar</packaging>
+	<url>https://github.com/varokas/jpaQuery/</url>
+	<licenses>
+		<license>
+   		 <name>BSD-style license</name>
+   		 <url></url>
+   		 <distribution>repo</distribution>
+   		 <comments></comments>
+  		</license>
+  	</licenses>
+	<scm>
+		<url>https://github.com/varokas/jpaQuery.git</url>
+		<developerConnection>scm:git://github.com/varokas/jpaQuery.git</developerConnection>
+		<connection>scm:git://github.com/varokas/jpaQuery.git</connection>
+	</scm>
+	<description>JPAQuery: Library for Database Testing</description>
+	<developers>
+		<developer>
+    	  <id>varokas</id>
+    	  <name>Varokas Panusuwan</name>
+    	  <email>varokas@panusuwan.com</email>
+    	</developer>
+    	<developer>
+    	  <id>tawan</id>
+    	  <name>Tawan Surachawala</name>
+    	</developer>
+    </developers>
+    
+    <parent>
+   	 <groupId>org.sonatype.oss</groupId>
+   	 <artifactId>oss-parent</artifactId>
+   	 <version>7</version>
+  	</parent>
 
 	<properties>
 		<jbehave.core.version>3.5.4</jbehave.core.version>
 		<jbehave.site.version>3.1.1</jbehave.site.version>
 		<embeddables>**/*Stories.java</embeddables>
 	</properties>
-
-	<distributionManagement>
-		<repository>
-			<id>jboss-releases-repository</id>
-			<name>JBoss Releases Repository</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-		</repository>
-	</distributionManagement>
 
 	<dependencies>
 		<dependency>

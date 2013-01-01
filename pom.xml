@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.huskycode</groupId>
 	<artifactId>jpaQuery</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>JPA Query</name>
 	<packaging>jar</packaging>
 	<url>https://github.com/varokas/jpaQuery/</url>
@@ -17,8 +17,8 @@
   	</licenses>
 	<scm>
 		<url>https://github.com/varokas/jpaQuery.git</url>
-		<developerConnection>scm:git:git://github.com/varokas/jpaQuery.git</developerConnection>
-		<connection>scm:git:git://github.com/varokas/jpaQuery.git</connection>
+		<developerConnection>scm:git:https://github.com/varokas/jpaQuery.git</developerConnection>
+		<connection>scm:git:https://github.com/varokas/jpaQuery.git</connection>
 	</scm>
 	<description>JPAQuery: Library for Database Testing</description>
 	<developers>

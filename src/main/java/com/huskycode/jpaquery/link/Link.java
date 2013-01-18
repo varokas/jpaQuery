@@ -1,18 +1,19 @@
 package com.huskycode.jpaquery.link;
 
-import javax.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
+
+import javax.persistence.metamodel.SingularAttribute;
 
 /**
  * Use to define dependency on one class to another.
- *
+ * 
  * @author Varokas Panusuwan
  */
-public class Link<E1,E2,T> {
-   private final Attribute<E1, T> from;
-   private final Attribute<E2, T> to;
+public class Link<E1, E2, T> {
+    private final Attribute<E1, T> from;
+    private final Attribute<E2, T> to;
 
-    private Link(Attribute<E1, T> from, Attribute<E2, T> to) {
+    private Link(final Attribute<E1, T> from, final Attribute<E2, T> to) {
         this.from = from;
         this.to = to;
     }
@@ -25,47 +26,47 @@ public class Link<E1,E2,T> {
         return to;
     }
 
-    public static <E, T> From from(Class<E> fromEntity, SingularAttribute<?,T> from) {
+    public static <E, T> From from(final Class<E> fromEntity, final SingularAttribute<?, T> from) {
         return new From(fromEntity, from);
     }
-    
-    public static <E, T> From from(Class<E> fromEntity, Field field) {
-    	return new From(fromEntity, field);
+
+    public static <E, T> From from(final Class<E> fromEntity, final Field field) {
+        return new From(fromEntity, field);
     }
 
-    public static class From<E1,E2,T> {
+    public static class From<E1, E2, T> {
         private final Attribute<E1, T> from;
 
-        private From(Class<E1> fromEntity, SingularAttribute<?,T> from) {
+        private From(final Class<E1> fromEntity, final SingularAttribute<?, T> from) {
             this(fromEntity, getJavaMember(from));
         }
 
-        public From(Class<E1> fromEntity, Field field) {
-			this.from = AttributeImpl.newInstance(fromEntity, field);
-		}
-        
-        public Link to(Class<E2> toEntity, Field field) {
-            return new Link(this.from,  AttributeImpl.newInstance(toEntity, field));
+        public From(final Class<E1> fromEntity, final Field field) {
+            this.from = AttributeImpl.newInstance(fromEntity, field);
         }
 
-		public Link to(Class<E2> toEntity, SingularAttribute<?, T> to) {
+        public Link to(final Class<E2> toEntity, final Field field) {
+            return new Link(this.from, AttributeImpl.newInstance(toEntity, field));
+        }
+
+        public Link to(final Class<E2> toEntity, final SingularAttribute<?, T> to) {
             return to(toEntity, getJavaMember(to));
         }
     }
-    
-	private static <T> Field getJavaMember(SingularAttribute<?, T> to) {
-		//A Hack for Composite Key
-		Class<?> declaredJavaType = to.getDeclaringType().getJavaType();
-		
-		Field originalField = (Field)to.getJavaMember();
-		if(originalField.getDeclaringClass().equals(declaredJavaType)) {
-			return originalField;
-		} else {
-			try {
-				return declaredJavaType.getDeclaredField(originalField.getName());
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+
+    private static <T> Field getJavaMember(final SingularAttribute<?, T> to) {
+        // A Hack for Composite Key
+        Class<?> declaredJavaType = to.getDeclaringType().getJavaType();
+
+        Field originalField = (Field)to.getJavaMember();
+        if (originalField.getDeclaringClass().equals(declaredJavaType)) {
+            return originalField;
+        } else {
+            try {
+                return declaredJavaType.getDeclaredField(originalField.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

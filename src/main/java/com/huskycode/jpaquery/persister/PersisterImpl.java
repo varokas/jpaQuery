@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.annotation.VisibleForTesting;
-import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactory;
 import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactoryImpl;
@@ -19,8 +18,6 @@ import com.huskycode.jpaquery.persister.util.BeanUtil;
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
-import com.huskycode.jpaquery.populator.ValuesPopulator;
-import com.huskycode.jpaquery.populator.ValuesPopulatorImpl;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
@@ -29,36 +26,45 @@ import com.huskycode.jpaquery.types.tree.PersistedResult;
  * @author Varokas Panusuwan
  */
 public class PersisterImpl implements Persister {
-	private EntityManager em;
-    private DependenciesDefinition deps;
-    
-    private CreationPlanTraverser creationPlanTraverser = new CreationPlanTraverser();
-    private EntityPersisterFactory entityPersisterFactory = new EntityPersisterFactoryImpl();
-	
+    private final EntityManager em;
+    private final DependenciesDefinition deps;
+
+    private final CreationPlanTraverser creationPlanTraverser = new CreationPlanTraverser();
+    private final EntityPersisterFactory entityPersisterFactory;
+
     @VisibleForTesting
-	PersisterImpl(EntityManager em, DependenciesDefinition deps) {
-		this.em = em;
-		this.deps = deps;
-	}
-	
-	
-	public static PersisterImpl newInstance(EntityManager em, DependenciesDefinition deps) {
-		PersisterImpl persisterImpl = new PersisterImpl(em, deps);
-		return persisterImpl;
-	}
+    PersisterImpl(final EntityManager em, final DependenciesDefinition deps) {
+        this(em, deps, new RandomValuePopulatorImpl());
+    }
+
+    PersisterImpl(final EntityManager em, final DependenciesDefinition deps,
+            final RandomValuePopulator randomValuePopulator) {
+        this.em = em;
+        this.deps = deps;
+        this.entityPersisterFactory = new EntityPersisterFactoryImpl(randomValuePopulator);
+    }
+
+    public static PersisterImpl newInstance(final EntityManager em, final DependenciesDefinition deps) {
+        PersisterImpl persisterImpl = new PersisterImpl(em, deps);
+        return persisterImpl;
+    }
+
+    public static PersisterImpl newInstance(final EntityManager em, final DependenciesDefinition deps,
+            final RandomValuePopulator randomValuePopulator) {
+        PersisterImpl persisterImpl = new PersisterImpl(em, deps, randomValuePopulator);
+        return persisterImpl;
+    }
 
     @Override
-    public PersistedResult persistValues(CreationPlan plan) {
+    public PersistedResult persistValues(final CreationPlan plan) {
         List<Object> objects = new ArrayList<Object>();
 
         PropogatedValueStore<EntityNode, Field, Object> valueStore = PropogatedValueStore.newInstance();
-        
+
         for (EntityNode node : creationPlanTraverser.getEntityNodes(plan)) {
-        	Map<Field, Object> overrideFields = getOverrideFields(node, valueStore);
-        	Object obj = entityPersisterFactory
-        			.createEntityPersister(node, deps, em)
-        			.persistNode(node, overrideFields);
-            
+            Map<Field, Object> overrideFields = getOverrideFields(node, valueStore);
+            Object obj = entityPersisterFactory.createEntityPersister(node, deps, em).persistNode(node, overrideFields);
+
             objects.add(obj);
             storeFieldValueToPopulate(obj, node, valueStore);
         }
@@ -66,24 +72,24 @@ public class PersisterImpl implements Persister {
         return PersistedResult.newInstance(objects);
     }
 
-    private Map<Field, Object> getOverrideFields(EntityNode node, 
-    						PropogatedValueStore<EntityNode, Field, Object> valueStore) {
-    	Map<Field, Object> overrideFields = new HashMap<Field, Object>();
-    	if (node.getCommand() != null) {
-    		overrideFields.putAll(node.getCommand().getFieldValues());
-    	}
-    	overrideFields.putAll(valueStore.get(node));
-    	return overrideFields;
+    private Map<Field, Object> getOverrideFields(final EntityNode node,
+            final PropogatedValueStore<EntityNode, Field, Object> valueStore) {
+        Map<Field, Object> overrideFields = new HashMap<Field, Object>();
+        if (node.getCommand() != null) {
+            overrideFields.putAll(node.getCommand().getFieldValues());
+        }
+        overrideFields.putAll(valueStore.get(node));
+        return overrideFields;
     }
-    
-    private void storeFieldValueToPopulate(Object obj, EntityNode parent,
-    		PropogatedValueStore<EntityNode, Field, Object> valueStore) {
-		for (EntityNode child : parent.getChilds()) {
-			List<Link<?,?,?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
-			for (Link<?,?,?> link : links) {
-				Field parentField = link.getTo().getField();
-				valueStore.putValue(child, link.getFrom().getField(), BeanUtil.getValue(obj, parentField));
-			}
-		}
-	}
+
+    private void storeFieldValueToPopulate(final Object obj, final EntityNode parent,
+            final PropogatedValueStore<EntityNode, Field, Object> valueStore) {
+        for (EntityNode child : parent.getChilds()) {
+            List<Link<?, ?, ?>> links = deps.getDependencyLinks(child.getEntityClass(), parent.getEntityClass());
+            for (Link<?, ?, ?> link : links) {
+                Field parentField = link.getTo().getField();
+                valueStore.putValue(child, link.getFrom().getField(), BeanUtil.getValue(obj, parentField));
+            }
+        }
+    }
 }

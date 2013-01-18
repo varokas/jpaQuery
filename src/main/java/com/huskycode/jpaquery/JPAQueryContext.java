@@ -25,15 +25,14 @@ public class JPAQueryContext {
     }
 
     /** Visible for Testing */
-    static JPAQueryContext newInstance(EntityManager entityManager,
-                                     DependenciesDefinition deps,
-                                     RandomValuePopulator randomValuePopulator) {
+    static JPAQueryContext newInstance(final EntityManager entityManager, final DependenciesDefinition deps,
+            final RandomValuePopulator randomValuePopulator) {
         JPAQueryContext jpaContext = new JPAQueryContext();
 
-        if(entityManager == null) {
+        if (entityManager == null) {
             throw new IllegalArgumentException("Entity manager supplied cannot be null");
         }
-        if(deps == null) {
+        if (deps == null) {
             throw new IllegalArgumentException("Dependencies definition supplied cannot be null");
         }
 
@@ -44,37 +43,38 @@ public class JPAQueryContext {
         return jpaContext;
     }
 
-    
-    public static JPAQueryContext newInstance(EntityManager entityManager, DependenciesDefinition deps) {
-        return newInstance(entityManager,
-                deps,
-                new RandomValuePopulatorImpl());
+    public static JPAQueryContext newInstance(final EntityManager entityManager, final DependenciesDefinition deps) {
+        return newInstance(entityManager, deps, new RandomValuePopulatorImpl());
     }
 
-    public <E> PersistedResult create(Class<E> entityClass) {
-            Solver solver = SolverImpl.newInstance(dependenciesDefinition);
-            CreationPlan creationPlan = solver.solveFor(entityClass);
-            
-            Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
-            return persister.persistValues(creationPlan);
-    }
-    
-    public <E> PersistedResult create(CommandNodes commands) {
+    public <E> PersistedResult create(final Class<E> entityClass) {
         Solver solver = SolverImpl.newInstance(dependenciesDefinition);
-        CreationPlan creationPlan = solver.solveFor(commands);
-        
-        Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
+        CreationPlan creationPlan = solver.solveFor(entityClass);
+
+        Persister persister = createPersister();
         return persister.persistValues(creationPlan);
     }
-    
+
+    public <E> PersistedResult create(final CommandNodes commands) {
+        Solver solver = SolverImpl.newInstance(dependenciesDefinition);
+        CreationPlan creationPlan = solver.solveFor(commands);
+
+        Persister persister = createPersister();
+        return persister.persistValues(creationPlan);
+    }
+
     public <E> PersistedResult createFromDependencyDefinition() {
-    	CreationPlanFromDefinition creator = CreationPlanFromDefinition.getInstance();
-    	Persister persister = PersisterImpl.newInstance(entityManager, dependenciesDefinition);
+        CreationPlanFromDefinition creator = CreationPlanFromDefinition.getInstance();
+        Persister persister = createPersister();
         return persister.persistValues(creator.from(dependenciesDefinition));
     }
-    
+
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    private Persister createPersister() {
+        return PersisterImpl.newInstance(entityManager, dependenciesDefinition, randomValuePopulator);
     }
 
     public RandomValuePopulator getRandomValuePopulator() {

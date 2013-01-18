@@ -45,14 +45,14 @@ public class RandomizerTest {
     @Test
     public void testGetAsciiString() {
         int length = Math.abs(any.nextInt(MAX_LENGTH));
-        String actual = RandomizerImpl.getAsciiString(length);
+        String actual = RandomizerImpl.getAlphanumericString(length);
 
         assertThat(actual,instanceOf(String.class));
         assertThat(actual.length(), equalTo(length));
 
         length = 0;
         String expect = "";
-        assertEquals(RandomizerImpl.getAsciiString(length), expect);
+        assertEquals(RandomizerImpl.getAlphanumericString(length), expect);
     }
 
     @Test

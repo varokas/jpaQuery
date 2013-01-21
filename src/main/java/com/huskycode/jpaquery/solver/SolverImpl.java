@@ -2,12 +2,11 @@ package com.huskycode.jpaquery.solver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
@@ -26,46 +25,43 @@ import com.huskycode.jpaquery.util.MapUtil;
 import com.huskycode.jpaquery.util.ValueStore;
 
 public class SolverImpl implements Solver {
-	
-	private CommandInterpretor commandInterpretor;
-	private DependenciesDefinition deps;
-	private SolverImpl(DependenciesDefinition deps) {
+
+	private final CommandInterpretor commandInterpretor;
+	private final DependenciesDefinition deps;
+
+	private SolverImpl(final DependenciesDefinition deps) {
 		commandInterpretor = CommandInterpretor.getInstance();
 		this.deps = deps;
 	}
-	
-	public static SolverImpl newInstance(DependenciesDefinition deps) { 
+
+	public static SolverImpl newInstance(final DependenciesDefinition deps) {
 		return new SolverImpl(deps);
 	}
 
 	@Deprecated
 	@Override
-	public <E> CreationPlan solveFor(Class<E> entityClass) {
+	public <E> CreationPlan solveFor(final Class<E> entityClass) {
 		CommandNode command = CommandNodeFactory.n(entityClass);
 		return solveFor(CommandNodesFactory.ns(command));
 	}
-	
+
 
 	@Override
-	public <E> CreationPlan solveFor(CommandNodes commands) {
+	public <E> CreationPlan solveFor(final CommandNodes commands) {
 		ActionGraph actionGraph = createActionGraph(commands);
 		return CreationPlan.newInstance(actionGraph);
 	}
-	
-	protected ActionGraph createActionGraph(CommandNodes commands) {
-		
+
+	protected ActionGraph createActionGraph(final CommandNodes commands) {
 		ActionGraph actionGraph = ActionGraph.newInstance();
 		CommandPlan plan = commandInterpretor.createPlan(commands, deps);
-		createActionGraph(plan,
-							actionGraph);
+		createActionGraph(plan, actionGraph);
 		return actionGraph;
 	}
-	
-	
-	
-	private void createActionGraph(CommandPlan plan,
-									ActionGraph actionGraph) {
-		
+
+	private void createActionGraph(final CommandPlan plan,
+									final ActionGraph actionGraph) {
+
 		//Context
 		PropogatedValueStore<CommandNode, Class<?>, EntityNode> context = PropogatedValueStore.newInstance();
 		InstanceValueStore<CommandNode, ListIterator<Class<?>>> commandNodeIteratorMap = InstanceValueStore.newInstance();
@@ -100,12 +96,12 @@ public class SolverImpl implements Solver {
 				} else {
 					throw new InvalidCommandHierarchy("Context contain the entity before it expects");
 				}
-				
+
 				if (entityClassIterator.hasNext()) {
 					currentEntityClass = entityClassIterator.next().getCurrent();
 				} else {
 					throw new InvalidCommandHierarchy(currentCommand.toString());
-				}	
+				}
 			}
 			//
 			Set<Class<?>> parents = getDirectParentDependency(currentEntityClass);
@@ -114,11 +110,11 @@ public class SolverImpl implements Solver {
 				actionGraph.addEntityNode(thisNode);
 				updateChildrenIterator(currentCommand.getChildren(), entityClassIterator, commandNodeIteratorMap);
 				updateChildrenContext(currentCommand.getChildren(), currentContext, context);
-			}			
+			}
 		}
 	}
-	
-	private boolean shouldCreate(Class<?> currentEntity, CommandNode command, PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
+
+	private boolean shouldCreate(final Class<?> currentEntity, final CommandNode command, final PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
 		if (command.getChildren().size() > 0) {
 			for (CommandNode child : command.getChildren()) {
 				if(!context.get(child).keySet().contains(currentEntity)) {
@@ -128,16 +124,16 @@ public class SolverImpl implements Solver {
 			return false;
 		}
 		return true;
-		
+
 	}
 
-	private Set<Class<?>> getDirectParentDependency(Class<?> currentEntityClass) {
+	private Set<Class<?>> getDirectParentDependency(final Class<?> currentEntityClass) {
 		return deps.getDirectParentDependencyEntity(currentEntityClass);
 	}
 
-	private ContextKey createContextKey(Class<?> currentEntityClass,
-										Map<Class<?>, EntityNode> context,
-										DummyEntityContainer dummyContainer) {
+	private ContextKey createContextKey(final Class<?> currentEntityClass,
+										final Map<Class<?>, EntityNode> context,
+										final DummyEntityContainer dummyContainer) {
 		ContextKey key = ContextKey.newInstance(currentEntityClass);
 		for (Class<?> parent : getDirectParentDependency(currentEntityClass)) {
 			EntityNode parentNode  = context.get(parent);
@@ -149,9 +145,9 @@ public class SolverImpl implements Solver {
 		return key;
 	}
 
-	private void updateChildrenContext(List<CommandNode> children,
-										Map<Class<?>, EntityNode> parentContext,
-										PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
+	private void updateChildrenContext(final List<CommandNode> children,
+										final Map<Class<?>, EntityNode> parentContext,
+										final PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
 		for (CommandNode child : children) {
 			for (Entry<Class<?>, EntityNode> entry : parentContext.entrySet()) {
 				Map<Class<?>, EntityNode> childContext = context.get(child);
@@ -161,10 +157,10 @@ public class SolverImpl implements Solver {
 			}
 		}
 	}
-	
-	private void updateChildrenIterator(List<CommandNode> children,
-										ListIterator<Class<?>> entityClassIterator,
-										ValueStore<CommandNode, ListIterator<Class<?>>> commandNodeIteratorMap) {
+
+	private void updateChildrenIterator(final List<CommandNode> children,
+										final ListIterator<Class<?>> entityClassIterator,
+										final ValueStore<CommandNode, ListIterator<Class<?>>> commandNodeIteratorMap) {
 		//update parent iterator to next one
 		entityClassIterator.next();
 		//copy to children
@@ -176,28 +172,28 @@ public class SolverImpl implements Solver {
 				childItr.updateLatest(entityClassIterator);
 			}
 		}
-	}	
-	
-	private EntityNode createEntityNodeAndUpdateContext(Class<?> entityClass,
-										Map<Class<?>, EntityNode> context,
-										DummyEntityContainer dummyContainer) {
+	}
+
+	private EntityNode createEntityNodeAndUpdateContext(final Class<?> entityClass,
+										final Map<Class<?>, EntityNode> context,
+										final DummyEntityContainer dummyContainer) {
 		EntityNode thisNode = EntityNode.newInstance(entityClass);
 		linkDependency(thisNode, context, dummyContainer);
 		context.put(entityClass, thisNode);
 		return thisNode;
 	}
-	
-	private EntityNode createEntityNodeAndUpdateContext(CommandNode command,
-											Map<Class<?>, EntityNode> context,
-											DummyEntityContainer dummyContainer,
-											Set<Class<?>> parents) {
+
+	private EntityNode createEntityNodeAndUpdateContext(final CommandNode command,
+											final Map<Class<?>, EntityNode> context,
+											final DummyEntityContainer dummyContainer,
+											final Set<Class<?>> parents) {
 		EntityNode thisNode = createEntityNodeAndUpdateContext(command.getEntity(), context, dummyContainer);
 		thisNode.setCommand(command);
 		return thisNode;
 	}
-	
-	private void linkDependency(EntityNode thisNode, Map<Class<?>, EntityNode> context,
-								DummyEntityContainer dummyContainer) {
+
+	private void linkDependency(final EntityNode thisNode, final Map<Class<?>, EntityNode> context,
+								final DummyEntityContainer dummyContainer) {
 		for (Class<?> entityClass : getDirectParentDependency(thisNode.getEntityClass())) {
 			EntityNode parentNode  = context.get(entityClass);
 			if (parentNode == null) {
@@ -207,39 +203,39 @@ public class SolverImpl implements Solver {
 			parentNode.addChild(thisNode);
 		}
 	}
-	
-	
+
+
 	private static class EntityListIteratorFactory implements Factory<ListIterator<Class<?>>> {
-		
+
 		private final List<Class<?>> plan;
-		
-		private EntityListIteratorFactory(List<Class<?>> plan) {
+
+		private EntityListIteratorFactory(final List<Class<?>> plan) {
 			this.plan = plan;
 		}
-		
-		public static EntityListIteratorFactory newInstance(List<Class<?>> plan) {
+
+		public static EntityListIteratorFactory newInstance(final List<Class<?>> plan) {
 			return new EntityListIteratorFactory(plan);
 		}
 
 		@Override
 		public ListIterator<Class<?>> newInstace() {
 			return ListIterator.of(plan);
-		}		
+		}
 	}
-	
+
 	private static class DummyEntityContainer {
 		private final Map<Class<?>, EntityNode> dummyContainer = new HashMap<Class<?>, EntityNode>();
 		private final DependenciesDefinition deps;
-		
-		private  DummyEntityContainer(DependenciesDefinition deps) {
+
+		private  DummyEntityContainer(final DependenciesDefinition deps) {
 			this.deps = deps;
 		}
-		
-		public static DummyEntityContainer newInstance(DependenciesDefinition deps) {
+
+		public static DummyEntityContainer newInstance(final DependenciesDefinition deps) {
 			return new DummyEntityContainer(deps);
 		}
-		
-		public EntityNode create(Class<?> entityClass) {
+
+		public EntityNode create(final Class<?> entityClass) {
 			EntityNode result = dummyContainer.get(entityClass);
 			if (result == null) {
 				result = EntityNode.newInstance(entityClass);
@@ -248,16 +244,16 @@ public class SolverImpl implements Solver {
 			}
 			return result;
 		}
-		
-		public boolean contain(Class<?> entityClass) {
+
+		public boolean contain(final Class<?> entityClass) {
 			return this.dummyContainer.containsKey(entityClass);
 		}
-		
-		public EntityNode getDummyEntity(Class<?> entityClass) {
+
+		public EntityNode getDummyEntity(final Class<?> entityClass) {
 			return dummyContainer.get(entityClass);
 		}
 
-		private void linkDependency(EntityNode thisNode) {
+		private void linkDependency(final EntityNode thisNode) {
 			for (Class<?> parent : deps.getDirectParentDependencyEntity(thisNode.getEntityClass())) {
 				EntityNode parentNode  = dummyContainer.get(parent);
 				thisNode.addParent(parentNode);
@@ -271,35 +267,35 @@ public class SolverImpl implements Solver {
 		private List<T> list;
 		private T current;
 		private int currentIndex;
-		
-		private ListIterator(List<T> list, int index) {
+
+		private ListIterator(final List<T> list, final int index) {
 			initialize(list, index);
 		}
-		
-		private void initialize(List<T> list, int index) {
+
+		private void initialize(final List<T> list, final int index) {
 			this.list = list;
 			this.itr = list.listIterator(index);
 			next();
 		}
-		
-		public static <T> ListIterator<T> of(List<T> list) {
+
+		public static <T> ListIterator<T> of(final List<T> list) {
 			return new ListIterator<T>(list, 0);
 		}
-		
-		public static <T> ListIterator<T> copy(ListIterator<T> other) {
+
+		public static <T> ListIterator<T> copy(final ListIterator<T> other) {
 			return new ListIterator<T>(other.list, other.currentIndex);
 		}
-		
-		public void updateLatest(ListIterator<T> other) {
+
+		public void updateLatest(final ListIterator<T> other) {
 			if (this.currentIndex < other.currentIndex) {
 				initialize(this.list, other.currentIndex);
 			}
 		}
-		
+
 		public boolean hasNext() {
 			return this.itr.hasNext();
 		}
-		
+
 		private ListIterator<T> next() {
 			try {
 				this.currentIndex = this.itr.nextIndex();
@@ -310,26 +306,26 @@ public class SolverImpl implements Solver {
 				return this;
 			}
 		}
-		
+
 		public T getCurrent() {
 			return this.current;
 		}
 	}
-	
+
 	private static class ContextKey {
 		private final Class<?> entityClass;
 		private final List<InstanceWrapper<EntityNode>> entityNodes;
-		
-		private ContextKey(Class<?> entityClass) {
+
+		private ContextKey(final Class<?> entityClass) {
 			this.entityClass = entityClass;
 			this.entityNodes = new ArrayList<InstanceWrapper<EntityNode>>();
 		}
-		
-		public static ContextKey newInstance(Class<?> entityClass) {
+
+		public static ContextKey newInstance(final Class<?> entityClass) {
 			return new ContextKey(entityClass);
 		}
-		
-		public void addEntityNode(EntityNode node) {
+
+		public void addEntityNode(final EntityNode node) {
 			this.entityNodes.add(new InstanceWrapper<EntityNode>(node));
 		}
 
@@ -345,25 +341,32 @@ public class SolverImpl implements Solver {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
+		public boolean equals(final Object obj) {
+			if (this == obj) {
+                return true;
+            }
+			if (obj == null) {
+                return false;
+            }
+			if (getClass() != obj.getClass()) {
+                return false;
+            }
 			ContextKey other = (ContextKey) obj;
 			if (entityClass == null) {
-				if (other.entityClass != null)
-					return false;
-			} else if (!entityClass.equals(other.entityClass))
-				return false;
+				if (other.entityClass != null) {
+                    return false;
+                }
+			} else if (!entityClass.equals(other.entityClass)) {
+                return false;
+            }
 			if (entityNodes == null) {
-				if (other.entityNodes != null)
-					return false;
-			} else if (!entityNodes.equals(other.entityNodes))
-				return false;
+				if (other.entityNodes != null) {
+                    return false;
+                }
+			} else if (!entityNodes.equals(other.entityNodes)) {
+                return false;
+            }
 			return true;
-		}	
+		}
 	}
 }

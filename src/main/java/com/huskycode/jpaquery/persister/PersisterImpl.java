@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.annotation.VisibleForTesting;
+import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactory;
 import com.huskycode.jpaquery.persister.entitycreator.EntityPersisterFactoryImpl;
@@ -18,6 +19,7 @@ import com.huskycode.jpaquery.persister.util.BeanUtil;
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.solver.CommandNodesIndexResult;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
@@ -57,19 +59,33 @@ public class PersisterImpl implements Persister {
 
     @Override
     public PersistedResult persistValues(final CreationPlan plan) {
+        return persistValues(plan, null);
+    }
+
+
+    @Override
+    public PersistedResult persistValues(final CreationPlan plan, final CommandNodesIndexResult commandIndexes) {
         List<Object> objects = new ArrayList<Object>();
 
         PropogatedValueStore<EntityNode, Field, Object> valueStore = PropogatedValueStore.newInstance();
-
+        Map<CommandNode, Object> commandObjectMap = new HashMap<CommandNode, Object>();
         for (EntityNode node : creationPlanTraverser.getEntityNodes(plan)) {
             Map<Field, Object> overrideFields = getOverrideFields(node, valueStore);
             Object obj = entityPersisterFactory.createEntityPersister(node, deps, em).persistNode(node, overrideFields);
 
             objects.add(obj);
             storeFieldValueToPopulate(obj, node, valueStore);
+
+            if (node.getCommand() != null) {
+                commandObjectMap.put(node.getCommand(), obj);
+            }
         }
 
-        return PersistedResult.newInstance(objects);
+        if (commandIndexes != null) {
+            return PersistedResult.newInstance(objects, commandIndexes, commandObjectMap);
+        } else {
+            return PersistedResult.newInstance(objects);
+        }
     }
 
     private Map<Field, Object> getOverrideFields(final EntityNode node,

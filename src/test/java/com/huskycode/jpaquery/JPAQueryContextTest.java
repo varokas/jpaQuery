@@ -1,17 +1,19 @@
 package com.huskycode.jpaquery;
 
-import com.huskycode.jpaquery.populator.RandomValuePopulator;
-import com.huskycode.jpaquery.testmodel.EntityWithFields;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Matchers;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import javax.persistence.EntityManager;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.huskycode.jpaquery.populator.RandomValuePopulator;
+import com.huskycode.jpaquery.solver.CommandNodesIndexBuilder;
 
 /**
  * @author Varokas Panusuwan
@@ -21,12 +23,13 @@ public class JPAQueryContextTest {
     private DependenciesDefinition deps;
     private JPAQueryContext jpaContext;
     private RandomValuePopulator randomValuePopulator;
-
+    private CommandNodesIndexBuilder indexBuilder;
     @Before
     public void before() {
         entityManager = mock(EntityManager.class);
         deps = mock(DependenciesDefinition.class);
         randomValuePopulator = mock(RandomValuePopulator.class);
+        indexBuilder = mock(CommandNodesIndexBuilder.class);
     }
 
     @Test

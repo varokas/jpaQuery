@@ -91,10 +91,10 @@ public class PersisterImpl implements Persister {
     private Map<Field, Object> getOverrideFields(final EntityNode node,
             final PropogatedValueStore<EntityNode, Field, Object> valueStore) {
         Map<Field, Object> overrideFields = new HashMap<Field, Object>();
-        if (node.getCommand() != null) {
+        overrideFields.putAll(valueStore.get(node));
+        if (node.getCommand() != null) { //Custom values from users have higher priority
             overrideFields.putAll(node.getCommand().getFieldValues());
         }
-        overrideFields.putAll(valueStore.get(node));
         return overrideFields;
     }
 

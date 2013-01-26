@@ -21,7 +21,7 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
 
 /**
  * This is a persister that will persist an entity as a normal database row.
- * 
+ *
  * @author varokas
  */
 public class NewRowEntityPersister implements EntityPersister {
@@ -71,7 +71,7 @@ public class NewRowEntityPersister implements EntityPersister {
                         try {
                             if (idField.getType().equals(Integer.class)) {
                                 valuesToPopulate.put(idField, (Integer.valueOf(maxRecordId.toString())) + 1);
-                            } else {
+                            } else if (idField.getType().equals(Long.class)){
                                 valuesToPopulate.put(idField, (Long.valueOf(maxRecordId.toString())) + 1);
                             }
                         } catch (IllegalArgumentException e) {

@@ -20,12 +20,14 @@ public class CommandNodesIndexBuilderImpl implements CommandNodesIndexBuilder {
 
     private void deepFirstSearchIndexing(final CommandNode command, final Map<Class<?>, Integer> sizeMap,
             final CommandNodesIndexResult result) {
-        Class<?> c = command.getEntity();
-        int size = getSize(c, sizeMap);
-        sizeMap.put(c, size + 1);
-        result.put(command, size);
-        for (CommandNode child : command.getChildren()) {
-            deepFirstSearchIndexing(child, sizeMap, result);
+        if (result.getIndexOf(command) == null) {
+            Class<?> c = command.getEntity();
+            int size = getSize(c, sizeMap);
+            sizeMap.put(c, size + 1);
+            result.put(command, size);
+            for (CommandNode child : command.getChildren()) {
+                deepFirstSearchIndexing(child, sizeMap, result);
+            }
         }
     }
 

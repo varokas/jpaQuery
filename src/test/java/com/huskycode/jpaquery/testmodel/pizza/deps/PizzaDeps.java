@@ -36,12 +36,12 @@ import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 public class PizzaDeps {
 	@SuppressWarnings("unchecked")
 	public DependenciesDefinition getDeps() {
-		return new DepsBuilder().withLinks(new Link[] { 
+		return new DepsBuilder().withLinks(new Link[] {
 			Link.from(Customer.class, Customer_.customerAddressId)
 				.to(Address.class, Address_.addressId),
 			Link.from(Employee.class, Employee_.employeeAddressId)
 				.to(Address.class, Address_.addressId),
-				
+
 			Link.from(PizzaOrder.class, PizzaOrder_.customerId)
 				.to(Customer.class, Customer_.customerId),
 			Link.from(PizzaOrder.class, PizzaOrder_.takenByEmployeeId)
@@ -56,7 +56,7 @@ public class PizzaDeps {
 				.to(PizzaOrdered.class, PizzaOrdered_.orderId),
 			Link.from(Topping.class, Topping_.pizzaSequenceNumber)
 				.to(PizzaOrdered.class, PizzaOrdered_.pizzaSequenceNumber),
-				
+
 			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
 				.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
 			Link.from(Customer.class, Customer_.paymentMethodCode)
@@ -76,22 +76,22 @@ public class PizzaDeps {
 		})
 		.build();
 	}
-	
+
 	/**
-	 * default pizza dependencies by field. Using the field to 
+	 * default pizza dependencies by field. Using the field to
 	 * be able to run this test without jpa context
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public DependenciesDefinition getDepsUsingField() {
 		try {
-			return new DepsBuilder().withLinks(new Link[] { 
+			return new DepsBuilder().withLinks(new Link[] {
 				Link.from(Customer.class, Customer.class.getDeclaredField("customerAddressId"))
 					.to(Address.class, Address.class.getDeclaredField("addressId")),
 				Link.from(Employee.class, Employee.class.getDeclaredField("employeeAddressId"))
 					.to(Address.class, Address.class.getDeclaredField("addressId")),
-					
+
 				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("customerId"))
 					.to(Customer.class, Customer.class.getDeclaredField("customerId")),
 				Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("takenByEmployeeId"))
@@ -106,7 +106,7 @@ public class PizzaDeps {
 					.to(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("orderId")),
 				Link.from(Topping.class, Topping_.class.getDeclaredField("pizzaSequenceNumber"))
 					.to(PizzaOrdered.class, PizzaOrdered_.class.getDeclaredField("pizzaSequenceNumber")),
-					
+
 				Link.from(Vehicle.class, Vehicle.class.getDeclaredField("vehicleTypeCode"))
 					.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
 				Link.from(Customer.class, Customer.class.getDeclaredField("paymentMethodCode"))
@@ -121,7 +121,7 @@ public class PizzaDeps {
 			.withEnumTables(new Class<?>[] {
 				RefPaymentMethod.class,
 				RefDeliveryStatus.class,
-				RefBaseType.class, 
+				RefBaseType.class,
 				RefTopping.class
 			})
 			.build();
@@ -130,20 +130,20 @@ public class PizzaDeps {
 		}
 	}
 
-	public void populateInitialData(EntityManager em) {
+	public void populateInitialData(final EntityManager em) {
 		em.merge(new RefBaseType("TH", 1.0, "Thin"));
 		em.merge(new RefBaseType("DD", 1.2, "Deep Dish"));
-		
+
 		em.merge(new RefPaymentMethod("Cash","Cash"));
 		em.merge(new RefPaymentMethod("CC","Credit Card"));
 		em.merge(new RefPaymentMethod("Check","Check"));
-		
+
 		em.merge(new RefDeliveryStatus("Completed","Successfully Delivered to customer"));
 		em.merge(new RefDeliveryStatus("Returned","Customer returned the order"));
-		
+
 		em.merge(new RefTopping("PA", 1.0, "Pine Apple"));
 		em.merge(new RefTopping("Ham", 1.5, "Ham"));
-		
+
 		em.merge(new RefVehicleType("Bike", "Bicycle"));
 		em.merge(new RefVehicleType("MBike", "Motorbike"));
 		em.merge(new RefVehicleType("Van", "Van"));

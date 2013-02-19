@@ -104,8 +104,6 @@ public class SolverImpl implements Solver {
         EntityNode thisNode = createEntityNodeAndUpdateContext(currentCommand, currentContext, dummyContainer,
                 parents, contextSpecificContainer);
         actionGraph.addEntityNode(thisNode);
-        ContextKey key = createContextKey(currentCommand.getEntity(), currentContext, dummyContainer, contextSpecificContainer);
-        contextSpecificContainer.put(key, thisNode);
     }
 
 
@@ -192,6 +190,10 @@ public class SolverImpl implements Solver {
 				if (!childContext.containsKey(entry.getKey())) {
 					childContext.put(entry.getKey(), entry.getValue());
 				}
+//				else {
+//				    throw new InvalidCommandHierarchy("Command for entity "
+//				            + child.toString() + " has conflict parent entity " + entry.getKey());
+//				}
 				//TODO else if there is conflict, throw exception?
 			}
 		}

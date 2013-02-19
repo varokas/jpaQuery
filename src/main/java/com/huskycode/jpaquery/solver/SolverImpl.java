@@ -13,7 +13,6 @@ import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodeFactory;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.command.CommandNodesFactory;
-import com.huskycode.jpaquery.persister.store.InstanceValueStore;
 import com.huskycode.jpaquery.persister.store.InstanceWrapper;
 import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
@@ -21,8 +20,6 @@ import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 import com.huskycode.jpaquery.util.CollectionUtil;
 import com.huskycode.jpaquery.util.Factory;
-import com.huskycode.jpaquery.util.MapUtil;
-import com.huskycode.jpaquery.util.ValueStore;
 
 public class SolverImpl implements Solver {
 
@@ -58,7 +55,7 @@ public class SolverImpl implements Solver {
 		ActionGraph actionGraph = ActionGraph.newInstance();
 		CommandPlan plan = commandInterpretor.createPlan(commands, deps);
 		printPlan(plan);
-		createActionGraph(plan, actionGraph);
+		createActionGraph2(plan, actionGraph);
 		return actionGraph;
 	}
 
@@ -73,113 +70,92 @@ public class SolverImpl implements Solver {
 	    }
 	}
 
-	private void createActionGraph(final CommandPlan plan,
-									final ActionGraph actionGraph) {
+    private void createActionGraph2(final CommandPlan plan, final ActionGraph actionGraph) {
 
-		//Context
-		PropogatedValueStore<CommandNode, Class<?>, EntityNode> context = PropogatedValueStore.newInstance();
-		InstanceValueStore<CommandNode, ListIterator<Class<?>>> commandNodeIteratorMap = InstanceValueStore.newInstance();
-		DummyEntityContainer dummyContainer = DummyEntityContainer.newInstance(deps);
-		Map<ContextKey, EntityNode> instanceContainer = new HashMap<ContextKey, EntityNode>();
+        // Context
+        PropogatedValueStore<CommandNode, Class<?>, EntityNode> context = PropogatedValueStore.newInstance();
+        DummyEntityContainer globallySharedContextContainer = DummyEntityContainer.newInstance(deps);
+        Map<ContextKey, EntityNode> contextSpecificContainer = new HashMap<ContextKey, EntityNode>();
 
-		InOrderEntityData inOrderEntityData = plan.getInOrderEntityData();
-		EntityListIteratorFactory entityListIteratorFactory = EntityListIteratorFactory.newInstance(inOrderEntityData.getInOrderEntityList());
+        InOrderEntityData inOrderEntityData = plan.getInOrderEntityData();
+        EntityListIteratorFactory entityListIteratorFactory = EntityListIteratorFactory.newInstance(inOrderEntityData
+                .getInOrderEntityList());
 
-		for (CommandNode currentCommand : plan.getPlan()) {
-		    printIfDebug("Command: " + currentCommand);
-			ListIterator<Class<?>> entityClassIterator = MapUtil.getOrCreate(commandNodeIteratorMap, currentCommand, entityListIteratorFactory);
-			Class<?> currentEntityClass = entityClassIterator.getCurrent();
-			Map<Class<?>, EntityNode> currentContext = context.get(currentCommand);
-			printIfDebug("Current Command Context: " + currentContext.keySet());
-			while (!currentCommand.getEntity().equals(currentEntityClass)) {
-			    printIfDebug("  Current Entity: " + currentEntityClass);
-			    printIfDebug("  Current Command Context(before): " + currentContext.keySet());
-			    if (isCurrentEntityAncestorOfCommandNode(currentEntityClass, currentCommand)) {
-			        printIfDebug("   Current Entity is an ancestor of Current Command");
-    				Set<Class<?>> parents = getDirectParentDependency(currentEntityClass);
-    				if (parents.size() == 0
-    						|| !CollectionUtil.containAny(parents, currentContext.keySet())) {
-    				    printIfDebug("      No parent or parents are not in context");
-    				    printIfDebug("      Parents: " + parents);
-    					if (!dummyContainer.contain(currentEntityClass)
-    							&& shouldCreate(currentEntityClass, currentCommand, context)) {
-    					    printIfDebug("        No Dummpy and should create it");
-    						EntityNode thisNode = dummyContainer.create(currentEntityClass);
-    						actionGraph.addEntityNode(thisNode);
-    					}
-    				} else if (!currentContext.keySet().contains(currentEntityClass)) {
-     				    printIfDebug("      Else if Not in Context");
-    					ContextKey key = createContextKey(currentEntityClass, currentContext, dummyContainer, instanceContainer);
-    					EntityNode thisNode = instanceContainer.get(key);
-    					if (thisNode == null) {
-    					    printIfDebug("        Create new Context Entity");
-    						thisNode = createEntityNodeAndUpdateContext(currentEntityClass, currentContext, dummyContainer, instanceContainer);
-    						actionGraph.addEntityNode(thisNode);
-    						instanceContainer.put(key, thisNode);
-    					}
-    					currentContext.put(currentEntityClass, thisNode);
-    				} else {
-    					throw new InvalidCommandHierarchy("Context contain the entity before it expects");
-    				}
-			    }
+        for (CommandNode currentCommand : plan.getPlan()) {
+            printIfDebug("Command: " + currentCommand);
 
-				if (entityClassIterator.hasNext()) {
-					currentEntityClass = entityClassIterator.next().getCurrent();
-				} else {
-					throw new InvalidCommandHierarchy(currentCommand.toString());
-				}
-				printIfDebug("  Current Command Context(after): " + currentContext.keySet());
-			}
-			printIfDebug("End While: " + currentEntityClass);
-			Set<Class<?>> parents = getDirectParentDependency(currentEntityClass);
-			if (currentCommand.getEntity().equals(currentEntityClass)) {
-			    printIfDebug("  Current Entity equal to Comamnd: " + currentCommand);
-				EntityNode thisNode = createEntityNodeAndUpdateContext(currentCommand, currentContext, dummyContainer, parents, instanceContainer);
-				actionGraph.addEntityNode(thisNode);
-				updateChildrenIterator(currentCommand.getChildren(), entityClassIterator, commandNodeIteratorMap);
-				updateChildrenContext(currentCommand.getChildren(), currentContext, context);
+            ListIterator<Class<?>> entityClassIterator = entityListIteratorFactory.newInstace();
+            Map<Class<?>, EntityNode> currentContext = context.get(currentCommand);
 
-				ContextKey key = createContextKey(currentEntityClass, currentContext, dummyContainer, instanceContainer);
-				instanceContainer.put(key, thisNode);
-			}
-			printIfDebug("");
-		}
-	}
+            createAllRequiredParentDependencyIfNeeded(entityClassIterator, currentCommand, currentContext, globallySharedContextContainer, contextSpecificContainer, actionGraph);
+            createEntityNodeOfThisCommand(currentCommand, currentContext, globallySharedContextContainer, contextSpecificContainer, actionGraph);
+            updateChildrenContext(currentCommand.getChildren(), currentContext, context);
 
-	private boolean isCurrentEntityAncestorOfCommandNode(final Class<?> currentEntity, final CommandNode command) {
-	    if (this.deps.getAllParentDependencyEntity(command.getEntity()).contains(currentEntity)) {
-	        return true;
-	    } else if (command.getChildren().size() > 0) {
-	        for (CommandNode child : command.getChildren()) {
-	            if (isCurrentEntityAncestorOfCommandNode(currentEntity, child)) {
-	                return true;
-	            }
-	        }
-	    }
-	    return false;
-	}
+            printIfDebug("");
+        }
+    }
 
-	private boolean shouldCreate(final Class<?> currentEntity, final CommandNode command, final PropogatedValueStore<CommandNode, Class<?>, EntityNode> context) {
-		if (this.deps.getAllParentDependencyEntity(command.getEntity()).contains(currentEntity)
-		        && !context.get(command).keySet().contains(currentEntity)) {
-		    //command itself requires this entity and it is not in the context;
-		    return true;
-		} else if (command.getChildren().size() > 0) {
-			for (CommandNode child : command.getChildren()) {
-			    //if descendants require this  entity and it is not in the context;
-			    if (this.deps.getAllParentDependencyEntity(child.getEntity()).contains(currentEntity)) {
-    				if(!context.get(child).keySet().contains(currentEntity)) {
-    					return true;
-    				}
-			    } else if (shouldCreate(currentEntity, child, context)) {
-                    return true;
+    private void createEntityNodeOfThisCommand(final CommandNode currentCommand,
+                                                final Map<Class<?>, EntityNode> currentContext,
+                                                final DummyEntityContainer dummyContainer,
+                                                final Map<ContextKey, EntityNode> contextSpecificContainer,
+                                                final ActionGraph actionGraph) {
+        Set<Class<?>> parents = getDirectParentDependency(currentCommand.getEntity());
+        EntityNode thisNode = createEntityNodeAndUpdateContext(currentCommand, currentContext, dummyContainer,
+                parents, contextSpecificContainer);
+        actionGraph.addEntityNode(thisNode);
+        ContextKey key = createContextKey(currentCommand.getEntity(), currentContext, dummyContainer, contextSpecificContainer);
+        contextSpecificContainer.put(key, thisNode);
+    }
+
+
+
+    private void createAllRequiredParentDependencyIfNeeded(final ListIterator<Class<?>> entityClassIterator,
+                                                            final CommandNode currentCommand,
+                                                            final Map<Class<?>, EntityNode> currentContext,
+                                                            final DummyEntityContainer globallySharedContextContainer,
+                                                            final Map<ContextKey, EntityNode> contextSpecificContainer,
+                                                            final ActionGraph actionGraph) {
+        Class<?> currentEntityClass = entityClassIterator.getCurrent();
+        Set<Class<?>> allParentDependency = this.deps.getAllParentDependencyEntity(currentCommand.getEntity());
+        printIfDebug(" Current Command Context: " + currentContext.keySet());
+        while (!currentCommand.getEntity().equals(currentEntityClass)) {
+            printIfDebug("  Current Entity: " + currentEntityClass);
+            if (allParentDependency.contains(currentEntityClass)
+                    && !currentContext.containsKey(currentEntityClass)) {
+                printIfDebug("     Current Entity is required and not in context");
+                Set<Class<?>> parents = getDirectParentDependency(currentEntityClass);
+                if (parents.size() == 0
+                        || !CollectionUtil.containAny(parents, currentContext.keySet())) {
+                    printIfDebug("      Not context specific and can be shared");
+                    if (!globallySharedContextContainer.contain(currentEntityClass)) {
+                        printIfDebug("        No Dummpy and should create it");
+                        EntityNode thisNode = globallySharedContextContainer.create(currentEntityClass);
+                        actionGraph.addEntityNode(thisNode);
+                    }
+                }  else {
+                    printIfDebug("      Context Specific Entity");
+                    ContextKey key = createContextKey(currentEntityClass, currentContext, globallySharedContextContainer, contextSpecificContainer);
+                    EntityNode thisNode = contextSpecificContainer.get(key);
+                    if (thisNode == null) {
+                        printIfDebug("        Create new Context Entity");
+                        thisNode = createEntityNodeAndUpdateContext(currentEntityClass, currentContext, globallySharedContextContainer, contextSpecificContainer);
+                        actionGraph.addEntityNode(thisNode);
+                        contextSpecificContainer.put(key, thisNode);
+                    }
+                    currentContext.put(currentEntityClass, thisNode);
                 }
-			}
-			return false;
-		}
-		return false;
+            }
 
-	}
+            if (entityClassIterator.hasNext()) {
+                currentEntityClass = entityClassIterator.next().getCurrent();
+            } else {
+                throw new InvalidCommandHierarchy(currentCommand.toString());
+            }
+        }
+        printIfDebug(" Current Command Context: " + currentContext.keySet());
+        printIfDebug("End While: " + currentEntityClass);
+    }
 
 	private Set<Class<?>> getDirectParentDependency(final Class<?> currentEntityClass) {
 		return deps.getDirectParentDependencyEntity(currentEntityClass);
@@ -187,20 +163,20 @@ public class SolverImpl implements Solver {
 
 	private ContextKey createContextKey(final Class<?> currentEntityClass,
 										final Map<Class<?>, EntityNode> context,
-										final DummyEntityContainer dummyContainer,
-										final Map<ContextKey, EntityNode> instanceContainer) {
+										final DummyEntityContainer globallySharedContextContainer,
+										final Map<ContextKey, EntityNode> contextSpecificContainer) {
 		ContextKey key = ContextKey.newInstance(currentEntityClass);
 		for (Class<?> parent : getDirectParentDependency(currentEntityClass)) {
 			EntityNode parentNode  = context.get(parent);
 			if (parentNode == null) {
-			    ContextKey parentKey = createContextKey(parent, context, dummyContainer, instanceContainer);
-			    parentNode = instanceContainer.get(parentKey);
+			    ContextKey parentKey = createContextKey(parent, context, globallySharedContextContainer, contextSpecificContainer);
+			    parentNode = contextSpecificContainer.get(parentKey);
 			}
 			if (parentNode == null) {
-				parentNode = dummyContainer.getDummyEntity(parent);
+				parentNode = globallySharedContextContainer.getDummyEntity(parent);
 			}
 			if (parentNode == null) {
-			    throw new RuntimeException("Cannot find parent enity " + parent + " in both context and dummy for " + currentEntityClass + "");
+			    throw new RuntimeException("Cannot find parent entity " + parent + " in all contexts and global context for " + currentEntityClass);
 			}
 			key.addEntityNode(parentNode);
 		}
@@ -216,64 +192,52 @@ public class SolverImpl implements Solver {
 				if (!childContext.containsKey(entry.getKey())) {
 					childContext.put(entry.getKey(), entry.getValue());
 				}
-			}
-			updateChildrenContext(child.getChildren(), parentContext, context);
-		}
-	}
-
-	private void updateChildrenIterator(final List<CommandNode> children,
-										final ListIterator<Class<?>> entityClassIterator,
-										final ValueStore<CommandNode, ListIterator<Class<?>>> commandNodeIteratorMap) {
-		//update parent iterator to next one
-		entityClassIterator.next();
-		//copy to children
-		for (CommandNode child : children) {
-			ListIterator<Class<?>> childItr = commandNodeIteratorMap.get(child);
-			if (childItr == null) {
-				commandNodeIteratorMap.putValue(child, ListIterator.copy(entityClassIterator));
-			} else {
-				childItr.updateLatest(entityClassIterator);
+				//TODO else if there is conflict, throw exception?
 			}
 		}
 	}
 
 	private EntityNode createEntityNodeAndUpdateContext(final Class<?> entityClass,
 										final Map<Class<?>, EntityNode> context,
-										final DummyEntityContainer dummyContainer,
-										final Map<ContextKey, EntityNode> instanceContainer) {
+										final DummyEntityContainer globallySharedContextContainer,
+										final Map<ContextKey, EntityNode> contextSpecificContainer) {
 		EntityNode thisNode = EntityNode.newInstance(entityClass);
-		linkDependency(thisNode, context, dummyContainer, instanceContainer);
+		linkDependency(thisNode, context, globallySharedContextContainer, contextSpecificContainer);
 		context.put(entityClass, thisNode);
 		return thisNode;
 	}
 
 	private EntityNode createEntityNodeAndUpdateContext(final CommandNode command,
 											final Map<Class<?>, EntityNode> context,
-											final DummyEntityContainer dummyContainer,
+											final DummyEntityContainer globallySharedContextContainer,
 											final Set<Class<?>> parents,
 											final Map<ContextKey, EntityNode> instanceContainer) {
-		EntityNode thisNode = createEntityNodeAndUpdateContext(command.getEntity(), context, dummyContainer, instanceContainer);
+		EntityNode thisNode = createEntityNodeAndUpdateContext(command.getEntity(), context, globallySharedContextContainer, instanceContainer);
 		thisNode.setCommand(command);
 		return thisNode;
 	}
 
 	private void linkDependency(final EntityNode thisNode, final Map<Class<?>, EntityNode> context,
-								final DummyEntityContainer dummyContainer, final Map<ContextKey, EntityNode> instanceContainer) {
+								final DummyEntityContainer globallySharedContextContainer, final Map<ContextKey, EntityNode> contextSpecificContainer) {
 		for (Class<?> entityClass : getDirectParentDependency(thisNode.getEntityClass())) {
 			EntityNode parentNode  = context.get(entityClass);
 			if (parentNode == null) {
-                ContextKey parentKey = createContextKey(entityClass, context, dummyContainer, instanceContainer);
-                parentNode = instanceContainer.get(parentKey);
+                ContextKey parentKey = createContextKey(entityClass, context, globallySharedContextContainer, contextSpecificContainer);
+                parentNode = contextSpecificContainer.get(parentKey);
             }
 			if (parentNode == null) {
-				parentNode = dummyContainer.getDummyEntity(entityClass);
+				parentNode = globallySharedContextContainer.getDummyEntity(entityClass);
 			}
+			if (parentNode == null) {
+                throw new RuntimeException("Cannot find parent entity " + entityClass
+                        + " in all contexts and global context for " + thisNode.getEntityClass());
+            }
 			thisNode.addParent(parentNode);
 			parentNode.addChild(thisNode);
 		}
 	}
 
-	private void printIfDebug(final Object msg) {
+	private static void printIfDebug(final Object msg) {
 	    if (isDebug) {
 	        System.out.println(msg);
 	    }
@@ -330,6 +294,11 @@ public class SolverImpl implements Solver {
 		private void linkDependency(final EntityNode thisNode) {
 			for (Class<?> parent : deps.getDirectParentDependencyEntity(thisNode.getEntityClass())) {
 				EntityNode parentNode  = dummyContainer.get(parent);
+				printIfDebug("Get Dummy Parent " + parent + " for " + thisNode.getEntityClass());
+				if (parentNode == null) {
+				    throw new RuntimeException("Cannot find parent entity " + parent + " for entity "
+				            + thisNode.getEntityClass() + " in globally shared context.");
+				}
 				thisNode.addParent(parentNode);
 				parentNode.addChild(thisNode);
 			}

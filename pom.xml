@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.huskycode</groupId>
 	<artifactId>jpaQuery</artifactId>
-	<version>1.7</version>
+	<version>1.8-SNAPSHOT</version>
 	<name>JPA Query</name>
 	<packaging>jar</packaging>
 	<url>https://github.com/varokas/jpaQuery/</url>

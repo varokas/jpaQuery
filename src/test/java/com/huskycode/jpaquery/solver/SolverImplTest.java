@@ -17,6 +17,7 @@ import com.huskycode.jpaquery.DepsBuilder;
 import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodeFactory.CommandNodeImpl;
 import com.huskycode.jpaquery.command.CommandNodes;
+import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
@@ -464,18 +465,56 @@ public class SolverImplTest {
 	}
 
 	@Test
-	public void testSolveJoinDescendantByTheParentsWithSharedAscendants() {
-	    DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
-        CommandNode sharedChild = n(PizzaOrder.class);
-        CommandNodeImpl customer = n(Customer.class);
-        CommandNodeImpl employee = n(Employee.class);
-        CommandNodes commands = ns(customer.with(sharedChild),
-                                    employee.with(sharedChild),
-                                n(Address.class, customer, employee));
+	public void testSolveJoinDescendantByTheParentsWithSharedAscendants() throws SecurityException, NoSuchFieldException {
+	    DependenciesDefinition dependenciesDefinition = getJoinDescendantDefinition();
+        CommandNode sharedChild = n(L3.class);
+        CommandNodeImpl l1_1Command = n(L1_1.class);
+        CommandNodes commands = ns(l1_1Command.with(sharedChild),
+                                    n(L1_2.class).with(sharedChild));
 
         CreationPlan result = SolverImpl.newInstance(dependenciesDefinition).solveFor(commands);
 
-        //Assert no duplication of either customer, or employee
-        assertThat(result.getActionGraph().getAllNodes().size(), is(8));
+        //Assert no duplication of L2
+        assertThat(result.getActionGraph().getAllNodes().size(), is(4));
+
+        EntityNode l2Node = result.getActionGraph().getAllNodes().get(2);
+        Assert.assertEquals(l2Node.getEntityClass(), L2.class);
+        //L2 entity depends on command L1_1 correctly.
+        Assert.assertSame(l2Node.getParent().toArray(new EntityNode[0])[0].getCommand(), l1_1Command);
+	}
+
+	@SuppressWarnings("unchecked")
+    private DependenciesDefinition getJoinDescendantDefinition() throws SecurityException, NoSuchFieldException {
+	    return new DepsBuilder().withLinks(new Link[]{
+	            Link.from(L2.class, L2.class.getDeclaredField("referenceL1_1"))
+	                .to(L1_1.class, L1_1.class.getDeclaredField("id")),
+	            Link.from(L3.class, L3.class.getDeclaredField("referenceL1_1"))
+                    .to(L1_1.class, L1_1.class.getDeclaredField("id")),
+                Link.from(L3.class, L3.class.getDeclaredField("referenceL1_2"))
+                    .to(L1_2.class, L1_2.class.getDeclaredField("id")),
+                Link.from(L3.class, L3.class.getDeclaredField("referenceL2"))
+                    .to(L2.class, L2.class.getDeclaredField("id"))
+	    }).build();
+	}
+
+	private static class L1_1 {
+	    private int id;
+	}
+
+	private static class L1_2 {
+        private int id;
+    }
+
+	private static class L2 {
+        private int id;
+        private int referenceL1_1;
+    }
+
+	private static class L3 {
+	    private int id;
+	    private int referenceL1_1;
+	    private int referenceL1_2;
+	    private int referenceL2;
+
 	}
 }

@@ -30,6 +30,16 @@ public class RandomizerTest {
     }
     
     @Test
+    public void testRandomByStringTypeRespectDefaultLength() {
+    	RandomizerImpl randomizer = new RandomizerImpl();
+    	int defaultLength = 1;
+    	randomizer.setDefaultLength(defaultLength);
+        
+    	String result = randomizer.getRandomOfType(String.class);
+        assertEquals(defaultLength, result.length());
+    }
+    
+    @Test
     public void testGetString() {
         int length = Math.abs(any.nextInt(MAX_LENGTH));
         String expected = RandomizerImpl.getString(length);
@@ -71,6 +81,11 @@ public class RandomizerTest {
     public void testGetLong() {
         assertThat(RandomizerImpl.getLong(),instanceOf(Long.class));
     }
+    
+    @Test
+    public void testGetLongNeverReturnValueLargerThanInt() {
+    	assertThat(RandomizerImpl.getLong(),lessThan((long)Integer.MAX_VALUE));
+    } 
 
     @Test
     public void testGetNonNegativeLong() {

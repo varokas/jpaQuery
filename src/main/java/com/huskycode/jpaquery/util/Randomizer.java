@@ -8,6 +8,8 @@ package com.huskycode.jpaquery.util;
  * To change this template use File | Settings | File Templates.
  */
 public interface Randomizer {
+	public int getDefaultLength();
+	public void setDefaultLength(int length);
     public <T> T getRandomOfType(Class<T> type, int length);
     public <T> T getRandomOfType(Class<T> type);
 }

@@ -12,13 +12,22 @@ import org.apache.commons.lang.RandomStringUtils;
 public class RandomizerImpl implements Randomizer {
 
     private static final Random any = new Random();
-    public static Integer DEFAULT_LENGTH = 2;
+    public static int DEFAULT_LENGTH = 2;
+    
+    private int defaultLength = DEFAULT_LENGTH;
 
-    @Override
+    public int getDefaultLength() {
+		return defaultLength;
+	}
+
+	public void setDefaultLength(int defaultLength) {
+		this.defaultLength = defaultLength;
+	}
+
+	@Override
     public <T> T getRandomOfType(final Class<T> type, final int length) {
         if (type.equals(String.class)) {
-            // TODO length doesn't seem to work?; Now use default length = 2;
-            return length > 0 ? (T)(getAlphanumericString(DEFAULT_LENGTH)) : (T)(getAlphanumericString(DEFAULT_LENGTH));
+            return length > 0 ? (T)(getAlphanumericString(length)) : (T)(getAlphanumericString(this.defaultLength));
         } else if (type.equals(Integer.class) || type.equals(int.class)) {
             return (T)(getInt());
         } else if (type.equals(Double.class) || type.equals(double.class)) {
@@ -90,12 +99,20 @@ public class RandomizerImpl implements Randomizer {
         return Math.abs(any.nextInt());
     }
 
+    /**
+     * @return return value in range of Integer so that it is compatible and system with
+     * 			inconsistency of the application type and database type.
+     */
     public static Long getLong() {
         return new Long(any.nextInt());
     }
 
+    /**
+     * @return return value in range of Integer so that it is compatible and system with
+     * 			inconsistency of the application type and database type.
+     */
     public static Long getNonNegativeLong() {
-        return Math.abs(any.nextLong());
+        return Math.abs(getLong());
     }
 
     public static Double getDouble() {
@@ -107,7 +124,7 @@ public class RandomizerImpl implements Randomizer {
     }
 
     public static Boolean getBoolean() {
-        return any.nextDouble() > 0.5;
+        return any.nextBoolean();
     }
 
     public static Date getDate() {

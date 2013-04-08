@@ -4,6 +4,7 @@ import static com.huskycode.jpaquery.util.MapUtil.getOrCreateList;
 import static com.huskycode.jpaquery.util.MapUtil.getOrCreateMap;
 import static com.huskycode.jpaquery.util.MapUtil.getOrCreateSet;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.persistence.metamodel.SingularAttribute;
 
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.util.Factory;
@@ -28,6 +31,7 @@ public class DependenciesDefinition {
     private final Map<Class<?>, Set<Class<?>>> entityAllParentEntityDependencyMap;
     private final Map<Class<?>, Set<Class<?>>> entityAllChildEntityDependencyMap;
     private final Map<Class<?>, Map<Class<?>, List<Link<?,?,?>>>> childFieldToParentMap;
+    private final Map<Class<?>, Set<Field>> foreignKeyMap;
 	private final Set<Class<?>> enumTables;
 	private final Set<Class<?>> triggeredTables;
 
@@ -39,6 +43,7 @@ public class DependenciesDefinition {
         this.entityAllParentEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.entityAllChildEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.childFieldToParentMap = new HashMap<Class<?>, Map<Class<?>,List<Link<?,?,?>>>>();
+        this.foreignKeyMap = new HashMap<Class<?>, Set<Field>>();
         for (Link<?,?,?> link : links) {
             Class<?> eFrom = link.getFrom().getEntityClass();
             Class<?> eTo = link.getTo().getEntityClass();
@@ -46,6 +51,7 @@ public class DependenciesDefinition {
             getOrCreateSet(entityDirectParentEntityDependencyMap, eFrom).add(eTo);
             getOrCreateSet(entityDirectChildEntityDependencyMap, eTo).add(eFrom);
             getOrCreateList(getOrCreateMap(childFieldToParentMap, eFrom), eTo).add(link);
+            getOrCreateSet(foreignKeyMap, eFrom).add(link.getFrom().getField());
         }
         this.links = links;
         this.enumTables = new HashSet<Class<?>>(enumTables);
@@ -85,6 +91,15 @@ public class DependenciesDefinition {
 
     public Link<?,?,?>[] getLinks() {
         return links;
+    }
+    
+    public <E> boolean isForeignKey(final Class<E> entityClass, Field field) {
+    	return getOrCreateSet(foreignKeyMap, entityClass).contains(field);
+    }
+    
+    public <E> boolean isForeignKey(final Class<E> entityClass, SingularAttribute<E, ?> attr) {
+    	Field field = (Field)attr.getJavaMember();
+    	return isForeignKey(entityClass, field);
     }
 
     /**

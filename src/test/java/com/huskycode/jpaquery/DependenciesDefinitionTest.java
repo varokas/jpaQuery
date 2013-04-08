@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.metamodel.SingularAttribute;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -93,6 +95,27 @@ public class DependenciesDefinitionTest {
 	    DependenciesDefinition deps = new DepsBuilder().withTriggeredTable(A.class).build();
 
 	    Assert.assertTrue("Fail to contain Triggered Table correctly", deps.getTriggeredTables().contains(A.class));
+	}
+	
+	@Test
+	public void testIsForeignKeyReturnTrueWhenFieldDependsOnParentField() throws NoSuchFieldException, SecurityException {
+		Link anyLink = createMockLink(A.class.getDeclaredFields()[0], B.class.getDeclaredFields()[0]);
+		SingularAttribute<A, Integer> aFieldAttr = Mockito.mock(SingularAttribute.class);
+		Mockito.when(aFieldAttr.getJavaMember()).thenReturn(A.class.getDeclaredField("aField"));
+        DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
+
+	    Assert.assertTrue("Fail return true when field is a foreign key", deps.isForeignKey(A.class, A.class.getDeclaredField("aField")));
+	    Assert.assertTrue("Fail return true when field is a foreign key", deps.isForeignKey(A.class, aFieldAttr));
+	}
+	
+	@Test
+	public void testIsForeignKeyReturnFalseWhenFieldDependsOnParentField() throws NoSuchFieldException, SecurityException {
+		SingularAttribute<A, Integer> aFieldAttr = Mockito.mock(SingularAttribute.class);
+		Mockito.when(aFieldAttr.getJavaMember()).thenReturn(A.class.getDeclaredField("aField"));
+        DependenciesDefinition deps = new DepsBuilder().build();
+
+	    Assert.assertFalse("Fail return false when field is NOT a foreign key", deps.isForeignKey(A.class, A.class.getDeclaredField("aField")));
+	    Assert.assertFalse("Fail return false when field is NOT a foreign key", deps.isForeignKey(A.class, aFieldAttr));
 	}
 
     static class A {

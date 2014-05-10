@@ -1,16 +1,21 @@
 package com.huskycode.jpaquery;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.types.db.Table;
+import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
 /**
  * A builder for DependenciesDefinition
  * @author varokas
  */
 public class DepsBuilder {
+    private final TableFactory tableFactory = new TableFactory();
+
 	private final List<Link<?,?,?>> links;
 
 	/** which classes are designated enums */
@@ -57,12 +62,18 @@ public class DepsBuilder {
 	public DependenciesDefinition build() {
 		return new DependenciesDefinition(
 				links.toArray(new Link<?,?,?>[0]),
-				enumTables,
+				convertToTables(enumTables),
 				triggeredTables
 				);
 	}
 
-
+    private List<Table> convertToTables(List<Class<?>> jpaEntityClasses) {
+        List<Table> tables = new ArrayList<Table>();
+        for(Class<?> enumTable : jpaEntityClasses) {
+            tables.add(tableFactory.createFromJPAEntity(enumTable));
+        }
+        return tables;
+    }
 
 
 }

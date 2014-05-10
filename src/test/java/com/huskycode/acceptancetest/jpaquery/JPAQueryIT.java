@@ -11,10 +11,12 @@ import static org.junit.Assert.assertThat;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import com.huskycode.integration.TestEntityManager;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.JPAQueryContext;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
@@ -28,15 +30,34 @@ import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 import com.huskycode.jpaquery.util.Maps;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.transaction.Transaction;
+
 /**
  * @author Varokas Panusuwan
  */
 @Transactional
-public class JPAQueryIT extends AbstractEntityManagerWired {
+public class JPAQueryIT {
     private PizzaDeps pizzaDeps;
     private JPAQueryContext context;
-    
-	@Test
+
+    private EntityManager entityManager;
+    private EntityTransaction tx;
+
+    @Before
+    public void setUp() throws Exception {
+        entityManager = TestEntityManager.INSTANCE.getEntityManager();
+        tx = entityManager.getTransaction();
+        tx.begin();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        tx.rollback();
+    }
+
+    @Test
     public void testCreateClassWithNoDeps() {
     	pizzaDeps = new PizzaDeps();
     	context = JPAQueryContext.newInstance(entityManager, pizzaDeps.getDeps());

@@ -5,8 +5,10 @@ import static org.hamcrest.CoreMatchers.is;
 
 import javax.persistence.EntityManager;
 
+import com.huskycode.jpaquery.testmodel.ClassA;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -16,7 +18,7 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
 
 public class EntityPersisterFactoryImplTest {
 
-	private Class<Integer> aClass = Integer.class;
+	private Class<ClassA> aClass = ClassA.class;
 	private enum AnEnum { AValue };
 	private EntityPersisterFactoryImpl factory;
 	private EntityNode anyNode;
@@ -47,6 +49,7 @@ public class EntityPersisterFactoryImplTest {
 	}
 	
 	@Test
+    @Ignore("temporary remove support for enum class")
 	public void testCreateEntityPersisterReturnEnumClassIfDeclaredSo() {
 		anyNode = EntityNode.newInstance(AnEnum.class);
 		DependenciesDefinition depsWithMatchingEnumClass = 

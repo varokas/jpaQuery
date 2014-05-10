@@ -27,4 +27,30 @@ public class JPAEntityTable<E> implements Table {
     public Class<E> getJpaEntity() {
         return jpaEntity;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JPAEntityTable that = (JPAEntityTable) o;
+
+        if (!jpaEntity.equals(that.jpaEntity)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return jpaEntity.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "JPAEntityTable{" +
+                "name='" + name + '\'' +
+                ", columns=" + columns +
+                ", jpaEntity=" + jpaEntity +
+                '}';
+    }
 }

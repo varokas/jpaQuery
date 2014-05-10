@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.persistence.metamodel.SingularAttribute;
 
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.util.Factory;
 import com.huskycode.jpaquery.util.ListFactory;
 import com.huskycode.jpaquery.util.SetFactory;
@@ -32,11 +33,11 @@ public class DependenciesDefinition {
     private final Map<Class<?>, Set<Class<?>>> entityAllChildEntityDependencyMap;
     private final Map<Class<?>, Map<Class<?>, List<Link<?,?,?>>>> childFieldToParentMap;
     private final Map<Class<?>, Set<Field>> foreignKeyMap;
-	private final Set<Class<?>> enumTables;
+	private final Set<Table> enumTables;
 	private final Set<Class<?>> triggeredTables;
 
 	/** Uses DepBuilder to create this class. */
-    DependenciesDefinition(final Link<?,?,?>[] links, final List<Class<?>> enumTables, final List<Class<?>> triggeredTables) {
+    DependenciesDefinition(final Link<?,?,?>[] links, final List<Table> enumTables, final List<Class<?>> triggeredTables) {
         this.entityDirectLinkDependencyMap = new HashMap<Class<?>, List<Link<?, ?, ?>>>();
         this.entityDirectParentEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.entityDirectChildEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
@@ -54,7 +55,7 @@ public class DependenciesDefinition {
             getOrCreateSet(foreignKeyMap, eFrom).add(link.getFrom().getField());
         }
         this.links = links;
-        this.enumTables = new HashSet<Class<?>>(enumTables);
+        this.enumTables = new HashSet<Table>(enumTables);
         this.triggeredTables = new HashSet<Class<?>>(triggeredTables);
         buildAllDependentEntitiesMap();
     }
@@ -159,8 +160,8 @@ public class DependenciesDefinition {
     private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
     private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
 
-	public Set<Class<?>> getEnumTables() {
-		return enumTables;
+	public boolean isEnumTable(Table table) {
+		return enumTables.contains(table);
 	}
 
 	public Set<Class<?>> getTriggeredTables() {

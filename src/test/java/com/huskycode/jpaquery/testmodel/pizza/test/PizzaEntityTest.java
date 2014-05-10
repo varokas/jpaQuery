@@ -5,10 +5,10 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.huskycode.jpaquery.AbstractEntityManagerWired;
 import com.huskycode.jpaquery.testmodel.pizza.Address_;
 import com.huskycode.jpaquery.testmodel.pizza.Customer_;
 import com.huskycode.jpaquery.testmodel.pizza.Employee_;
@@ -25,8 +25,19 @@ import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType_;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle_;
 
-public class PizzaEntityTest extends AbstractEntityManagerWired {
-	@Test
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
+public class PizzaEntityTest {
+    private EntityManager entityManager;
+
+    @Before
+    public void setUp() throws Exception {
+        entityManager = Persistence.createEntityManagerFactory("testPersistentUnit").createEntityManager();
+        new PizzaDeps().populateInitialData(entityManager);
+    }
+
+    @Test
 	public void testMetaModelPopulated() {
 		assertThat(Customer_.customerId, is(not(nullValue())));
 		assertThat(Customer_.customerAddressId, is(not(nullValue())));

@@ -57,8 +57,8 @@ public class PizzaDeps {
 			Link.from(Topping.class, Topping_.pizzaSequenceNumber)
 				.to(PizzaOrdered.class, PizzaOrdered_.pizzaSequenceNumber),
 
-			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
-				.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
+//			Link.from(Vehicle.class, Vehicle_.vehicleTypeCode)
+//				.to(RefVehicleTypeEnum.class, RefVehicleTypeEnum.getVehicleTypeCodeField()),
 			Link.from(Customer.class, Customer_.paymentMethodCode)
 				.to(RefPaymentMethod.class, RefPaymentMethod_.paymentMethodCode),
 			Link.from(PizzaOrder.class, PizzaOrder_.deliveryStatusCode)

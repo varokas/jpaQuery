@@ -7,6 +7,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
@@ -65,13 +66,15 @@ public class TableFactoryTest {
 
     @Entity
     public class JPAEntityWithoutTable {
-
+        @Id
+        private Integer columnA;
     }
 
     @Entity
     @javax.persistence.Table(name = "someTable")
     public class JPAEntity {
         @javax.persistence.Column(name="someColumn")
+        @Id
         private Integer columnA;
 
         @javax.persistence.Column

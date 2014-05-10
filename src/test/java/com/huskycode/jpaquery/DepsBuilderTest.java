@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.huskycode.jpaquery.types.db.factory.TableFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,6 +22,7 @@ import com.huskycode.jpaquery.testmodel.pizza.Customer;
  */
 public class DepsBuilderTest {
 	private DepsBuilder depBuilder;
+    private TableFactory tableFactory = new TableFactory();
 	
 	private Link<?,?,?> aLink;
 	private Class<?> anEnumTable;
@@ -57,8 +59,7 @@ public class DepsBuilderTest {
 		depBuilder.withEnumTable(anEnumTable);
 		
 		DependenciesDefinition deps = depBuilder.build();
-		assertThat(deps.getEnumTables().size(), is(1));
-		assertEquals(anEnumTable, deps.getEnumTables().iterator().next());
+		assertThat(deps.isEnumTable(tableFactory.createFromJPAEntity(anEnumTable)), is(true));
 	}
 	
 	@Test
@@ -67,8 +68,7 @@ public class DepsBuilderTest {
 		depBuilder.withEnumTables(enumTableArray);
 		
 		DependenciesDefinition deps = depBuilder.build();
-		assertEquals(new HashSet<Class<?>>(Arrays.asList(enumTableArray)),
-				deps.getEnumTables());
+        assertThat(deps.isEnumTable(tableFactory.createFromJPAEntity(anEnumTable)), is(true));
 	}
 
 

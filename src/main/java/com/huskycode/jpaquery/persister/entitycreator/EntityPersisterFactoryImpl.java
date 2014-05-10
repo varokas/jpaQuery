@@ -9,6 +9,8 @@ import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
+import com.huskycode.jpaquery.types.db.Table;
+import com.huskycode.jpaquery.types.db.factory.TableFactory;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
 /**
@@ -17,6 +19,7 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
 public class EntityPersisterFactoryImpl implements EntityPersisterFactory {
 
     private final RandomValuePopulator randomValuePopulator;
+    private final TableFactory tableFactory = new TableFactory();
 
     public EntityPersisterFactoryImpl(final RandomValuePopulator randomValuePopulator) {
         this.randomValuePopulator = randomValuePopulator;
@@ -30,10 +33,11 @@ public class EntityPersisterFactoryImpl implements EntityPersisterFactory {
     public EntityPersister createEntityPersister(final EntityNode entityNode, final DependenciesDefinition deps,
             final EntityManager em) {
         Class<?> entityClass = entityNode.getEntityClass();
+        Table table = tableFactory.createFromJPAEntity(entityClass);
 
         if (entityClass.isEnum()) {
             return new EnumClassEntityPersister();
-        } else if (deps.getEnumTables().contains(entityClass)) {
+        } else if (deps.isEnumTable(table)) {
             return new EnumTableEntityPersister(em);
         } else if (deps.getTriggeredTables().contains(entityClass)) {
             List<Link<?,?,?>> allDirectLinks = getAllDirectLinksFrom(entityClass, deps);

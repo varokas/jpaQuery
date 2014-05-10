@@ -29,7 +29,7 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
 public class EnumTableEntityPersister implements EntityPersister {
 	private final EntityManager em;
     
-    EnumTableEntityPersister(final EntityManager em) {
+    public EnumTableEntityPersister(final EntityManager em) {
     	this.em = em;
 	}
     

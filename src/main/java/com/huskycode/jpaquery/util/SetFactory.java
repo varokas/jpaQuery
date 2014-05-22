@@ -7,7 +7,7 @@ public class SetFactory<T> implements Factory<Set<T>> {
 	@SuppressWarnings("rawtypes")
 	private static final SetFactory INSTANCE = new SetFactory();
 	
-	private SetFactory() {};
+	private SetFactory() {}
 	
 	@SuppressWarnings("unchecked")
 	public static final <T> SetFactory<T> getInstance() {

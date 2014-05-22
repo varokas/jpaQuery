@@ -7,7 +7,7 @@ public class MapFactory<K,V> implements Factory<Map<K,V>> {
 	@SuppressWarnings("rawtypes")
 	private static final MapFactory INSTANCE = new MapFactory();
 	
-	private MapFactory() {};
+	private MapFactory() {}
 	
 	@SuppressWarnings("unchecked")
 	public static final <K,V> MapFactory<K,V> getInstance() {

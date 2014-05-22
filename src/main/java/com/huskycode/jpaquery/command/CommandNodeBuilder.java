@@ -10,7 +10,7 @@ import com.huskycode.jpaquery.command.CommandNodeFactory.CommandNodeImpl;
 public interface CommandNodeBuilder {
     CommandNodeBuilder with(CommandNode... children);
 
-    CommandNodeImpl withValues(Map<Field, ? extends Object> values);
+    CommandNodeImpl withValues(Map<Field, ?> values);
 
     <E, T> CommandNodeImpl withValue(SingularAttribute<E, T> attr, T value);
 }

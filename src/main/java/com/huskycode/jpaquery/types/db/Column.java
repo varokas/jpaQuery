@@ -14,9 +14,8 @@ public class Column {
 
         Column column = (Column) o;
 
-        if (name != null ? !name.equals(column.name) : column.name != null) return false;
+        return !(name != null ? !name.equals(column.name) : column.name != null);
 
-        return true;
     }
 
     @Override

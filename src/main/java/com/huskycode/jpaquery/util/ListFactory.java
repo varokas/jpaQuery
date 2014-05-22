@@ -8,7 +8,7 @@ public class ListFactory<T> implements Factory<List<T>> {
 	@SuppressWarnings("rawtypes")
 	private static final ListFactory INSTANCE = new ListFactory();
 	
-	private ListFactory() {};
+	private ListFactory() {}
 	
 	@SuppressWarnings("unchecked")
 	public static final <T> ListFactory<T> getInstance() {

@@ -42,9 +42,8 @@ public class AttributeImpl<E, T> implements Attribute<E, T> {
         AttributeImpl<?,?> attribute = (AttributeImpl<?,?>) o;
 
         if (!cls.equals(attribute.cls)) return false;
-        if (!field.equals(attribute.field)) return false;
+        return field.equals(attribute.field);
 
-        return true;
     }
 
     @Override

@@ -47,14 +47,12 @@ public class PersisterImpl implements Persister {
     }
 
     public static PersisterImpl newInstance(final EntityManager em, final DependenciesDefinition deps) {
-        PersisterImpl persisterImpl = new PersisterImpl(em, deps);
-        return persisterImpl;
+        return new PersisterImpl(em, deps);
     }
 
     public static PersisterImpl newInstance(final EntityManager em, final DependenciesDefinition deps,
             final RandomValuePopulator randomValuePopulator) {
-        PersisterImpl persisterImpl = new PersisterImpl(em, deps, randomValuePopulator);
-        return persisterImpl;
+        return new PersisterImpl(em, deps, randomValuePopulator);
     }
 
     @Override

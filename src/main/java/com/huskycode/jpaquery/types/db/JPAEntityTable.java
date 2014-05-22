@@ -35,9 +35,8 @@ public class JPAEntityTable<E> implements Table {
 
         JPAEntityTable that = (JPAEntityTable) o;
 
-        if (!jpaEntity.equals(that.jpaEntity)) return false;
+        return jpaEntity.equals(that.jpaEntity);
 
-        return true;
     }
 
     @Override

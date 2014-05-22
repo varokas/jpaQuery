@@ -36,6 +36,9 @@ public class DependenciesDefinition {
 	private final Set<Table> enumTables;
 	private final Set<Table> triggeredTables;
 
+    private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
+    private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
+
 	/** Uses DepBuilder to create this class. */
     DependenciesDefinition(final Link<?,?,?>[] links, final List<Table> enumTables, final List<Table> triggeredTables) {
         this.entityDirectLinkDependencyMap = new HashMap<Class<?>, List<Link<?, ?, ?>>>();
@@ -156,9 +159,6 @@ public class DependenciesDefinition {
 
     	return LIST_OF_LINK_FACTORY.newInstace();
     }
-
-    private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
-    private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
 
 	public boolean isEnumTable(Table table) {
 		return enumTables.contains(table);

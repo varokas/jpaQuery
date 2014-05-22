@@ -10,7 +10,7 @@ import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
 /**
- * A builder for DependenciesDefinition
+ * A default builder for DependenciesDefinition that mainly uses JPA
  * @author varokas
  */
 public class DepsBuilder {

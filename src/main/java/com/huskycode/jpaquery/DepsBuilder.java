@@ -61,7 +61,7 @@ public class DepsBuilder {
 
 	public DependenciesDefinition build() {
 		return new DependenciesDefinition(
-				links.toArray(new Link<?,?,?>[0]),
+				links.toArray(new Link<?,?,?>[links.size()]),
 				convertToTables(enumTables),
                 convertToTables(triggeredTables)
 				);

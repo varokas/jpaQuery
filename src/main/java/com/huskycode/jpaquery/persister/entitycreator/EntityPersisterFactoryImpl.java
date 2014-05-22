@@ -9,7 +9,6 @@ import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
-import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 

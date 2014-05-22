@@ -5,10 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
-import com.huskycode.jpaquery.testmodel.pizza.Address;
-import com.huskycode.jpaquery.testmodel.pizza.Customer;
-import com.huskycode.jpaquery.testmodel.pizza.Employee;
-import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;

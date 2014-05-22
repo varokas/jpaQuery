@@ -1,9 +1,7 @@
 package com.huskycode.jpaquery.persister.entitycreator;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -11,12 +9,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
-import com.huskycode.jpaquery.persister.util.BeanUtil;
-import com.huskycode.jpaquery.populator.RandomValuePopulator;
-import com.huskycode.jpaquery.populator.RandomValuePopulatorImpl;
-import com.huskycode.jpaquery.populator.ValuesPopulator;
-import com.huskycode.jpaquery.populator.ValuesPopulatorImpl;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
 /**

@@ -3,7 +3,6 @@ package com.huskycode.jpaquery.types.db.factory;
 import com.huskycode.jpaquery.types.db.Column;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import javax.persistence.Entity;

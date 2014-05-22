@@ -37,9 +37,9 @@ public class BeanUtil {
 
     private static <E> Constructor<E> searchForDefaultConstructor(final Class<E> beanClass) {
         Constructor<E>[] constructors = (Constructor<E>[])beanClass.getDeclaredConstructors();
-        for (int i = 0; i < constructors.length; i++) {
-            if (constructors[i].getParameterTypes().length == 0) {
-                return constructors[i];
+        for (final Constructor<E> constructor : constructors) {
+            if (constructor.getParameterTypes().length == 0) {
+                return constructor;
             }
         }
         return null;

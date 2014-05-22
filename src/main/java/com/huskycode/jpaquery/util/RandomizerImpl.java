@@ -104,7 +104,7 @@ public class RandomizerImpl implements Randomizer {
      * 			inconsistency of the application type and database type.
      */
     public static Long getLong() {
-        return new Long(any.nextInt());
+        return (long) any.nextInt();
     }
 
     /**

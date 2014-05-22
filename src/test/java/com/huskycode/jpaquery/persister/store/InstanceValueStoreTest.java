@@ -8,8 +8,8 @@ public class InstanceValueStoreTest {
 	@Test
 	public void testGetValueReturnCorrectValueAssociatedWithTheGivenInstance() {
 		Object value = new Object();
-		Integer instance1 = new Integer(1);
-		Integer instance2 = new Integer(1);
+		Integer instance1 = 1;
+		Integer instance2 = 1;
 		 
 		InstanceValueStore<Object, Object> valueStore = InstanceValueStore.newInstance();
 		valueStore.putValue(instance1, value);

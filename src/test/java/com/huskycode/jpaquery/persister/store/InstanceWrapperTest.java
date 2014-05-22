@@ -19,8 +19,8 @@ public class InstanceWrapperTest {
 	
 	@Test
 	public void testTwoINstanceIsNotEqualWhenItWrapDifferntInstanceEvenIfTheyAreEqual() {
-		Integer obj1 = 1;
-		Integer obj2 = 1;
+		Integer obj1 = new Integer(1);
+		Integer obj2 = new Integer(1);
 		InstanceWrapper<Integer> one = InstanceWrapper.newInstance(obj1);
 		InstanceWrapper<Integer> two = InstanceWrapper.newInstance(obj2);
 		

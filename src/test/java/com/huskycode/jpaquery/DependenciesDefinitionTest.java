@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import com.huskycode.jpaquery.testmodel.ClassA;
+import com.huskycode.jpaquery.types.db.factory.TableFactory;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,6 +29,8 @@ import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
  * @author Varokas Panusuwan
  */
 public class DependenciesDefinitionTest {
+    private final TableFactory tableFactory = new TableFactory();
+
     @Test
     public void shouldBeAbleToDefineDependenciesByLinks() {
         Link anyLink = createMockLink(A.class.getDeclaredFields()[0], B.class.getDeclaredFields()[0]);
@@ -92,9 +96,9 @@ public class DependenciesDefinitionTest {
 
 	@Test
 	public void testTriggeredTables() {
-	    DependenciesDefinition deps = new DepsBuilder().withTriggeredTable(A.class).build();
+	    DependenciesDefinition deps = new DepsBuilder().withTriggeredTable(ClassA.class).build();
 
-	    Assert.assertTrue("Fail to contain Triggered Table correctly", deps.getTriggeredTables().contains(A.class));
+	    Assert.assertTrue("Fail to contain Triggered Table correctly", deps.getTriggeredTables().contains(tableFactory.createFromJPAEntity(ClassA.class)));
 	}
 	
 	@Test

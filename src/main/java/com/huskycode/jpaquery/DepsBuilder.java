@@ -63,7 +63,7 @@ public class DepsBuilder {
 		return new DependenciesDefinition(
 				links.toArray(new Link<?,?,?>[0]),
 				convertToTables(enumTables),
-				triggeredTables
+                convertToTables(triggeredTables)
 				);
 	}
 

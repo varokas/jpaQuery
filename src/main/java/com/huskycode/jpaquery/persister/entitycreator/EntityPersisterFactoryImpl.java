@@ -33,13 +33,12 @@ public class EntityPersisterFactoryImpl implements EntityPersisterFactory {
     public EntityPersister createEntityPersister(final EntityNode entityNode, final DependenciesDefinition deps,
             final EntityManager em) {
         Class<?> entityClass = entityNode.getEntityClass();
-        Table table = tableFactory.createFromJPAEntity(entityClass);
 
         if (entityClass.isEnum()) {
             return new EnumClassEntityPersister();
-        } else if (deps.isEnumTable(table)) {
+        } else if (deps.isEnumTable(tableFactory.createFromJPAEntity(entityClass))) {
             return new EnumTableEntityPersister(em);
-        } else if (deps.getTriggeredTables().contains(entityClass)) {
+        } else if (deps.getTriggeredTables().contains(tableFactory.createFromJPAEntity(entityClass))) {
             List<Link<?,?,?>> allDirectLinks = getAllDirectLinksFrom(entityClass, deps);
             return new TriggeredTableEntityPersister(em, allDirectLinks);
         } else {

@@ -30,7 +30,7 @@ public class TableFactory {
             if(column != null) {
                 String columnName = getColumnNameOrDefault(column, field);
 
-                columns.add(new Column(columnName));
+                columns.add(new Column(columnName, field.getType()));
             }
         }
         return columns;

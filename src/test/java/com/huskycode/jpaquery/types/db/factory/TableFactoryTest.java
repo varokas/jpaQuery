@@ -33,7 +33,7 @@ public class TableFactoryTest {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
         assertThat(table.getName(), equalTo("someTable"));
-        assertThat(table.getColumns(), hasItem(new Column("someColumn")));
+        assertThat(table.getColumns(), hasItem(new Column("someColumn", Integer.class)));
     }
 
     @Test
@@ -44,10 +44,10 @@ public class TableFactoryTest {
     }
 
     @Test
-    public void createFromJPAEntityUseFieldAsColumnName() throws Exception {
+    public void createFromJPAEntityUseFieldAsColumnNameAndAType() throws Exception {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
-        assertThat(table.getColumns(), hasItem(new Column("columnB")));
+        assertThat(table.getColumns(), hasItem(new Column("columnB", String.class)));
     }
 
     @Test
@@ -77,6 +77,6 @@ public class TableFactoryTest {
         private Integer columnA;
 
         @javax.persistence.Column
-        private Integer columnB;
+        private String columnB;
     }
 }

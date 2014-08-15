@@ -45,8 +45,6 @@ public class TableFactory {
     }
 
     public static class NotJPAEntityException extends RuntimeException {
-        private Class<?> entity;
-
         public NotJPAEntityException(Class<?>  entity) {
             super("Class is not a JPA entity: " + entity.getCanonicalName());
         }

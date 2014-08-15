@@ -105,8 +105,6 @@ public class DependenciesDefinition {
 
     /**
      * Return link to parent entity  (with PK)  that the given entity (with FK) refers to.
-     * @param entityClass
-     * @return
      */
     public <E> List<Link<?,?,?>>  getDirectDependency(final Class<E> entityClass) {
         if (this.entityDirectLinkDependencyMap.containsKey(entityClass)) {
@@ -135,14 +133,6 @@ public class DependenciesDefinition {
     public Set<Class<?>>  getAllParentDependencyEntity(final Class<?> entityClass) {
     	if (this.entityAllParentEntityDependencyMap.containsKey(entityClass)) {
         	return entityAllParentEntityDependencyMap.get(entityClass);
-        }
-
-        return SET_OF_CLASS_FACTORY.newInstace();
-    }
-
-    public Set<Class<?>>  getAllChildDependencyEntity(final Class<?> entityClass) {
-    	if (this.entityAllChildEntityDependencyMap.containsKey(entityClass)) {
-        	return entityAllChildEntityDependencyMap.get(entityClass);
         }
 
         return SET_OF_CLASS_FACTORY.newInstace();

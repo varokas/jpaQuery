@@ -34,10 +34,13 @@ public class DependenciesDefinition {
     private final Map<Class<?>, Map<Class<?>, List<Link<?,?,?>>>> childFieldToParentMap;
     private final Map<Class<?>, Set<Field>> foreignKeyMap;
 	private final Set<Table> enumTables;
-	private final Set<Class<?>> triggeredTables;
+	private final Set<Table> triggeredTables;
+
+    private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
+    private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
 
 	/** Uses DepBuilder to create this class. */
-    DependenciesDefinition(final Link<?,?,?>[] links, final List<Table> enumTables, final List<Class<?>> triggeredTables) {
+    DependenciesDefinition(final Link<?,?,?>[] links, final List<Table> enumTables, final List<Table> triggeredTables) {
         this.entityDirectLinkDependencyMap = new HashMap<Class<?>, List<Link<?, ?, ?>>>();
         this.entityDirectParentEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
         this.entityDirectChildEntityDependencyMap = new HashMap<Class<?>, Set<Class<?>>>();
@@ -56,7 +59,7 @@ public class DependenciesDefinition {
         }
         this.links = links;
         this.enumTables = new HashSet<Table>(enumTables);
-        this.triggeredTables = new HashSet<Class<?>>(triggeredTables);
+        this.triggeredTables = new HashSet<Table>(triggeredTables);
         buildAllDependentEntitiesMap();
     }
 
@@ -147,14 +150,11 @@ public class DependenciesDefinition {
     	return LIST_OF_LINK_FACTORY.newInstace();
     }
 
-    private static final Factory<List<Link<?,?,?>>> LIST_OF_LINK_FACTORY = ListFactory.getInstance();
-    private static final Factory<Set<Class<?>>> SET_OF_CLASS_FACTORY = SetFactory.getInstance();
-
 	public boolean isEnumTable(Table table) {
 		return enumTables.contains(table);
 	}
 
-	public Set<Class<?>> getTriggeredTables() {
+	public Set<Table> getTriggeredTables() {
 	    return this.triggeredTables;
 	}
 }

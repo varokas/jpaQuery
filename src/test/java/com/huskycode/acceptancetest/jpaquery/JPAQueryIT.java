@@ -1,22 +1,6 @@
 package com.huskycode.acceptancetest.jpaquery;
 
-import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
-import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
-import java.lang.reflect.Field;
-import java.util.List;
-
 import com.huskycode.integration.TestEntityManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.huskycode.jpaquery.JPAQueryContext;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
@@ -29,15 +13,26 @@ import com.huskycode.jpaquery.testmodel.pizza.Topping;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 import com.huskycode.jpaquery.util.Maps;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.transaction.Transaction;
+import java.lang.reflect.Field;
+import java.util.List;
+
+import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
+import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Varokas Panusuwan
  */
-@Transactional
 public class JPAQueryIT {
     private PizzaDeps pizzaDeps;
     private JPAQueryContext context;

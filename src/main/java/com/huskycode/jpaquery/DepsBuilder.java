@@ -10,7 +10,7 @@ import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
 /**
- * A builder for DependenciesDefinition
+ * A default builder for DependenciesDefinition that mainly uses JPA
  * @author varokas
  */
 public class DepsBuilder {
@@ -61,9 +61,9 @@ public class DepsBuilder {
 
 	public DependenciesDefinition build() {
 		return new DependenciesDefinition(
-				links.toArray(new Link<?,?,?>[0]),
+				links.toArray(new Link<?,?,?>[links.size()]),
 				convertToTables(enumTables),
-				triggeredTables
+                convertToTables(triggeredTables)
 				);
 	}
 

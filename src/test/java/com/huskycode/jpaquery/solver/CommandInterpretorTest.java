@@ -20,7 +20,6 @@ import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.RefDeliveryStatus;
 import com.huskycode.jpaquery.testmodel.pizza.RefPaymentMethod;
-import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleTypeEnum;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;

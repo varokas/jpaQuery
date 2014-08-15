@@ -3,7 +3,6 @@ package com.huskycode.integration;
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.ClassA_;
 import org.junit.Test;
-import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
 public class EnumClassEntityPersisterTest {

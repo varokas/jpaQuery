@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.huskycode.jpaquery.util.ListFactory;
-
 /**
  * A wrapper for an instance of EntityNode
  */

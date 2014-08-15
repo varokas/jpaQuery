@@ -66,7 +66,7 @@ public class CommandNodeFactory {
         }
 
         @Override
-        public CommandNodeImpl withValues(final Map<Field, ? extends Object> values) {
+        public CommandNodeImpl withValues(final Map<Field, ?> values) {
             this.values.putAll(values);
             return this;
         }

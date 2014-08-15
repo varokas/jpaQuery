@@ -19,7 +19,7 @@ import com.huskycode.jpaquery.types.tree.EntityNode;
 public class EntityPersisterFactoryImplTest {
 
 	private Class<ClassA> aClass = ClassA.class;
-	private enum AnEnum { AValue };
+	private enum AnEnum { AValue }
 	private EntityPersisterFactoryImpl factory;
 	private EntityNode anyNode;
 	private EntityManager em;

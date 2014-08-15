@@ -5,7 +5,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
 import org.junit.Test;
 

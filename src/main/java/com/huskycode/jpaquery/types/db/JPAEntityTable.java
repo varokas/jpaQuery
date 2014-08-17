@@ -1,17 +1,24 @@
 package com.huskycode.jpaquery.types.db;
 
+import com.huskycode.jpaquery.util.Function;
+import com.huskycode.jpaquery.util.Maps;
+
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JPAEntityTable<E> implements Table {
     private final String name;
     private final List<Column> columns;
     private final Class<E> jpaEntity;
+    private final Map<String, Column> columNameMap;
 
     public JPAEntityTable(String name, List<Column> columns, Class<E> jpaEntity) {
         this.name = name;
         this.columns = columns;
         this.jpaEntity = jpaEntity;
+        this.columNameMap = Maps.from(columns, COLUMN_KEY_FUNCTION);
     }
 
     @Override
@@ -22,6 +29,11 @@ public class JPAEntityTable<E> implements Table {
     @Override
     public List<Column> getColumns() {
         return Collections.unmodifiableList(columns);
+    }
+
+    @Override
+    public Column column(String colName) {
+        return columNameMap.get(colName);
     }
 
     public Class<E> getJpaEntity() {
@@ -52,4 +64,11 @@ public class JPAEntityTable<E> implements Table {
                 ", jpaEntity=" + jpaEntity +
                 '}';
     }
+
+    private Function<Column, String> COLUMN_KEY_FUNCTION = new Function<Column, String>() {
+        @Override
+        public String apply(Column input) {
+            return input.getName();
+        }
+    };
 }

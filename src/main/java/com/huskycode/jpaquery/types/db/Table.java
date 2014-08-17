@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface Table {
     String getName();
-
     List<Column> getColumns();
+    Column column(String colName);
 }

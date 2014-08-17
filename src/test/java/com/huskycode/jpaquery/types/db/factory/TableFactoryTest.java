@@ -4,6 +4,7 @@ import com.huskycode.jpaquery.types.db.Column;
 import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import javax.persistence.Entity;
@@ -35,6 +36,7 @@ public class TableFactoryTest {
 
         assertThat(table.getName(), equalTo("someTable"));
         assertThat(table.getColumns(), hasItem((Column)new ColumnImpl("someColumn", Integer.class)));
+        assertThat(table.column("someColumn"), Matchers.equalTo((Column)new ColumnImpl("someColumn", Integer.class)));
     }
 
     @Test
@@ -49,6 +51,7 @@ public class TableFactoryTest {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
         assertThat(table.getColumns(), hasItem((Column)new ColumnImpl("columnB", String.class)));
+        assertThat(table.column("columnB"), Matchers.equalTo((Column)new ColumnImpl("columnB", String.class)));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.types.db.factory;
 
 import com.huskycode.jpaquery.types.db.Column;
+import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
 
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class TableFactory {
             if(column != null) {
                 String columnName = getColumnNameOrDefault(column, field);
 
-                columns.add(new Column(columnName, field.getType()));
+                columns.add(new ColumnImpl(columnName, field.getType()));
             }
         }
         return columns;

@@ -7,6 +7,6 @@ import com.huskycode.jpaquery.persister.types.Row;
  *
  * @author Varokas
  */
-public interface TablePersister {
+public interface RowPersister {
     void save(Row row);
 }

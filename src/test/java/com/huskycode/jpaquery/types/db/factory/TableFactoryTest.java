@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.types.db.factory;
 
 import com.huskycode.jpaquery.types.db.Column;
+import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class TableFactoryTest {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
         assertThat(table.getName(), equalTo("someTable"));
-        assertThat(table.getColumns(), hasItem(new Column("someColumn", Integer.class)));
+        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl("someColumn", Integer.class)));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class TableFactoryTest {
     public void createFromJPAEntityUseFieldAsColumnNameAndAType() throws Exception {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
-        assertThat(table.getColumns(), hasItem(new Column("columnB", String.class)));
+        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl("columnB", String.class)));
     }
 
     @Test

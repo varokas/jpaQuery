@@ -35,6 +35,19 @@ public class Maps {
 		putValues(result, a(k1, k2, k3, k4, k5), a(v1, v2, v3, v4, v5));
 		return result;
 	}
+
+    public static <K, V> Map<K, V> from(Iterable<V> values, Function<V, K> keyFunction) {
+        Map<K, V> map = newMap();
+        for (V v : values) {
+            K key = keyFunction.apply(v);
+            if (!map.containsKey(key)) {
+                map.put(key, v);
+            } else {
+                throw new RuntimeException("There are duplicated keys in iterables: key=" + key);
+            }
+        }
+        return map;
+    }
 	
 	private static <K,V> Map<K, V> newMap() {
 		return new HashMap<K, V>(); 

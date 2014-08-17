@@ -1,5 +1,7 @@
 package com.huskycode.jpaquery.util;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -29,4 +31,42 @@ public class MapsTest {
 		Assert.assertSame(value1, map.get(key1));
 		Assert.assertSame(value2, map.get(key2));
 	}
+
+    @Test
+    public void testCreateMapFromIterables() {
+        List<TestValue> values = Arrays.asList(
+                new TestValue("k1"),
+                new TestValue("k2"));
+
+        Map<String, TestValue> mapResult = Maps.from(values, KEY_FUNC);
+
+        Assert.assertEquals(2, mapResult.size());
+        Assert.assertSame(values.get(0), mapResult.get(values.get(0).key));
+        Assert.assertSame(values.get(1), mapResult.get(values.get(1).key));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testThrowExceptionIfThereAreDuplicateKeysWhenCreateMapFromIterables() {
+        List<TestValue> values = Arrays.asList(
+                new TestValue("k1"),
+                new TestValue("k1"));
+
+        Maps.from(values, KEY_FUNC);
+    }
+
+    private static class TestValue {
+        private String key;
+
+        public TestValue(String key) {
+            this.key = key;
+        }
+    }
+
+    private Function<TestValue, String> KEY_FUNC = new Function<TestValue, String>() {
+        @Override
+        public String apply(TestValue input) {
+            return input.key;
+        }
+    };
+
 }

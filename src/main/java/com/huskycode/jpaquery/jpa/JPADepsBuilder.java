@@ -5,12 +5,9 @@ import com.huskycode.jpaquery.jpa.persister.JPARowPersister;
 import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.types.db.Column;
-import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
-import com.sun.istack.internal.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class JPADepsBuilder {
@@ -67,12 +64,12 @@ public class JPADepsBuilder {
     }
 
     private List<com.huskycode.jpaquery.types.db.Link> createLinkFromJPALink(List<Link<?, ?, ?>> links) {
-        //Map<String, Table> collectedTablesByName = new HashMap<String, Table>();
+        Map<String, Table> collectedTablesByName = new HashMap<String, Table>();
 
         List<com.huskycode.jpaquery.types.db.Link> result = new ArrayList<com.huskycode.jpaquery.types.db.Link>();
         for(Link link : links) {
-            Table fromTable = tableFactory.createFromJPAEntity(link.getFrom().getEntityClass());
-            Table toTable = tableFactory.createFromJPAEntity(link.getTo().getEntityClass());
+            Table fromTable = getOrCreateTable(collectedTablesByName, link.getFrom().getEntityClass());
+            Table toTable = getOrCreateTable(collectedTablesByName, link.getTo().getEntityClass());
 
             Column fromColumn = fromTable.column( JPAUtil.getColumnNameOrDefault(link.getFrom().getField()) );
             Column toColumn = toTable.column( JPAUtil.getColumnNameOrDefault(link.getTo().getField()) );
@@ -81,6 +78,15 @@ public class JPADepsBuilder {
         }
 
         return result;
+    }
+
+    private Table getOrCreateTable(Map<String, Table> collectedTablesByName, Class entityClass) {
+        String tableName = entityClass.getSimpleName();
+        if(!collectedTablesByName.containsKey(tableName)) {
+            collectedTablesByName.put(tableName, tableFactory.createFromJPAEntity(entityClass));
+        }
+
+        return collectedTablesByName.get(tableName);
     }
 
 

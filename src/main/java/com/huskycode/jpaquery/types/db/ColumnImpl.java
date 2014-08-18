@@ -33,8 +33,8 @@ public class ColumnImpl implements Column {
 
         ColumnImpl column = (ColumnImpl) o;
 
+        if (!table.getName().equals(column.table.getName())) return false;
         if (!name.equals(column.name)) return false;
-        if (!table.equals(column.table)) return false;
         if (!type.equals(column.type)) return false;
 
         return true;
@@ -42,7 +42,7 @@ public class ColumnImpl implements Column {
 
     @Override
     public int hashCode() {
-        int result = table.hashCode();
+        int result = table.getName().hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + type.hashCode();
         return result;

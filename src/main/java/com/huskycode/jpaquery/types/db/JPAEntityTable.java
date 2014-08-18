@@ -19,7 +19,7 @@ public class JPAEntityTable<E> implements Table {
         this.name = name;
         this.columns = toColumns(columnDefinitions);
         this.jpaEntity = jpaEntity;
-        this.columNameMap = Maps.from(this.columns, COLUMN_KEY_FUNCTION);
+        this.columNameMap = Maps.from(this.columns, Column.NAME_MAPPER);
     }
 
     private List<Column> toColumns(List<ColumnDefinition> columns) {
@@ -69,11 +69,4 @@ public class JPAEntityTable<E> implements Table {
                 ", jpaEntity=" + jpaEntity +
                 '}';
     }
-
-    private Function<Column, String> COLUMN_KEY_FUNCTION = new Function<Column, String>() {
-        @Override
-        public String apply(Column input) {
-            return input.getName();
-        }
-    };
 }

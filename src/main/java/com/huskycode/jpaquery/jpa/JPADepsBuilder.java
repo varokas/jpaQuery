@@ -3,81 +3,81 @@ package com.huskycode.jpaquery.jpa;
 import com.huskycode.jpaquery.GenericDependenciesDefinition;
 import com.huskycode.jpaquery.jpa.persister.JPARowPersister;
 import com.huskycode.jpaquery.jpa.util.JPAUtil;
-import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.types.db.Column;
+import com.huskycode.jpaquery.types.db.Link;
 import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
 import java.util.*;
 
 public class JPADepsBuilder {
-    private final List<Link<?,?,?>> links;
-    private final List<Class<?>> enumTables;
-    private final List<Class<?>> triggeredTables;
+    private final List<Link> links;
+    private final Set<Table> enumTables;
+    private final Set<Table> triggeredTables;
+
+    private Map<String, Table> collectedTablesByName = new HashMap<String, Table>();
 
     private final TableFactory tableFactory = new TableFactory();
 
     public JPADepsBuilder() {
-        links = new LinkedList<Link<?,?,?>>();
-        enumTables = new LinkedList<Class<?>>();
-        triggeredTables = new LinkedList<Class<?>>();
+        links = new LinkedList<Link>();
+        enumTables = new HashSet<Table>();
+        triggeredTables = new HashSet<Table>();
     }
 
-    public JPADepsBuilder withLink(final Link<?,?,?> link) {
-        links.add(link);
+    public JPADepsBuilder withLink(final com.huskycode.jpaquery.link.Link<?,?,?> link) {
+        links.add(createLinkFromJPALink(collectedTablesByName, link));
         return this;
     }
 
-    public JPADepsBuilder withLinks(final Link<?, ?, ?>[] linkArray) {
-        links.addAll(Arrays.asList(linkArray));
+    public JPADepsBuilder withLinks(final com.huskycode.jpaquery.link.Link<?,?,?> links[]) {
+        for(com.huskycode.jpaquery.link.Link link : links) {
+           withLink(link);
+        }
         return this;
     }
 
     public JPADepsBuilder withEnumTable(final Class<?> e) {
-        enumTables.add(e);
+        enumTables.add(getOrCreateTable(collectedTablesByName, e));
         return this;
     }
 
     public JPADepsBuilder withEnumTables(final Class<?>[] es) {
-        enumTables.addAll(Arrays.asList(es));
+        for(Class<?> e : es) {
+            withEnumTable(e);
+        }
         return this;
     }
 
     public JPADepsBuilder withTriggeredTable(final Class<?> e) {
-        triggeredTables.add(e);
+        triggeredTables.add(getOrCreateTable(collectedTablesByName, e));
         return this;
     }
 
     public JPADepsBuilder withTriggeredTables(final Class<?>[] es) {
-        triggeredTables.addAll(Arrays.asList(es));
+        for(Class<?> e : es) {
+            withTriggeredTable(e);
+        }
         return this;
     }
 
     public DependenciesContext build() {
-        List<com.huskycode.jpaquery.types.db.Link> genericLinks = createLinkFromJPALink(links);
-
         return new DependenciesContext(new GenericDependenciesDefinition(
-                genericLinks,
-                new HashSet<Table>(),
-                new HashSet<Table>()
+                links,
+                enumTables,
+                triggeredTables
         ), new JPARowPersister());
     }
 
-    private List<com.huskycode.jpaquery.types.db.Link> createLinkFromJPALink(List<Link<?, ?, ?>> links) {
-        Map<String, Table> collectedTablesByName = new HashMap<String, Table>();
+    private com.huskycode.jpaquery.types.db.Link createLinkFromJPALink(
+            Map<String, Table> collectedTablesByName, com.huskycode.jpaquery.link.Link link) {
+        Table fromTable = getOrCreateTable(collectedTablesByName, link.getFrom().getEntityClass());
+        Table toTable = getOrCreateTable(collectedTablesByName, link.getTo().getEntityClass());
 
-        List<com.huskycode.jpaquery.types.db.Link> result = new ArrayList<com.huskycode.jpaquery.types.db.Link>();
-        for(Link link : links) {
-            Table fromTable = getOrCreateTable(collectedTablesByName, link.getFrom().getEntityClass());
-            Table toTable = getOrCreateTable(collectedTablesByName, link.getTo().getEntityClass());
+        Column fromColumn = fromTable.column( JPAUtil.getColumnNameOrDefault(link.getFrom().getField()) );
+        Column toColumn = toTable.column( JPAUtil.getColumnNameOrDefault(link.getTo().getField()) );
 
-            Column fromColumn = fromTable.column( JPAUtil.getColumnNameOrDefault(link.getFrom().getField()) );
-            Column toColumn = toTable.column( JPAUtil.getColumnNameOrDefault(link.getTo().getField()) );
-
-            result.add( new com.huskycode.jpaquery.types.db.Link(fromColumn, toColumn));
-        }
-
-        return result;
+        return new com.huskycode.jpaquery.types.db.Link(fromColumn, toColumn);
     }
 
     private Table getOrCreateTable(Map<String, Table> collectedTablesByName, Class entityClass) {

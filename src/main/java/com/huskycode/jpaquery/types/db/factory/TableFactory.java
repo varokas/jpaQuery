@@ -20,8 +20,6 @@ public class TableFactory {
         return new JPAEntityTable(tableName, getColumnDefinitions(jpaEntity), jpaEntity);
     }
 
-
-
     private List<ColumnDefinition> getColumnDefinitions(Class<?> jpaEntity) {
         List<ColumnDefinition> columns = new ArrayList<ColumnDefinition>();
         for(Field field : jpaEntity.getDeclaredFields()) {

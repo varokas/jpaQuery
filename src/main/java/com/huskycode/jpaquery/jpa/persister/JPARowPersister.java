@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.jpa.persister;
 
 import com.huskycode.jpaquery.persister.RowPersister;
-import com.huskycode.jpaquery.persister.types.Row;
+import com.huskycode.jpaquery.types.db.Row;
 
 public class JPARowPersister implements RowPersister {
     @Override

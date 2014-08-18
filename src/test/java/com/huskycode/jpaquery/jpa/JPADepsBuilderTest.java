@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
  */
 public class JPADepsBuilderTest {
     private JPADepsBuilder jpaDepsBuilder = new JPADepsBuilder();
-    private Link<?,?,?> aLink;
+    private Link<?, ?, ?> aLink;
 
     public JPADepsBuilderTest() throws NoSuchFieldException {
         aLink = Link.from(Customer.class, Customer.class.getDeclaredField("customerAddressId"))
@@ -45,10 +45,10 @@ public class JPADepsBuilderTest {
 
     @Test
     public void testDepsBuilderReuseTableInLink() throws NoSuchFieldException {
-        Link[] links = new Link[] {
-           Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("takenByEmployeeId"))
-                    .to(Employee.class, Employee.class.getDeclaredField("employeeId")),
-           Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("deliveredByEmployeeId"))
+        Link[] links = new Link[]{
+                Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("takenByEmployeeId"))
+                        .to(Employee.class, Employee.class.getDeclaredField("employeeId")),
+                Link.from(PizzaOrder.class, PizzaOrder.class.getDeclaredField("deliveredByEmployeeId"))
                         .to(Employee.class, Employee_.class.getDeclaredField("employeeId"))
         };
 
@@ -62,5 +62,21 @@ public class JPADepsBuilderTest {
 
         assertThat(link1.getFrom().getTable(), sameInstance(link2.getFrom().getTable()));
         assertThat(link1.getTo().getTable(), sameInstance(link2.getTo().getTable()));
+    }
+
+    @Test
+    public void testDepsBuilderPopulatesEnumAndTriggerTables() {
+        GenericDependenciesDefinition dependenciesDefinition =
+                jpaDepsBuilder.withEnumTable(Customer.class)
+                        .withTriggeredTable(Address.class)
+                        .build()
+                        .getDependenciesDefinition();
+
+        assertThat(dependenciesDefinition.getEnumTables(), hasSize(1));
+        assertThat(dependenciesDefinition.getTriggeredTables(), hasSize(1));
+
+        assertThat(dependenciesDefinition.getEnumTables().iterator().next().getName(), equalTo("Customer"));
+        assertThat(dependenciesDefinition.getTriggeredTables().iterator().next().getName(), equalTo("Address"));
+
     }
 }

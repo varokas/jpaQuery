@@ -2,7 +2,6 @@ package com.huskycode.jpaquery.types.db.factory;
 
 import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.types.db.ColumnDefinition;
-import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.TableImpl;
 

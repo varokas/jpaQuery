@@ -8,6 +8,7 @@ import com.huskycode.jpaquery.types.db.Link;
 import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 public class JPADepsBuilder {
@@ -61,12 +62,12 @@ public class JPADepsBuilder {
         return this;
     }
 
-    public DependenciesContext build() {
+    public DependenciesContext build(EntityManager entityManager) {
         return new DependenciesContext(new GenericDependenciesDefinition(
                 links,
                 enumTables,
                 triggeredTables
-        ), new JPARowPersister());
+        ), new JPARowPersister(entityManager));
     }
 
     private com.huskycode.jpaquery.types.db.Link createLinkFromJPALink(

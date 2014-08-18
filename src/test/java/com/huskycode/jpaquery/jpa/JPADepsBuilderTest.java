@@ -4,7 +4,13 @@ import com.huskycode.jpaquery.GenericDependenciesDefinition;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.pizza.*;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.persistence.EntityManager;
+import javax.swing.text.html.parser.Entity;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -16,6 +22,14 @@ public class JPADepsBuilderTest {
     private JPADepsBuilder jpaDepsBuilder = new JPADepsBuilder();
     private Link<?, ?, ?> aLink;
 
+    @Mock
+    private EntityManager entityManager;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+
     public JPADepsBuilderTest() throws NoSuchFieldException {
         aLink = Link.from(Customer.class, Customer.class.getDeclaredField("customerAddressId"))
                 .to(Address.class, Address.class.getDeclaredField("addressId"));
@@ -23,7 +37,7 @@ public class JPADepsBuilderTest {
 
     @Test
     public void testDepsBuilderBuildDepsContext() {
-        DependenciesContext dependenciesContext = jpaDepsBuilder.build();
+        DependenciesContext dependenciesContext = jpaDepsBuilder.build(entityManager);
 
         assertThat(dependenciesContext.getDependenciesDefinition(), notNullValue());
         assertThat(dependenciesContext.getRowPersister(), notNullValue());
@@ -32,7 +46,7 @@ public class JPADepsBuilderTest {
     @Test
     public void testDepsBuilderBuildsCorrectLink() {
         GenericDependenciesDefinition dependenciesDefinition =
-                jpaDepsBuilder.withLink(aLink).build().getDependenciesDefinition();
+                jpaDepsBuilder.withLink(aLink).build(entityManager).getDependenciesDefinition();
 
         assertThat(dependenciesDefinition.getLinks(), Matchers.hasSize(1));
         com.huskycode.jpaquery.types.db.Link link = dependenciesDefinition.getLinks().get(0);
@@ -53,7 +67,7 @@ public class JPADepsBuilderTest {
         };
 
         GenericDependenciesDefinition dependenciesDefinition =
-                jpaDepsBuilder.withLinks(links).build().getDependenciesDefinition();
+                jpaDepsBuilder.withLinks(links).build(entityManager).getDependenciesDefinition();
 
         assertThat(dependenciesDefinition.getLinks(), Matchers.hasSize(2));
 
@@ -69,7 +83,7 @@ public class JPADepsBuilderTest {
         GenericDependenciesDefinition dependenciesDefinition =
                 jpaDepsBuilder.withEnumTable(Customer.class)
                         .withTriggeredTable(Address.class)
-                        .build()
+                        .build(entityManager)
                         .getDependenciesDefinition();
 
         assertThat(dependenciesDefinition.getEnumTables(), hasSize(1));

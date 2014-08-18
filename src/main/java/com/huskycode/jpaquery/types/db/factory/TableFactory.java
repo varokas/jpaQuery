@@ -1,11 +1,8 @@
 package com.huskycode.jpaquery.types.db.factory;
 
 import com.huskycode.jpaquery.jpa.util.JPAUtil;
-import com.huskycode.jpaquery.types.db.Column;
 import com.huskycode.jpaquery.types.db.ColumnDefinition;
-import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
-import com.sun.istack.internal.Nullable;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;

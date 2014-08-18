@@ -2,16 +2,23 @@ package com.huskycode.jpaquery.jpa;
 
 import com.huskycode.jpaquery.GenericDependenciesDefinition;
 import com.huskycode.jpaquery.jpa.persister.JPARowPersister;
+import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.types.db.Column;
+import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
+import com.huskycode.jpaquery.types.db.factory.TableFactory;
+import com.sun.istack.internal.Nullable;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class JPADepsBuilder {
-
     private final List<Link<?,?,?>> links;
     private final List<Class<?>> enumTables;
     private final List<Class<?>> triggeredTables;
+
+    private final TableFactory tableFactory = new TableFactory();
 
     public JPADepsBuilder() {
         links = new LinkedList<Link<?,?,?>>();
@@ -50,10 +57,31 @@ public class JPADepsBuilder {
     }
 
     public DependenciesContext build() {
+        List<com.huskycode.jpaquery.types.db.Link> genericLinks = createLinkFromJPALink(links);
+
         return new DependenciesContext(new GenericDependenciesDefinition(
-                new ArrayList<com.huskycode.jpaquery.types.db.Link>(),
+                genericLinks,
                 new HashSet<Table>(),
                 new HashSet<Table>()
         ), new JPARowPersister());
     }
+
+    private List<com.huskycode.jpaquery.types.db.Link> createLinkFromJPALink(List<Link<?, ?, ?>> links) {
+        //Map<String, Table> collectedTablesByName = new HashMap<String, Table>();
+
+        List<com.huskycode.jpaquery.types.db.Link> result = new ArrayList<com.huskycode.jpaquery.types.db.Link>();
+        for(Link link : links) {
+            Table fromTable = tableFactory.createFromJPAEntity(link.getFrom().getEntityClass());
+            Table toTable = tableFactory.createFromJPAEntity(link.getTo().getEntityClass());
+
+            Column fromColumn = fromTable.column( JPAUtil.getColumnNameOrDefault(link.getFrom().getField()) );
+            Column toColumn = toTable.column( JPAUtil.getColumnNameOrDefault(link.getTo().getField()) );
+
+            result.add( new com.huskycode.jpaquery.types.db.Link(fromColumn, toColumn));
+        }
+
+        return result;
+    }
+
+
 }

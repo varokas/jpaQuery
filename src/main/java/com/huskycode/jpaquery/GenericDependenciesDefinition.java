@@ -19,4 +19,16 @@ public class GenericDependenciesDefinition {
         this.enumTables = enumTables;
         this.triggeredTables = triggeredTables;
     }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public Set<Table> getEnumTables() {
+        return enumTables;
+    }
+
+    public Set<Table> getTriggeredTables() {
+        return triggeredTables;
+    }
 }

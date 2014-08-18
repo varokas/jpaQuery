@@ -1,11 +1,14 @@
 package com.huskycode.jpaquery.types.db.factory;
 
+import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.types.db.Column;
 import com.huskycode.jpaquery.types.db.ColumnDefinition;
 import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
+import com.sun.istack.internal.Nullable;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +31,9 @@ public class TableFactory {
     private List<ColumnDefinition> getColumnDefinitions(Class<?> jpaEntity) {
         List<ColumnDefinition> columns = new ArrayList<ColumnDefinition>();
         for(Field field : jpaEntity.getDeclaredFields()) {
-            javax.persistence.Column column = field.getAnnotation(javax.persistence.Column.class);
-            if(column != null) {
-                String columnName = getColumnNameOrDefault(column, field);
+            if(!isTransient(field)) {
+                javax.persistence.Column column = field.getAnnotation(javax.persistence.Column.class);
+                String columnName = JPAUtil.getColumnNameOrDefault(field);
 
                 columns.add(new ColumnDefinition(columnName, field.getType()));
             }
@@ -38,12 +41,8 @@ public class TableFactory {
         return columns;
     }
 
-    private String getColumnNameOrDefault(javax.persistence.Column column, Field field) {
-        String columnName = column.name();
-        if(columnName.equals("")) {
-            columnName = field.getName();
-        }
-        return columnName;
+    private boolean isTransient(Field field) {
+        return field.getAnnotation(Transient.class) != null;
     }
 
     public static class NotJPAEntityException extends RuntimeException {

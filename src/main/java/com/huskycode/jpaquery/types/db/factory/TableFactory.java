@@ -3,6 +3,8 @@ package com.huskycode.jpaquery.types.db.factory;
 import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.types.db.ColumnDefinition;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
+import com.huskycode.jpaquery.types.db.Table;
+import com.huskycode.jpaquery.types.db.TableImpl;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -11,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableFactory {
-    public <E> JPAEntityTable<E> createFromJPAEntity(Class<E> jpaEntity) {
+    public Table createFromJPAEntity(Class<?> jpaEntity) {
         if(jpaEntity.getAnnotation(Entity.class) == null)
             throw new NotJPAEntityException(jpaEntity);
 
         String tableName = JPAUtil.getTableName(jpaEntity);
 
-        return new JPAEntityTable(tableName, getColumnDefinitions(jpaEntity), jpaEntity);
+        return new TableImpl(tableName, getColumnDefinitions(jpaEntity));
     }
 
 

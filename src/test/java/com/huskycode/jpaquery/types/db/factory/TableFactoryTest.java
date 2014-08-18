@@ -2,7 +2,6 @@ package com.huskycode.jpaquery.types.db.factory;
 
 import com.huskycode.jpaquery.types.db.Column;
 import com.huskycode.jpaquery.types.db.ColumnImpl;
-import com.huskycode.jpaquery.types.db.JPAEntityTable;
 import com.huskycode.jpaquery.types.db.Table;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -50,15 +49,8 @@ public class TableFactoryTest {
     public void createFromJPAEntityUseFieldAsColumnNameAndAType() throws Exception {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
-        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl(table, "columnB", String.class)));
-        assertThat(table.column("columnB"), Matchers.equalTo((Column)new ColumnImpl(table, "columnB", String.class)));
-    }
-
-    @Test
-    public void createFromJPAEntityReturnsEntityWithOriginalClass() throws Exception {
-        JPAEntityTable<JPAEntity> table = tableFactory.createFromJPAEntity(JPAEntity.class);
-
-        assertThat(table.getJpaEntity(), equalTo(JPAEntity.class));
+        assertThat(table.getColumns(), hasItem((Column) new ColumnImpl(table, "columnB", String.class)));
+        assertThat(table.column("columnB"), Matchers.equalTo((Column) new ColumnImpl(table, "columnB", String.class)));
     }
 
     @Test(expected = TableFactory.NotJPAEntityException.class)

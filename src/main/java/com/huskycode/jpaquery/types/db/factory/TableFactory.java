@@ -18,15 +18,12 @@ public class TableFactory {
         if(jpaEntity.getAnnotation(Entity.class) == null)
             throw new NotJPAEntityException(jpaEntity);
 
-        String tableName = jpaEntity.getSimpleName();
-
-        javax.persistence.Table tableAnnotation = jpaEntity.getAnnotation(javax.persistence.Table.class);
-        if(tableAnnotation != null) {
-            tableName = tableAnnotation.name();
-        }
+        String tableName = JPAUtil.getTableName(jpaEntity);
 
         return new JPAEntityTable(tableName, getColumnDefinitions(jpaEntity), jpaEntity);
     }
+
+
 
     private List<ColumnDefinition> getColumnDefinitions(Class<?> jpaEntity) {
         List<ColumnDefinition> columns = new ArrayList<ColumnDefinition>();

@@ -81,7 +81,7 @@ public class JPADepsBuilder {
     }
 
     private Table getOrCreateTable(Map<String, Table> collectedTablesByName, Class entityClass) {
-        String tableName = entityClass.getSimpleName();
+        String tableName = JPAUtil.getTableName(entityClass);
         if(!collectedTablesByName.containsKey(tableName)) {
             collectedTablesByName.put(tableName, tableFactory.createFromJPAEntity(entityClass));
         }

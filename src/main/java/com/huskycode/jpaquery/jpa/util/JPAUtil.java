@@ -19,4 +19,14 @@ public class JPAUtil {
         }
         return columnName;
     }
+
+    public static  String getTableName(Class<?> jpaEntity) {
+        String tableName = jpaEntity.getSimpleName();
+
+        javax.persistence.Table tableAnnotation = jpaEntity.getAnnotation(javax.persistence.Table.class);
+        if(tableAnnotation != null) {
+            tableName = tableAnnotation.name();
+        }
+        return tableName;
+    }
 }

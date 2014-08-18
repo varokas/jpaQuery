@@ -7,4 +7,6 @@ public interface Column {
     String getName();
 
     Class<?> getType();
+
+    Table getTable();
 }

@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.types.db.factory;
 
 import com.huskycode.jpaquery.types.db.Column;
+import com.huskycode.jpaquery.types.db.ColumnDefinition;
 import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.JPAEntityTable;
 
@@ -21,17 +22,17 @@ public class TableFactory {
             tableName = tableAnnotation.name();
         }
 
-        return new JPAEntityTable(tableName, getColumns(jpaEntity), jpaEntity);
+        return new JPAEntityTable(tableName, getColumnDefinitions(jpaEntity), jpaEntity);
     }
 
-    private List<Column> getColumns(Class<?> jpaEntity) {
-        List<Column> columns = new ArrayList<Column>();
+    private List<ColumnDefinition> getColumnDefinitions(Class<?> jpaEntity) {
+        List<ColumnDefinition> columns = new ArrayList<ColumnDefinition>();
         for(Field field : jpaEntity.getDeclaredFields()) {
             javax.persistence.Column column = field.getAnnotation(javax.persistence.Column.class);
             if(column != null) {
                 String columnName = getColumnNameOrDefault(column, field);
 
-                columns.add(new ColumnImpl(columnName, field.getType()));
+                columns.add(new ColumnDefinition(columnName, field.getType()));
             }
         }
         return columns;

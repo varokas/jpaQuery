@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.types.db;
 
 import com.huskycode.jpaquery.util.Function;
+import com.huskycode.jpaquery.util.ListUtil;
 import com.huskycode.jpaquery.util.Maps;
 
 import java.util.Collections;
@@ -14,11 +15,15 @@ public class JPAEntityTable<E> implements Table {
     private final Class<E> jpaEntity;
     private final Map<String, Column> columNameMap;
 
-    public JPAEntityTable(String name, List<Column> columns, Class<E> jpaEntity) {
+    public JPAEntityTable(String name, List<ColumnDefinition> columnDefinitions, Class<E> jpaEntity) {
         this.name = name;
-        this.columns = columns;
+        this.columns = toColumns(columnDefinitions);
         this.jpaEntity = jpaEntity;
-        this.columNameMap = Maps.from(columns, COLUMN_KEY_FUNCTION);
+        this.columNameMap = Maps.from(this.columns, COLUMN_KEY_FUNCTION);
+    }
+
+    private List<Column> toColumns(List<ColumnDefinition> columns) {
+        return ListUtil.map(columns, ColumnDefinitionUtil.createToColumnFunction(this));
     }
 
     @Override

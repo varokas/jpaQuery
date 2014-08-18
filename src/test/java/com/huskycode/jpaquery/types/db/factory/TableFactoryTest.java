@@ -35,8 +35,8 @@ public class TableFactoryTest {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
         assertThat(table.getName(), equalTo("someTable"));
-        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl("someColumn", Integer.class)));
-        assertThat(table.column("someColumn"), Matchers.equalTo((Column)new ColumnImpl("someColumn", Integer.class)));
+        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl(table, "someColumn", Integer.class)));
+        assertThat(table.column("someColumn"), Matchers.equalTo((Column)new ColumnImpl(table, "someColumn", Integer.class)));
     }
 
     @Test
@@ -50,8 +50,8 @@ public class TableFactoryTest {
     public void createFromJPAEntityUseFieldAsColumnNameAndAType() throws Exception {
         Table table = tableFactory.createFromJPAEntity(JPAEntity.class);
 
-        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl("columnB", String.class)));
-        assertThat(table.column("columnB"), Matchers.equalTo((Column)new ColumnImpl("columnB", String.class)));
+        assertThat(table.getColumns(), hasItem((Column)new ColumnImpl(table, "columnB", String.class)));
+        assertThat(table.column("columnB"), Matchers.equalTo((Column)new ColumnImpl(table, "columnB", String.class)));
     }
 
     @Test

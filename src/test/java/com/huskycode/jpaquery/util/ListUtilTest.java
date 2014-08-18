@@ -24,6 +24,16 @@ public class ListUtilTest {
 
     }
 
+    @Test
+    public void testFromIterable() {
+        Iterable<String> numberStrings = Arrays.asList("1", "2", "3");
+
+        List<String> result = ListUtil.from(numberStrings);
+
+        Assert.assertThat(result, Matchers.equalTo(numberStrings));
+    }
+
+
     private Function<Integer, String> createIntegerStringFunction() {
         return new Function<Integer, String>() {
                 @Override

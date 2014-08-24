@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 
+import com.huskycode.jpaquery.types.tree.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,10 +35,6 @@ import com.huskycode.jpaquery.testmodel.pizza.Employee;
 import com.huskycode.jpaquery.testmodel.pizza.PizzaOrder;
 import com.huskycode.jpaquery.testmodel.pizza.Vehicle;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
-import com.huskycode.jpaquery.types.tree.ActionGraph;
-import com.huskycode.jpaquery.types.tree.CreationPlan;
-import com.huskycode.jpaquery.types.tree.EntityNode;
-import com.huskycode.jpaquery.types.tree.PersistedResult;
 import com.huskycode.jpaquery.util.Maps;
 
 public class PersisterImplTest {
@@ -72,7 +69,7 @@ public class PersisterImplTest {
 	@Test
 	public void testPersistValuePersistTheRootFromCreationTree() {
         ActionGraph actionGraph = ActionGraph.newInstance();
-        actionGraph.addEntityNode(EntityNode.newInstance(ClassA.class));
+        actionGraph.addEntityNode(EntityNodeImpl.newInstance(ClassA.class));
 		CreationPlan plan = CreationPlan.newInstance(actionGraph);
 		
 		PersistedResult persistedTree = persister.persistValues(plan);
@@ -83,7 +80,7 @@ public class PersisterImplTest {
 	@Test
 	public void testPersistValuePersistAGivenClass() throws IllegalAccessException {
 		ActionGraph actionGraph = ActionGraph.newInstance();
-	    actionGraph.addEntityNode(EntityNode.newInstance(ClassA.class));
+	    actionGraph.addEntityNode(EntityNodeImpl.newInstance(ClassA.class));
         CreationPlan plan = CreationPlan.newInstance(actionGraph);
 		
 		persister.persistValues(plan);
@@ -170,7 +167,7 @@ public class PersisterImplTest {
 		ActionGraph actionGraph = ActionGraph.newInstance();
 		Field field = Address.class.getDeclaredField("city");
 		String expectedValue = "anyCity";
-		EntityNode entityNode = EntityNode.newInstance(Address.class);
+		EntityNode entityNode = EntityNodeImpl.newInstance(Address.class);
 		entityNode.setCommand(mockCommandNodeWithReturnValues(field, expectedValue));
 	    actionGraph.addEntityNode(entityNode);
         CreationPlan plan = CreationPlan.newInstance(actionGraph);

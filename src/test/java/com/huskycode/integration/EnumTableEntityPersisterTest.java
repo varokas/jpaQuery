@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import com.huskycode.jpaquery.persister.entitycreator.EnumTableEntityPersister;
+import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
 import org.junit.Test;
 
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
@@ -31,7 +32,7 @@ public class EnumTableEntityPersisterTest {
         tx.begin();
 
 
-		EntityNode n = EntityNode.newInstance(RefVehicleType.class);
+		EntityNode n = EntityNodeImpl.newInstance(RefVehicleType.class);
 		Object obj = persister.persistNode(n, new HashMap<Field, Object>());
 		
 		assertThat(obj, is(not(nullValue())));

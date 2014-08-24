@@ -10,6 +10,7 @@ import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
+import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
 
 public class CreationPlanFromDefinition {
 
@@ -52,7 +53,7 @@ public class CreationPlanFromDefinition {
 	private EntityNode getOrCreate(Class<?> entityClass, Map<Class<?>, EntityNode> container) { 
 		EntityNode result = container.get(entityClass);
 		if (result == null) {
-			result = EntityNode.newInstance(entityClass);
+			result = EntityNodeImpl.newInstance(entityClass);
 			container.put(entityClass, result);
 		}
 		return result;

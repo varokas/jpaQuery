@@ -2,6 +2,7 @@ package com.huskycode.jpaquery.solver;
 
 import java.util.List;
 
+import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,10 +13,10 @@ public class DirectedGraphTest {
 	@Test
 	public void testGraph() {
 		//set up mock network
-		EntityNode a = EntityNode.newInstance(null);
-		EntityNode bNeedA = EntityNode.newInstance(null);
-		EntityNode cNeedAandB = EntityNode.newInstance(null);
-		EntityNode dNeedBandC = EntityNode.newInstance(null);
+		EntityNode a = EntityNodeImpl.newInstance(null);
+		EntityNode bNeedA = EntityNodeImpl.newInstance(null);
+		EntityNode cNeedAandB = EntityNodeImpl.newInstance(null);
+		EntityNode dNeedBandC = EntityNodeImpl.newInstance(null);
 		
 		DirectedGraph<EntityNode> graph = DirectedGraph.newInstance();
 		graph.addRelation(bNeedA, a);

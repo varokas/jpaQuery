@@ -18,6 +18,7 @@ import com.huskycode.jpaquery.persister.store.PropogatedValueStore;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
 import com.huskycode.jpaquery.types.tree.CreationPlan;
 import com.huskycode.jpaquery.types.tree.EntityNode;
+import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
 import com.huskycode.jpaquery.util.CollectionUtil;
 import com.huskycode.jpaquery.util.Factory;
 
@@ -203,7 +204,7 @@ public class SolverImpl implements Solver {
 										final Map<Class<?>, EntityNode> context,
 										final DummyEntityContainer globallySharedContextContainer,
 										final Map<ContextKey, EntityNode> contextSpecificContainer) {
-		EntityNode thisNode = EntityNode.newInstance(entityClass);
+		EntityNode thisNode = EntityNodeImpl.newInstance(entityClass);
 		linkDependency(thisNode, context, globallySharedContextContainer, contextSpecificContainer);
 		context.put(entityClass, thisNode);
 		return thisNode;
@@ -278,7 +279,7 @@ public class SolverImpl implements Solver {
 		public EntityNode create(final Class<?> entityClass) {
 			EntityNode result = dummyContainer.get(entityClass);
 			if (result == null) {
-				result = EntityNode.newInstance(entityClass);
+				result = EntityNodeImpl.newInstance(entityClass);
 				linkDependency(result);
 				dummyContainer.put(entityClass, result);
 			}

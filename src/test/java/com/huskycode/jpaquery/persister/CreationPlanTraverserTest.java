@@ -1,5 +1,6 @@
 package com.huskycode.jpaquery.persister;
 
+import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +24,10 @@ public class CreationPlanTraverserTest {
 	@Test
 	public void testPlanIsCreatedCorrectlyInOrderOfDependency() {
 		//set up mock network
-		EntityNode a = EntityNode.newInstance(null);
-		EntityNode bNeedA = EntityNode.newInstance(null);
-		EntityNode cNeedAandB = EntityNode.newInstance(null);
-		EntityNode dNeedBandC = EntityNode.newInstance(null);
+		EntityNode a = EntityNodeImpl.newInstance(null);
+		EntityNode bNeedA = EntityNodeImpl.newInstance(null);
+		EntityNode cNeedAandB = EntityNodeImpl.newInstance(null);
+		EntityNode dNeedBandC = EntityNodeImpl.newInstance(null);
 		
 		a.addChild(bNeedA);
 		a.addChild(cNeedAandB);

@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class PropogatedValueStoreTest {
 	@Before
 	public void before() {
 		valueStore = PropogatedValueStore.newInstance();
-		node = EntityNode.newInstance(Integer.class);
+		node = EntityNodeImpl.newInstance(Integer.class);
 	}
 	
 	@Test

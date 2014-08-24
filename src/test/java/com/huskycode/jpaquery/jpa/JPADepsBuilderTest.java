@@ -1,19 +1,30 @@
 package com.huskycode.jpaquery.jpa;
 
 import com.huskycode.jpaquery.GenericDependenciesDefinition;
+import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.link.Link;
+import com.huskycode.jpaquery.persister.RowPersister;
 import com.huskycode.jpaquery.testmodel.pizza.*;
+import com.huskycode.jpaquery.types.db.ColumnValue;
+import com.huskycode.jpaquery.types.db.Row;
+import com.huskycode.jpaquery.types.db.Table;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javax.persistence.EntityManager;
 import javax.swing.text.html.parser.Entity;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author varokas
@@ -76,6 +87,33 @@ public class JPADepsBuilderTest {
 
         assertThat(link1.getFrom().getTable(), sameInstance(link2.getFrom().getTable()));
         assertThat(link1.getTo().getTable(), sameInstance(link2.getTo().getTable()));
+    }
+
+    @Ignore
+    @Test
+    public void testDepsBuilderCreatesACorrectRowPersister() throws NoSuchFieldException {
+        DependenciesContext context = jpaDepsBuilder.withLink(aLink).build(entityManager);
+        RowPersister rowPersister = context.getRowPersister();
+        GenericDependenciesDefinition dependenciesDefinition = context.getDependenciesDefinition();
+
+        com.huskycode.jpaquery.types.db.Link link = dependenciesDefinition.getLinks().get(0);
+        Table customerTable = link.getFrom().getTable();
+
+        ArrayList<ColumnValue> columnValues = new ArrayList<ColumnValue>();
+        columnValues.add(new ColumnValue(customerTable.column("customerAddressId"), 1L));
+        columnValues.add(new ColumnValue(customerTable.column("paymentMethodCode"), "CODE"));
+        columnValues.add(new ColumnValue(customerTable.column("customerName"), "custName"));
+        columnValues.add(new ColumnValue(customerTable.column("customerPhone"), "phone"));
+        columnValues.add(new ColumnValue(customerTable.column("dateOfFirstOrder"), new Date()));
+        columnValues.add(new ColumnValue(customerTable.column("otherCustomerDetails"), "details"));
+
+        rowPersister.save(new Row(columnValues));
+
+        ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(entityManager).persist(customerCaptor.capture());
+
+        Customer customer = customerCaptor.getValue();
+
     }
 
     @Test

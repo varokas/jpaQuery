@@ -16,7 +16,7 @@ public class JPADepsBuilder {
     private final Set<Table> enumTables;
     private final Set<Table> triggeredTables;
 
-    private Map<String, Table> collectedTablesByName = new HashMap<String, Table>();
+    private Map<String, TableAndEntity> collectedTablesByName = new HashMap<String, TableAndEntity>();
 
     private final TableFactory tableFactory = new TableFactory();
 
@@ -70,8 +70,17 @@ public class JPADepsBuilder {
         ), new JPARowPersister(entityManager));
     }
 
+    private Map<Table, Class<?>> createTableToEntityClassMap(Collection<TableAndEntity> tableAndEntities) {
+        Map<Table, Class<?>> map = new HashMap<Table, Class<?>>();
+        for(TableAndEntity tableAndEntity : tableAndEntities) {
+            map.put(tableAndEntity.table, tableAndEntity.entityClass);
+        }
+
+        return map;
+    }
+
     private com.huskycode.jpaquery.types.db.Link createLinkFromJPALink(
-            Map<String, Table> collectedTablesByName, com.huskycode.jpaquery.link.Link link) {
+            Map<String, TableAndEntity> collectedTablesByName, com.huskycode.jpaquery.link.Link link) {
         Table fromTable = getOrCreateTable(collectedTablesByName, link.getFrom().getEntityClass());
         Table toTable = getOrCreateTable(collectedTablesByName, link.getTo().getEntityClass());
 
@@ -81,14 +90,24 @@ public class JPADepsBuilder {
         return new com.huskycode.jpaquery.types.db.Link(fromColumn, toColumn);
     }
 
-    private Table getOrCreateTable(Map<String, Table> collectedTablesByName, Class entityClass) {
+    private Table getOrCreateTable(Map<String, TableAndEntity> collectedTablesByName, Class entityClass) {
         String tableName = JPAUtil.getTableName(entityClass);
         if(!collectedTablesByName.containsKey(tableName)) {
-            collectedTablesByName.put(tableName, tableFactory.createFromJPAEntity(entityClass));
+            collectedTablesByName.put(tableName,
+                    new TableAndEntity(tableFactory.createFromJPAEntity(entityClass), entityClass)
+            );
         }
 
-        return collectedTablesByName.get(tableName);
+        return collectedTablesByName.get(tableName).table;
     }
 
+    class TableAndEntity {
+        private Table table;
+        private Class entityClass;
 
+        TableAndEntity(Table table, Class entityClass) {
+            this.table = table;
+            this.entityClass = entityClass;
+        }
+    }
 }

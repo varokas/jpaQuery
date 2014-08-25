@@ -1,6 +1,11 @@
 package com.huskycode.jpaquery.jpa.util;
 
+import com.huskycode.jpaquery.types.db.ColumnDefinition;
+
+import javax.persistence.Transient;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by varokas.

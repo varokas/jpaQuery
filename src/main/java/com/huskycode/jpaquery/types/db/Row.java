@@ -1,13 +1,21 @@
 package com.huskycode.jpaquery.types.db;
 
-public class Row {
-    private final Iterable<ColumnValue> columnValue;
+import java.util.List;
 
-    public Row(Iterable<ColumnValue> columnValue) {
+public class Row {
+    private final Table table;
+    private final List<ColumnValue> columnValue;
+
+    Row(Table table, List<ColumnValue> columnValue) {
+        this.table = table;
         this.columnValue = columnValue;
     }
 
-    public Iterable<ColumnValue> getColumnValue() {
+    public List<ColumnValue> getColumnValue() {
         return columnValue;
+    }
+
+    public Table getTable() {
+        return table;
     }
 }

@@ -25,7 +25,6 @@ public class TableFactory {
         List<ColumnDefinition> columns = new ArrayList<ColumnDefinition>();
         for(Field field : jpaEntity.getDeclaredFields()) {
             if(!isTransient(field)) {
-                javax.persistence.Column column = field.getAnnotation(javax.persistence.Column.class);
                 String columnName = JPAUtil.getColumnNameOrDefault(field);
 
                 columns.add(new ColumnDefinition(columnName, field.getType()));

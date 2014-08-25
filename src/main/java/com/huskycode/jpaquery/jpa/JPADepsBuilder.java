@@ -9,6 +9,7 @@ import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
 import javax.persistence.EntityManager;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class JPADepsBuilder {
@@ -17,6 +18,7 @@ public class JPADepsBuilder {
     private final Set<Table> triggeredTables;
 
     private Map<String, TableAndEntity> collectedTablesByName = new HashMap<String, TableAndEntity>();
+    private Map<Column, Field> collectedColumnAndField = new HashMap<Column, Field>();
 
     private final TableFactory tableFactory = new TableFactory();
 
@@ -67,8 +69,13 @@ public class JPADepsBuilder {
                 links,
                 enumTables,
                 triggeredTables
-        ), new JPARowPersister(entityManager));
+        ), new JPARowPersister(
+                entityManager,
+                createTableToEntityClassMap(collectedTablesByName.values())
+        ));
     }
+
+
 
     private Map<Table, Class<?>> createTableToEntityClassMap(Collection<TableAndEntity> tableAndEntities) {
         Map<Table, Class<?>> map = new HashMap<Table, Class<?>>();

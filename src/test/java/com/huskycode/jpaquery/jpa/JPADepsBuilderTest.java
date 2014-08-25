@@ -1,12 +1,12 @@
 package com.huskycode.jpaquery.jpa;
 
 import com.huskycode.jpaquery.GenericDependenciesDefinition;
-import com.huskycode.jpaquery.jpa.util.JPAUtil;
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.persister.RowPersister;
 import com.huskycode.jpaquery.testmodel.pizza.*;
 import com.huskycode.jpaquery.types.db.ColumnValue;
 import com.huskycode.jpaquery.types.db.Row;
+import com.huskycode.jpaquery.types.db.RowBuilder;
 import com.huskycode.jpaquery.types.db.Table;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,9 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
@@ -99,21 +97,29 @@ public class JPADepsBuilderTest {
         com.huskycode.jpaquery.types.db.Link link = dependenciesDefinition.getLinks().get(0);
         Table customerTable = link.getFrom().getTable();
 
-        ArrayList<ColumnValue> columnValues = new ArrayList<ColumnValue>();
-        columnValues.add(new ColumnValue(customerTable.column("customerAddressId"), 1L));
-        columnValues.add(new ColumnValue(customerTable.column("paymentMethodCode"), "CODE"));
-        columnValues.add(new ColumnValue(customerTable.column("customerName"), "custName"));
-        columnValues.add(new ColumnValue(customerTable.column("customerPhone"), "phone"));
-        columnValues.add(new ColumnValue(customerTable.column("dateOfFirstOrder"), new Date()));
-        columnValues.add(new ColumnValue(customerTable.column("otherCustomerDetails"), "details"));
+        final Date date = new Date();
+        Row row = new RowBuilder(customerTable)
+                .withColumnValue(customerTable.column("customerAddressId"), 1L)
+                .withColumnValue(customerTable.column("paymentMethodCode"), "CODE")
+                .withColumnValue(customerTable.column("customerName"), "custName")
+                .withColumnValue(customerTable.column("customerPhone"), "phone")
+                .withColumnValue(customerTable.column("dateOfFirstOrder"), date)
+                .withColumnValue(customerTable.column("otherCustomerDetails"), "details")
+                .build();
 
-        rowPersister.save(new Row(columnValues));
+        rowPersister.save(row);
 
         ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(entityManager).persist(customerCaptor.capture());
 
         Customer customer = customerCaptor.getValue();
-
+        assertThat(customer, instanceOf(Customer.class));
+        assertThat(customer.getCustomerAddressId(), is(1L));
+        assertThat(customer.getPaymentMethodCode(), is("CODE"));
+        assertThat(customer.getCustomerName(), is("custName"));
+        assertThat(customer.getCustomerPhone(), is("phone"));
+        assertThat(customer.getDateOfFirstOrder(), is(date));
+        assertThat(customer.getOtherCustomerDetails(), is("details"));
     }
 
     @Test

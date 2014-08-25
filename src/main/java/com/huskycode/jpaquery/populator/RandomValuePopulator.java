@@ -1,5 +1,8 @@
 package com.huskycode.jpaquery.populator;
 
+import com.huskycode.jpaquery.types.db.Row;
+import com.huskycode.jpaquery.types.db.Table;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -18,4 +21,6 @@ public interface RandomValuePopulator {
     <E, T> void addFieldRandomizer(SingularAttribute<E, T> attr, FieldValueRandomizer<T> randomizer);
 
     <E, T> void addFieldRandomizers(Map<SingularAttribute, FieldValueRandomizer> map);
+
+    Row random(Table table);
 }

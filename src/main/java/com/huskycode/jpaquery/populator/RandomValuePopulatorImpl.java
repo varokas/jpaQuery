@@ -12,6 +12,9 @@ import java.util.Queue;
 import javax.persistence.Column;
 import javax.persistence.metamodel.SingularAttribute;
 
+import com.huskycode.jpaquery.types.db.Row;
+import com.huskycode.jpaquery.types.db.RowBuilder;
+import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.util.Randomizer;
 import com.huskycode.jpaquery.util.RandomizerImpl;
 
@@ -126,5 +129,14 @@ public class RandomValuePopulatorImpl implements RandomValuePopulator {
         for (Entry<SingularAttribute, FieldValueRandomizer> entry : map.entrySet()) {
             addFieldRandomizer(entry.getKey(), entry.getValue());
         }
+    }
+
+    @Override
+    public Row random(Table table) {
+        RowBuilder rowBuilder = new RowBuilder(table);
+        for (com.huskycode.jpaquery.types.db.Column c : table.getColumns()) {
+            rowBuilder.withColumnValue(c, this.randomizer.getRandomOfType(c.getType()));
+        }
+        return rowBuilder.build();
     }
 }

@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class EntityNodeImpl implements EntityNode {
-	private final Class<?> entityClass;
-	private final Set<EntityNode> parent;
-	private final Set<EntityNode> childs;
+    private final Class<?> entityClass;
+    private final Set<EntityNode> parent;
+    private final Set<EntityNode> childs;
 
 	private CommandNode command;
 

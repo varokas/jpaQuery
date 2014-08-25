@@ -71,7 +71,8 @@ public class JPADepsBuilder {
                 triggeredTables
         ), new JPARowPersister(
                 entityManager,
-                createTableToEntityClassMap(collectedTablesByName.values())
+                createTableToEntityClassMap(collectedTablesByName.values()),
+                collectedColumnAndField
         ));
     }
 
@@ -100,9 +101,12 @@ public class JPADepsBuilder {
     private Table getOrCreateTable(Map<String, TableAndEntity> collectedTablesByName, Class entityClass) {
         String tableName = JPAUtil.getTableName(entityClass);
         if(!collectedTablesByName.containsKey(tableName)) {
-            collectedTablesByName.put(tableName,
-                    new TableAndEntity(tableFactory.createFromJPAEntity(entityClass), entityClass)
+            final TableFactory.TableWithMapping tableWithMapping = tableFactory.createWithMappingFromJPAEntity(entityClass);
+            collectedTablesByName.put(
+                    tableName,
+                    new TableAndEntity(tableWithMapping.getTable(), entityClass)
             );
+            collectedColumnAndField.putAll(tableWithMapping.getColumnFieldMap());
         }
 
         return collectedTablesByName.get(tableName).table;

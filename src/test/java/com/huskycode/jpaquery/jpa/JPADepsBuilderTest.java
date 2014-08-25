@@ -87,7 +87,6 @@ public class JPADepsBuilderTest {
         assertThat(link1.getTo().getTable(), sameInstance(link2.getTo().getTable()));
     }
 
-    @Ignore
     @Test
     public void testDepsBuilderCreatesACorrectRowPersister() throws NoSuchFieldException {
         DependenciesContext context = jpaDepsBuilder.withLink(aLink).build(entityManager);

@@ -2,11 +2,11 @@ package com.huskycode.integration;
 
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Varokas Panusuwan
@@ -14,13 +14,13 @@ import static org.junit.Assert.assertThat;
 public class LinkTest {
     private Link<ClassA, ClassB, Integer> link;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         //for meta model annotation
         TestEntityManager.INSTANCE.getEntityManager();
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         link = Link.from(ClassA.class, ClassA_.foreignId).to(ClassB.class, ClassB_.id);
     }

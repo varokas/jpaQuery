@@ -1,6 +1,7 @@
 package com.huskycode.jpaquery.types.db;
 
-import com.huskycode.jpaquery.util.Function;
+
+import java.util.function.Function;
 
 public interface Column {
     String getName();
@@ -9,10 +10,5 @@ public interface Column {
 
     Table getTable();
 
-    static Function<Column, String> NAME_MAPPER = new Function<Column, String>() {
-        @Override
-        public String apply(Column input) {
-            return input.getName();
-        }
-    };
+    static Function<Column, String> NAME_MAPPER = Column::getName;
 }

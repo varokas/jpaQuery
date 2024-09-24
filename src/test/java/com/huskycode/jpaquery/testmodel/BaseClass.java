@@ -1,6 +1,6 @@
 package com.huskycode.jpaquery.testmodel;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Just a generic annotated entity class for testing.

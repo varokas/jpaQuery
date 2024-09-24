@@ -2,14 +2,13 @@ package com.huskycode.jpaquery.solver;
 
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.command.CommandNode;
@@ -29,7 +28,7 @@ public class CommandInterpretorTest {
 	private CommandPlan plan;
 	private CommandNodes commands;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
 		commands = ns(n(Address.class,
@@ -40,9 +39,9 @@ public class CommandInterpretorTest {
 	
 	@Test
 	public void testCreatePlanReturnPlanInCorrectOrderFromRootToLeave() {
-		Assert.assertEquals(2, plan.getPlan().size());
-		Assert.assertEquals(commands.get().get(0), plan.getPlan().get(0));
-		Assert.assertEquals(commands.get().get(0).getChildren().get(0), plan.getPlan().get(1));
+		assertEquals(2, plan.getPlan().size());
+		assertEquals(commands.get().get(0), plan.getPlan().get(0));
+		assertEquals(commands.get().get(0).getChildren().get(0), plan.getPlan().get(1));
 		
 	}
 	
@@ -50,7 +49,7 @@ public class CommandInterpretorTest {
 	public void testCreatePlanReturnCorrectInOrderEntityData() {
 		InOrderEntityData inOrderData = plan.getInOrderEntityData();
 
-		Assert.assertEquals(8, inOrderData.getInOrderEntityList().size());
+		assertEquals(8, inOrderData.getInOrderEntityList().size());
 		int refPaymentMethodIndex = inOrderData.getOrderIndexOf(RefPaymentMethod.class);
 		int refDeliveryStatusIndex = inOrderData.getOrderIndexOf(RefDeliveryStatus.class);
 		int refVehicleTypeIndex = inOrderData.getOrderIndexOf(RefVehicleTypeEnum.class);
@@ -86,8 +85,8 @@ public class CommandInterpretorTest {
 		
 		List<CommandNode> commandNodePlan = plan.getPlan();
 		
-		Assert.assertEquals(3, commandNodePlan.size());
-		Assert.assertEquals(sharedChild, commandNodePlan.get(2));
+		assertEquals(3, commandNodePlan.size());
+		assertEquals(sharedChild, commandNodePlan.get(2));
 		
 	}
 }

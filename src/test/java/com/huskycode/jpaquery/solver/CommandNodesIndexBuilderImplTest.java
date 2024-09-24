@@ -2,11 +2,11 @@ package com.huskycode.jpaquery.solver;
 
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
-import junit.framework.Assert;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.huskycode.jpaquery.command.CommandNodeFactory.CommandNodeImpl;
+
+import org.junit.jupiter.api.Test;
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
@@ -28,16 +28,16 @@ public class CommandNodesIndexBuilderImplTest {
         CommandNodesIndexBuilderImpl indexBuilder = new CommandNodesIndexBuilderImpl();
         CommandNodesIndexResult result = indexBuilder.build(commands);
 
-        Assert.assertEquals(0, result.getIndexOf(commands.get().get(0)).intValue());
-        Assert.assertEquals(1, result.getIndexOf(commands.get().get(1)).intValue());
+        assertEquals(0, result.getIndexOf(commands.get().get(0)).intValue());
+        assertEquals(1, result.getIndexOf(commands.get().get(1)).intValue());
 
-        Assert.assertEquals(0, result.getIndexOf(commands.get().get(0).getChildren().get(0)).intValue());
-        Assert.assertEquals(1, result.getIndexOf(commands.get().get(0).getChildren().get(1)).intValue());
-        Assert.assertEquals(3, result.getIndexOf(commands.get().get(0).getChildren().get(2)).intValue());
+        assertEquals(0, result.getIndexOf(commands.get().get(0).getChildren().get(0)).intValue());
+        assertEquals(1, result.getIndexOf(commands.get().get(0).getChildren().get(1)).intValue());
+        assertEquals(3, result.getIndexOf(commands.get().get(0).getChildren().get(2)).intValue());
 
-        Assert.assertEquals(0, result.getIndexOf(commands.get().get(0).getChildren().get(0).getChildren().get(0)).intValue());
-        Assert.assertEquals(1, result.getIndexOf(commands.get().get(0).getChildren().get(0).getChildren().get(1)).intValue());
-        Assert.assertEquals(2, result.getIndexOf(commands.get().get(0).getChildren().get(1).getChildren().get(0)).intValue());
+        assertEquals(0, result.getIndexOf(commands.get().get(0).getChildren().get(0).getChildren().get(0)).intValue());
+        assertEquals(1, result.getIndexOf(commands.get().get(0).getChildren().get(0).getChildren().get(1)).intValue());
+        assertEquals(2, result.getIndexOf(commands.get().get(0).getChildren().get(1).getChildren().get(0)).intValue());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CommandNodesIndexBuilderImplTest {
         CommandNodesIndexBuilderImpl indexBuilder = new CommandNodesIndexBuilderImpl();
         CommandNodesIndexResult result = indexBuilder.build(commands);
 
-        Assert.assertEquals(0, result.getIndexOf(order1).intValue());
-        Assert.assertEquals(1, result.getIndexOf(order2).intValue());
+        assertEquals(0, result.getIndexOf(order1).intValue());
+        assertEquals(1, result.getIndexOf(order2).intValue());
     }
 }

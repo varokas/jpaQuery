@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  */
 public class JPAUtil {
     public static String getColumnNameOrDefault(Field field) {
-        javax.persistence.Column column = field.getAnnotation(javax.persistence.Column.class);
+        jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
 
         if(column == null) {
             return field.getName();
@@ -23,7 +23,7 @@ public class JPAUtil {
     public static  String getTableName(Class<?> jpaEntity) {
         String tableName = jpaEntity.getSimpleName();
 
-        javax.persistence.Table tableAnnotation = jpaEntity.getAnnotation(javax.persistence.Table.class);
+        jakarta.persistence.Table tableAnnotation = jpaEntity.getAnnotation(jakarta.persistence.Table.class);
         if(tableAnnotation != null) {
             tableName = tableAnnotation.name();
         }

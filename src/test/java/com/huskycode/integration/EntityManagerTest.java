@@ -2,13 +2,14 @@ package com.huskycode.integration;
 
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.testmodel.ClassA_;
-import org.junit.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Varokas Panusuwan

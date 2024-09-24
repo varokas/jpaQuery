@@ -1,12 +1,13 @@
 package com.huskycode.jpaquery.types.db;
 
-import org.junit.Test;
-
 import java.util.Arrays;
 
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RowBuilderTest {
 
@@ -33,13 +34,15 @@ public class RowBuilderTest {
         assertThat(row.getColumnValue().get(0).getValue(), is((Object)"ABC"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testBuildRowThrowsIllegalArgumentExceptionWhenColumnNotExistsInTable() throws Exception {
-        RowBuilder builder = new RowBuilder(table);
-        Table anotherTable = new TableImpl("anotherTable",
-                Arrays.asList(new ColumnDefinition("anotherColumn", String.class)));
+    @Test
+    public void testBuildRowThrowsIllegalArgumentExceptionWhenColumnNotExistsInTable() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			RowBuilder builder = new RowBuilder(table);
+			Table anotherTable = new TableImpl("anotherTable",
+					Arrays.asList(new ColumnDefinition("anotherColumn", String.class)));
 
-        builder.withColumnValue(anotherTable.getColumns().get(0), "someValue")
-                .build();
-    }
+			builder.withColumnValue(anotherTable.getColumns().get(0), "someValue")
+					.build();
+		});
+	}
 }

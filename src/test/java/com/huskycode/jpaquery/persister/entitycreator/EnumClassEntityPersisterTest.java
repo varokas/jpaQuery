@@ -3,13 +3,15 @@ package com.huskycode.jpaquery.persister.entitycreator;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.types.tree.EntityNode;
 

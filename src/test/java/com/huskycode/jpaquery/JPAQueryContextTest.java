@@ -1,16 +1,17 @@
 package com.huskycode.jpaquery;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.populator.RandomValuePopulator;
 import com.huskycode.jpaquery.solver.CommandNodesIndexBuilder;
@@ -24,7 +25,7 @@ public class JPAQueryContextTest {
     private JPAQueryContext jpaContext;
     private RandomValuePopulator randomValuePopulator;
     private CommandNodesIndexBuilder indexBuilder;
-    @Before
+    @BeforeEach
     public void before() {
         entityManager = mock(EntityManager.class);
         deps = mock(DependenciesDefinition.class);
@@ -56,14 +57,16 @@ public class JPAQueryContextTest {
         assertThat(jpaContext.getRandomValuePopulator(), is(equalTo(randomValuePopulator)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowIllegalArgumentExceptionWhenEntityManagerIsNull() {
-        JPAQueryContext.newInstance(null, deps);
-    }
+		assertThrows(IllegalArgumentException.class, () ->
+			JPAQueryContext.newInstance(null, deps));
+	}
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowIllegalArgumentExceptionWhenDependenciesIsNull() {
-        JPAQueryContext.newInstance(entityManager, null);
-    }
+		assertThrows(IllegalArgumentException.class, () ->
+			JPAQueryContext.newInstance(entityManager, null));
+	}
 
 }

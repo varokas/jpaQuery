@@ -3,14 +3,14 @@ package com.huskycode.jpaquery.solver;
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.DepsBuilder;
@@ -63,38 +63,38 @@ public class SolverImplTest {
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			expectedEntitiesInActionGraph.remove(n.getEntityClass());
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
-				Assert.assertSame(commands.get().get(0), n.getCommand());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
+				Assertions.assertSame(commands.get().get(0), n.getCommand());
 			}
 			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 			}
 			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 			}
 		}
 
-		Assert.assertEquals("Could not resolved for all entity types", 0, expectedEntitiesInActionGraph.size());
+		Assertions.assertEquals(0, expectedEntitiesInActionGraph.size(), "Could not resolved for all entity types");
 	}
 
 	@Test
@@ -117,39 +117,39 @@ public class SolverImplTest {
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			expectedEntitiesInActionGraph.remove(n.getEntityClass());
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
-				Assert.assertSame(commands.get().get(0), n.getCommand());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
+				Assertions.assertSame(commands.get().get(0), n.getCommand());
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
-				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
+				Assertions.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 			}
 			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 			}
 			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 			}
 		}
 
-		Assert.assertEquals("Could not resolved for all entity types", 0, expectedEntitiesInActionGraph.size());
+		Assertions.assertEquals(0, expectedEntitiesInActionGraph.size(), "Could not resolved for all entity types");
 	}
 
 	@Test
@@ -165,54 +165,54 @@ public class SolverImplTest {
 		int count = 0;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
-				Assert.assertSame(commands.get().get(0), n.getCommand());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
+				Assertions.assertSame(commands.get().get(0), n.getCommand());
 				count++;
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 				count++;
 			}
 
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(1) == n.getCommand()) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(2, n.getChilds().size());
 				count++;
 			}
 		}
 
-		Assert.assertEquals("Could not resolved for all entity types", expectedCount, count);
+		Assertions.assertEquals(expectedCount, count, "Could not resolved for all entity types");
 	}
 
 	@Test
@@ -237,79 +237,79 @@ public class SolverImplTest {
 		EntityNode paymentMethod = null;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(3, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
-				Assert.assertSame(commands.get().get(0), n.getCommand());
+				Assertions.assertEquals(3, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
+				Assertions.assertSame(commands.get().get(0), n.getCommand());
 				count++;
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				vehical = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 				customer1 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(0).getChildren().get(1) == n.getCommand()) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 				customer2 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				employeeNode  = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(0).getChildren().get(0) == n.getCommand()) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 				pizzaOrder1 = n;
 				count++;
 			}
 
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(1).getChildren().get(0) == n.getCommand()) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 				pizzaOrder2 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 				vehicalType = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(2, n.getChilds().size());
 				paymentMethod = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(2, n.getChilds().size());
 				deliveryStatus = n;
 				count++;
 			}
 		}
 
-		Assert.assertEquals("Could not resolved for all entity types", expectedCount, count);
-		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder1));
-		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder2));
-		Assert.assertTrue("Does not contain correct pizza order", customer1.getChilds().contains(pizzaOrder1));
-		Assert.assertTrue("Does not contain correct pizza order", customer2.getChilds().contains(pizzaOrder2));
-		Assert.assertTrue("Does not contain correct vehical", vehicalType.getChilds().contains(vehical));
-		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder1));
-		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder2));
-		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer1));
-		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer2));
+		Assertions.assertEquals(expectedCount, count, "Could not resolved for all entity types");
+		Assertions.assertTrue(employeeNode.getChilds().contains(pizzaOrder1), "Does not contain all pizza order");
+		Assertions.assertTrue(employeeNode.getChilds().contains(pizzaOrder2), "Does not contain all pizza order");
+		Assertions.assertTrue(customer1.getChilds().contains(pizzaOrder1), "Does not contain correct pizza order");
+		Assertions.assertTrue(customer2.getChilds().contains(pizzaOrder2), "Does not contain correct pizza order");
+		Assertions.assertTrue(vehicalType.getChilds().contains(vehical), "Does not contain correct vehical");
+		Assertions.assertTrue(deliveryStatus.getChilds().contains(pizzaOrder1), "Does not contain pizza order");
+		Assertions.assertTrue(deliveryStatus.getChilds().contains(pizzaOrder2), "Does not contain pizza order");
+		Assertions.assertTrue(paymentMethod.getChilds().contains(customer1), "Does not contain customer");
+		Assertions.assertTrue(paymentMethod.getChilds().contains(customer2), "Does not contain customer");
 	}
 
 
@@ -334,78 +334,78 @@ public class SolverImplTest {
 		EntityNode paymentMethod = null;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(3, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assertions.assertEquals(3, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				vehical = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(0) == n.getCommand()) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 				customer1 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)
 					&& commands.get().get(1) == n.getCommand()) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 				customer2 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				employeeNode  = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(0).getChildren().get(0) == n.getCommand()) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 				pizzaOrder1 = n;
 				count++;
 			}
 
 			if (n.getEntityClass().equals(PizzaOrder.class)
 					&& commands.get().get(1).getChildren().get(0) == n.getCommand()) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 				pizzaOrder2 = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(RefVehicleTypeEnum.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getChilds().size());
 				vehicalType = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(RefPaymentMethod.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(2, n.getChilds().size());
 				paymentMethod = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(RefDeliveryStatus.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(2, n.getChilds().size());
 				deliveryStatus = n;
 				count++;
 			}
 		}
 
-		Assert.assertEquals("Could not resolved for all entity types", expectedCount, count);
-		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder1));
-		Assert.assertTrue("Does not contain all pizza order", employeeNode.getChilds().contains(pizzaOrder2));
-		Assert.assertTrue("Does not contain correct pizza order", customer1.getChilds().contains(pizzaOrder1));
-		Assert.assertTrue("Does not contain correct pizza order", customer2.getChilds().contains(pizzaOrder2));
-		Assert.assertTrue("Does not contain correct vehical", vehicalType.getChilds().contains(vehical));
-		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder1));
-		Assert.assertTrue("Does not contain pizza order", deliveryStatus.getChilds().contains(pizzaOrder2));
-		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer1));
-		Assert.assertTrue("Does not contain customer", paymentMethod.getChilds().contains(customer2));
+		Assertions.assertEquals(expectedCount, count, "Could not resolved for all entity types");
+		Assertions.assertTrue(employeeNode.getChilds().contains(pizzaOrder1), "Does not contain all pizza order");
+		Assertions.assertTrue(employeeNode.getChilds().contains(pizzaOrder2), "Does not contain all pizza order");
+		Assertions.assertTrue(customer1.getChilds().contains(pizzaOrder1), "Does not contain correct pizza order");
+		Assertions.assertTrue(customer2.getChilds().contains(pizzaOrder2), "Does not contain correct pizza order");
+		Assertions.assertTrue(vehicalType.getChilds().contains(vehical), "Does not contain correct vehical");
+		Assertions.assertTrue(deliveryStatus.getChilds().contains(pizzaOrder1), "Does not contain pizza order");
+		Assertions.assertTrue(deliveryStatus.getChilds().contains(pizzaOrder2), "Does not contain pizza order");
+		Assertions.assertTrue(paymentMethod.getChilds().contains(customer1), "Does not contain customer");
+		Assertions.assertTrue(paymentMethod.getChilds().contains(customer2), "Does not contain customer");
 	}
 
 
@@ -426,42 +426,42 @@ public class SolverImplTest {
 		EntityNode pizzaOrder = null;
 		for (EntityNode n : result.getActionGraph().getAllNodes()) {
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 				count++;
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
-				Assert.assertEquals(commands.get().get(0), n.getCommand());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(commands.get().get(0), n.getCommand());
 				customer = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
-				Assert.assertEquals(commands.get().get(1), n.getCommand());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(commands.get().get(1), n.getCommand());
 				employee = n;
 				count++;
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
-				Assert.assertEquals(0, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
-				Assert.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
+				Assertions.assertEquals(0, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
+				Assertions.assertSame(commands.get().get(0).getChildren().get(0), n.getCommand());
 				pizzaOrder = n;
 				count++;
 			}
 		}
 
-		Assert.assertEquals("Could not resolved for all entity types", 5, count);
+		Assertions.assertEquals(5, count, "Could not resolved for all entity types");
 
-		Assert.assertTrue("Does not contain pizza order", customer.getChilds().contains(pizzaOrder));
-		Assert.assertTrue("Does not contain pizza order", employee.getChilds().contains(pizzaOrder));
+		Assertions.assertTrue(customer.getChilds().contains(pizzaOrder), "Does not contain pizza order");
+		Assertions.assertTrue(employee.getChilds().contains(pizzaOrder), "Does not contain pizza order");
 	}
 
 	@Test
@@ -478,9 +478,9 @@ public class SolverImplTest {
         assertThat(result.getActionGraph().getAllNodes().size(), is(4));
 
         EntityNode l2Node = result.getActionGraph().getAllNodes().get(2);
-        Assert.assertEquals(l2Node.getEntityClass(), L2.class);
+        Assertions.assertEquals(l2Node.getEntityClass(), L2.class);
         //L2 entity depends on command L1_1 correctly.
-        Assert.assertSame(l2Node.getParent().toArray(new EntityNode[0])[0].getCommand(), l1_1Command);
+        Assertions.assertSame(l2Node.getParent().toArray(new EntityNode[0])[0].getCommand(), l1_1Command);
 	}
 
 	@SuppressWarnings("unchecked")

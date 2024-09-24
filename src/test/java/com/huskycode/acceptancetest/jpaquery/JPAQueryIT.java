@@ -13,12 +13,12 @@ import com.huskycode.jpaquery.testmodel.pizza.Topping;
 import com.huskycode.jpaquery.testmodel.pizza.deps.PizzaDeps;
 import com.huskycode.jpaquery.types.tree.PersistedResult;
 import com.huskycode.jpaquery.util.Maps;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -28,7 +28,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author Varokas Panusuwan
@@ -40,14 +40,14 @@ public class JPAQueryIT {
     private EntityManager entityManager;
     private EntityTransaction tx;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         entityManager = TestEntityManager.INSTANCE.getEntityManager();
         tx = entityManager.getTransaction();
         tx.begin();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         tx.rollback();
     }

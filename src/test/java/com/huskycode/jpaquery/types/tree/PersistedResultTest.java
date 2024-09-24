@@ -3,14 +3,15 @@ package com.huskycode.jpaquery.types.tree;
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.command.CommandNode;
 import com.huskycode.jpaquery.command.CommandNodes;
@@ -26,7 +27,7 @@ public class PersistedResultTest {
 	public void shouldBeAbleToCreateAndRetrieve() {
 		List<Object> persistedObjects = Arrays.asList(new Object());
 		PersistedResult pt = PersistedResult.newInstance(persistedObjects);
-		Assert.assertThat(pt.getPersistedObjects(), sameInstance(persistedObjects));
+		assertThat(pt.getPersistedObjects(), sameInstance(persistedObjects));
 	}
 
 	@Test
@@ -38,12 +39,12 @@ public class PersistedResultTest {
 													  new PizzaOrder(),
 													  new PizzaOrder());
 		PersistedResult pt = PersistedResult.newInstance(persistedObjects);
-		Assert.assertEquals(2, pt.getForClass(Address.class).size());
-		Assert.assertEquals(persistedObjects.subList(0, 2), pt.getForClass(Address.class));
-		Assert.assertEquals(1, pt.getForClass(Customer.class).size());
-		Assert.assertEquals(persistedObjects.subList(2, 3), pt.getForClass(Customer.class));
-		Assert.assertEquals(3, pt.getForClass(PizzaOrder.class).size());
-		Assert.assertEquals(persistedObjects.subList(3, 6), pt.getForClass(PizzaOrder.class));
+		Assertions.assertEquals(2, pt.getForClass(Address.class).size());
+		Assertions.assertEquals(persistedObjects.subList(0, 2), pt.getForClass(Address.class));
+		Assertions.assertEquals(1, pt.getForClass(Customer.class).size());
+		Assertions.assertEquals(persistedObjects.subList(2, 3), pt.getForClass(Customer.class));
+		Assertions.assertEquals(3, pt.getForClass(PizzaOrder.class).size());
+		Assertions.assertEquals(persistedObjects.subList(3, 6), pt.getForClass(PizzaOrder.class));
 	}
 
 	@Test
@@ -90,13 +91,13 @@ public class PersistedResultTest {
 	    PersistedResult pt = PersistedResult.newInstance(persistedObjects, index, commandObjectMap);
 
 	    //verify
-	    Assert.assertSame(persistedObjects.get(0), pt.getForClassByCommandIndex(Address.class, 0));
-	    Assert.assertSame(persistedObjects.get(1), pt.getForClassByCommandIndex(Address.class, 1));
-	    Assert.assertSame(persistedObjects.get(2), pt.getForClassByCommandIndex(PizzaOrder.class, 0));
-	    Assert.assertSame(persistedObjects.get(3), pt.getForClassByCommandIndex(PizzaOrder.class, 1));
-	    Assert.assertSame(persistedObjects.get(4), pt.getForClassByCommandIndex(Employee.class, 0));
-	    Assert.assertSame(persistedObjects.get(5), pt.getForClassByCommandIndex(Employee.class, 1));
-	    Assert.assertSame(persistedObjects.get(6), pt.getForClassByCommandIndex(Employee.class, 2));
-	    Assert.assertSame(persistedObjects.get(7), pt.getForClassByCommandIndex(Employee.class, 3));
+	    Assertions.assertSame(persistedObjects.get(0), pt.getForClassByCommandIndex(Address.class, 0));
+	    Assertions.assertSame(persistedObjects.get(1), pt.getForClassByCommandIndex(Address.class, 1));
+	    Assertions.assertSame(persistedObjects.get(2), pt.getForClassByCommandIndex(PizzaOrder.class, 0));
+	    Assertions.assertSame(persistedObjects.get(3), pt.getForClassByCommandIndex(PizzaOrder.class, 1));
+	    Assertions.assertSame(persistedObjects.get(4), pt.getForClassByCommandIndex(Employee.class, 0));
+	    Assertions.assertSame(persistedObjects.get(5), pt.getForClassByCommandIndex(Employee.class, 1));
+	    Assertions.assertSame(persistedObjects.get(6), pt.getForClassByCommandIndex(Employee.class, 2));
+	    Assertions.assertSame(persistedObjects.get(7), pt.getForClassByCommandIndex(Employee.class, 3));
 	}
 }

@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 
-import javax.persistence.Column;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.Column;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import com.huskycode.jpaquery.types.db.Row;
 import com.huskycode.jpaquery.types.db.RowBuilder;

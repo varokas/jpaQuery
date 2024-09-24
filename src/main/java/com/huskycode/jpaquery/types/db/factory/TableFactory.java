@@ -6,8 +6,8 @@ import com.huskycode.jpaquery.types.db.ColumnDefinition;
 import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.TableImpl;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;

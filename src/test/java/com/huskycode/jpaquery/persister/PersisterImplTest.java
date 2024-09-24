@@ -3,7 +3,7 @@ package com.huskycode.jpaquery.persister;
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -11,15 +11,15 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
 
 import com.huskycode.jpaquery.types.tree.*;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -43,7 +43,7 @@ public class PersisterImplTest {
 	private DependenciesDefinition deps;
 	private Random any = new Random();
 
-	@Before
+	@BeforeEach
 	public void before() {
 	    em = Mockito.mock(EntityManager.class);
 	    Mockito.doAnswer(new Answer<Object>() {
@@ -89,7 +89,7 @@ public class PersisterImplTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void testPersistValuesCreateAndPersistAllEntityWithCorrectForeignKeysFromParents() {
 		//set up
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
@@ -112,53 +112,53 @@ public class PersisterImplTest {
 		PizzaOrder order1 = null;
 		PizzaOrder order2 =  null;
 		for (Object obj : result.getPersistedObjects()) {
-			if (obj instanceof Address) {
-				address = (Address) obj;
+			if (obj instanceof Address address1) {
+				address = address1;
 			}
-			if (obj instanceof Vehicle) {
-				vehicle = (Vehicle) obj;
+			if (obj instanceof Vehicle vehicle1) {
+				vehicle = vehicle1;
 			}
-			if (obj instanceof Customer
+			if (obj instanceof Customer customer
 					&& customer1 == null) {
-				customer1 = (Customer) obj;
-			} else if (obj instanceof Customer
+				customer1 = customer;
+			} else if (obj instanceof Customer customer
 					&& customer2 == null) {
-				customer2 = (Customer) obj;
+				customer2 = customer;
 			}
-			if (obj instanceof Employee) {
-				employee = (Employee) obj;
+			if (obj instanceof Employee employee1) {
+				employee = employee1;
 			}
-			if (obj instanceof PizzaOrder
+			if (obj instanceof PizzaOrder order
 					&& order1 == null) {
-				order1 = (PizzaOrder) obj;
-			} else if (obj instanceof PizzaOrder
+				order1 = order;
+			} else if (obj instanceof PizzaOrder order
 							&& order2 == null) {
-				order2 = (PizzaOrder) obj;
+				order2 = order;
 			}
 		}
 		
 		//verify
-		Assert.assertNotNull(address);
-		Assert.assertNotNull(vehicle);
-		Assert.assertNotNull(customer1);
-		Assert.assertNotNull(employee);
-		Assert.assertNotNull(customer2);
-		Assert.assertNotNull(order1);
-		Assert.assertNotNull(order2);
+		Assertions.assertNotNull(address);
+		Assertions.assertNotNull(vehicle);
+		Assertions.assertNotNull(customer1);
+		Assertions.assertNotNull(employee);
+		Assertions.assertNotNull(customer2);
+		Assertions.assertNotNull(order1);
+		Assertions.assertNotNull(order2);
 		
-		Assert.assertEquals(customer1.getCustomerAddressId(), address.getAddressId().longValue());
-		Assert.assertEquals(customer2.getCustomerAddressId(), address.getAddressId().longValue());
-		Assert.assertEquals(employee.getEmployeeAddressId(), address.getAddressId().longValue());
-		Assert.assertEquals(employee.getEmployeeId().longValue(), order1.getDeliveredByEmployeeId());
-		Assert.assertEquals(employee.getEmployeeId().longValue(), order1.getTakenByEmployeeId());
-		Assert.assertEquals(employee.getEmployeeId().longValue(), order2.getDeliveredByEmployeeId());
-		Assert.assertEquals(employee.getEmployeeId().longValue(), order2.getTakenByEmployeeId());
+		Assertions.assertEquals(customer1.getCustomerAddressId(), address.getAddressId().longValue());
+		Assertions.assertEquals(customer2.getCustomerAddressId(), address.getAddressId().longValue());
+		Assertions.assertEquals(employee.getEmployeeAddressId(), address.getAddressId().longValue());
+		Assertions.assertEquals(employee.getEmployeeId().longValue(), order1.getDeliveredByEmployeeId());
+		Assertions.assertEquals(employee.getEmployeeId().longValue(), order1.getTakenByEmployeeId());
+		Assertions.assertEquals(employee.getEmployeeId().longValue(), order2.getDeliveredByEmployeeId());
+		Assertions.assertEquals(employee.getEmployeeId().longValue(), order2.getTakenByEmployeeId());
 		
 		if (order1.getCustomerId() == customer1.getCustomerId()) {
-			Assert.assertEquals(customer2.getCustomerId().longValue(), order2.getCustomerId());
+			Assertions.assertEquals(customer2.getCustomerId().longValue(), order2.getCustomerId());
 		} else {
-			Assert.assertEquals(customer2.getCustomerId().longValue(), order1.getCustomerId());
-			Assert.assertEquals(customer1.getCustomerId().longValue(), order2.getCustomerId());
+			Assertions.assertEquals(customer2.getCustomerId().longValue(), order1.getCustomerId());
+			Assertions.assertEquals(customer1.getCustomerId().longValue(), order2.getCustomerId());
 		}
 	}
 	
@@ -174,11 +174,11 @@ public class PersisterImplTest {
 		
         PersistedResult result = persister.persistValues(plan);
 
-		Assert.assertNotNull(result);
+		Assertions.assertNotNull(result);
 		List<Address> addresses = result.getForClass(Address.class);
-		Assert.assertNotNull(addresses);
-		Assert.assertEquals(1, addresses.size());
-		Assert.assertEquals(expectedValue, addresses.get(0).getCity());
+		Assertions.assertNotNull(addresses);
+		Assertions.assertEquals(1, addresses.size());
+		Assertions.assertEquals(expectedValue, addresses.get(0).getCity());
 	}
 	
 	private <V> CommandNode mockCommandNodeWithReturnValues(Field f, Object value) {

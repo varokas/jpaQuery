@@ -1,6 +1,6 @@
 package com.huskycode.jpaquery.testmodel;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.util.Date;
 
 /**

@@ -1,9 +1,9 @@
 package com.huskycode.jpaquery.persister;
 
 import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.populator.CreationPlanTraverser;
 import com.huskycode.jpaquery.types.tree.ActionGraph;
@@ -16,7 +16,7 @@ public class CreationPlanTraverserTest {
 	
 	private CreationPlanTraverser creationPlanTraverser;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		creationPlanTraverser = new CreationPlanTraverser();
 	}
@@ -54,11 +54,11 @@ public class CreationPlanTraverserTest {
 		List<EntityNode> planSteps = creationPlanTraverser.getEntityNodes(plan);
 		
 		//verify
-		Assert.assertEquals(4, planSteps.size());
-		Assert.assertSame(a, planSteps.get(0));
-		Assert.assertSame(bNeedA, planSteps.get(1));
-		Assert.assertSame(cNeedAandB, planSteps.get(2));
-		Assert.assertSame(dNeedBandC, planSteps.get(3));
+		Assertions.assertEquals(4, planSteps.size());
+		Assertions.assertSame(a, planSteps.get(0));
+		Assertions.assertSame(bNeedA, planSteps.get(1));
+		Assertions.assertSame(cNeedAandB, planSteps.get(2));
+		Assertions.assertSame(dNeedBandC, planSteps.get(3));
 	}
 
 }

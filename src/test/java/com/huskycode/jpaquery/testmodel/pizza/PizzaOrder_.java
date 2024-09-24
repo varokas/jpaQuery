@@ -2,8 +2,8 @@ package com.huskycode.jpaquery.testmodel.pizza;
 
 import java.util.Date;
 
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.StaticMetamodel;
 
 @StaticMetamodel(PizzaOrder.class)
 public class PizzaOrder_ {

@@ -1,12 +1,13 @@
 package com.huskycode.jpaquery.crud;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
@@ -27,7 +28,7 @@ public class CreationPlanFromDefinitionTest {
 		
 		CreationPlan plan = creator.from(dependenciesDefinition);
 		
-		Assert.assertThat(plan.getActionGraph().getAllNodes().size(), is(12));
+		assertThat(plan.getActionGraph().getAllNodes().size(), is(12));
 		Set<Class<?>> expectedEntitiesInActionGraph = new HashSet<Class<?>>();
 		expectedEntitiesInActionGraph.add(Address.class);
 		expectedEntitiesInActionGraph.add(Vehicle.class);
@@ -38,28 +39,28 @@ public class CreationPlanFromDefinitionTest {
 		for (EntityNode n : plan.getActionGraph().getAllNodes()) {
 			expectedEntitiesInActionGraph.remove(n.getEntityClass());
 			if (n.getEntityClass().equals(Address.class)) {
-				Assert.assertEquals(2, n.getChilds().size());
-				Assert.assertEquals(0, n.getParent().size());
+				Assertions.assertEquals(2, n.getChilds().size());
+				Assertions.assertEquals(0, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Vehicle.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Customer.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(2, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(2, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(Employee.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(1, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(1, n.getParent().size());
 			}
 			if (n.getEntityClass().equals(PizzaOrder.class)) {
-				Assert.assertEquals(1, n.getChilds().size());
-				Assert.assertEquals(4, n.getParent().size());
+				Assertions.assertEquals(1, n.getChilds().size());
+				Assertions.assertEquals(4, n.getParent().size());
 			}
 		}
 		
-		Assert.assertEquals("Could not resolved for all entity types", 0, expectedEntitiesInActionGraph.size());
+		Assertions.assertEquals(0, expectedEntitiesInActionGraph.size(), "Could not resolved for all entity types");
 		
 	}
 }

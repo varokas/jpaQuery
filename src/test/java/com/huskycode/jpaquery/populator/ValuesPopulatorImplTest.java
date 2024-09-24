@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 
@@ -21,6 +21,6 @@ public class ValuesPopulatorImplTest {
 		Customer customer = new Customer();
 		populator.populateValue(customer, overrideValues);	
 		
-		Assert.assertEquals(expectedValue, customer.getCustomerId());	
+		Assertions.assertEquals(expectedValue, customer.getCustomerId());	
 	}
 }

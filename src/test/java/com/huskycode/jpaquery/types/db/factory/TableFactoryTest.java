@@ -4,23 +4,25 @@ import com.huskycode.jpaquery.types.db.Column;
 import com.huskycode.jpaquery.types.db.ColumnImpl;
 import com.huskycode.jpaquery.types.db.Table;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class TableFactoryTest {
 
     private TableFactory tableFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         tableFactory = new TableFactory();
     }
@@ -69,10 +71,11 @@ public class TableFactoryTest {
         assertThat(table.column("columnB"), Matchers.equalTo((Column) new ColumnImpl(table, "columnB", String.class)));
     }
 
-    @Test(expected = TableFactory.NotJPAEntityException.class)
-    public void createFromJPAEntityThrowsExceptionIfInputIsNotAnEntity() throws Exception {
-        tableFactory.createFromJPAEntity(String.class);
-    }
+    @Test
+    public void createFromJPAEntityThrowsExceptionIfInputIsNotAnEntity() {
+		assertThrows(TableFactory.NotJPAEntityException.class, () ->
+			tableFactory.createFromJPAEntity(String.class));
+	}
 
 
     @Entity
@@ -82,13 +85,13 @@ public class TableFactoryTest {
     }
 
     @Entity
-    @javax.persistence.Table(name = "someTable")
+    @jakarta.persistence.Table(name = "someTable")
     public class JPAEntity {
-        @javax.persistence.Column(name="someColumn")
+        @jakarta.persistence.Column(name="someColumn")
         @Id
         private Integer columnA;
 
-        @javax.persistence.Column
+        @jakarta.persistence.Column
         private String columnB;
     }
 }

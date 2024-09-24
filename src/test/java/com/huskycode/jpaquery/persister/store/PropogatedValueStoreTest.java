@@ -3,14 +3,14 @@ package com.huskycode.jpaquery.persister.store;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
 import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
@@ -21,7 +21,7 @@ public class PropogatedValueStoreTest {
 	private PropogatedValueStore<EntityNode, Field, Object> valueStore;
 	private EntityNode node;
 	
-	@Before
+	@BeforeEach
 	public void before() {
 		valueStore = PropogatedValueStore.newInstance();
 		node = EntityNodeImpl.newInstance(Integer.class);

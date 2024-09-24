@@ -9,19 +9,18 @@ import com.huskycode.jpaquery.types.db.Row;
 import com.huskycode.jpaquery.types.db.RowBuilder;
 import com.huskycode.jpaquery.types.db.Table;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import java.util.Date;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -34,7 +33,7 @@ public class JPADepsBuilderTest {
     @Mock
     private EntityManager entityManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }

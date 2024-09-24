@@ -1,9 +1,9 @@
 package com.huskycode.jpaquery.testmodel.pizza;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
 /**
  * Model taken from the design here

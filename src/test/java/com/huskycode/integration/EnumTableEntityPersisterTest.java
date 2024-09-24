@@ -3,21 +3,22 @@ package com.huskycode.integration;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import com.huskycode.jpaquery.persister.entitycreator.EnumTableEntityPersister;
 import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
-import org.junit.Test;
 
 import com.huskycode.jpaquery.testmodel.pizza.RefVehicleType;
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+
+import org.junit.jupiter.api.Test;
 
 public class EnumTableEntityPersisterTest {
 	private EnumTableEntityPersister persister;

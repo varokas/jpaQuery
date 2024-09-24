@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.testmodel;
 
-import javax.annotation.Generated;
-import javax.persistence.metamodel.StaticMetamodel;
+import jakarta.annotation.Generated;
+import jakarta.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(ClassB.class)

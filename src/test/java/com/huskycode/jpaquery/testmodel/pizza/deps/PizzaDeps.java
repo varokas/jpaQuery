@@ -1,6 +1,6 @@
 package com.huskycode.jpaquery.testmodel.pizza.deps;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
 import com.huskycode.jpaquery.DepsBuilder;

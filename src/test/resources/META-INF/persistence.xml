@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
-    <persistence-unit name="testPersistentUnit"
-                      transaction-type="RESOURCE_LOCAL">
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+	<persistence-unit name="testPersistentUnit"
+		transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<properties>
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
 
-        <properties>
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.connection.driver_class"
+				value="org.h2.Driver" />
+			<property name="hibernate.connection.url"
+				value="jdbc:h2:mem:jpaQueryTest;DB_CLOSE_ON_EXIT=FALSE" />
+			<property name="hibernate.connection.username" value="sa" />
 
-            <property name="hibernate.connection.driver_class"
-                      value="org.h2.Driver" />
-            <property name="hibernate.connection.url"
-                      value="jdbc:h2:mem:jpaQueryTest;DB_CLOSE_ON_EXIT=FALSE" />
-            <property name="hibernate.connection.username" value="sa" />
-
-            <property name="hibernate.dialect"
-                      value="org.hibernate.dialect.H2Dialect" />
-            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
-            <property name="connection.autocommit" value="true"/>
-        </properties>
-
-    </persistence-unit>
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="connection.autocommit" value="true"/>
+		</properties>
+	</persistence-unit>
 </persistence>

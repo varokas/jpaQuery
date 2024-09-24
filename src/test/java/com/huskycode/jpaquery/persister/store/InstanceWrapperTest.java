@@ -1,8 +1,8 @@
 package com.huskycode.jpaquery.persister.store;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
 
 public class InstanceWrapperTest {
 	
@@ -12,20 +12,20 @@ public class InstanceWrapperTest {
 		InstanceWrapper<Object> one = InstanceWrapper.newInstance(obj);
 		InstanceWrapper<Object> two = InstanceWrapper.newInstance(obj);
 		
-		Assert.assertSame(obj, one.get());
-		Assert.assertSame(obj, two.get());
-		Assert.assertEquals(one, two);	
+		assertSame(obj, one.get());
+		assertSame(obj, two.get());
+		assertEquals(one, two);	
 	}
 	
 	@Test
-	public void testTwoINstanceIsNotEqualWhenItWrapDifferntInstanceEvenIfTheyAreEqual() {
+	public void testTwoInstanceIsNotEqualWhenItWrapDifferntInstanceEvenIfTheyAreEqual() {
 		Integer obj1 = new Integer(1);
 		Integer obj2 = new Integer(1);
 		InstanceWrapper<Integer> one = InstanceWrapper.newInstance(obj1);
 		InstanceWrapper<Integer> two = InstanceWrapper.newInstance(obj2);
 		
 		
-		Assert.assertEquals(obj1, obj2);
-		Assert.assertFalse(one.equals(two));	
+		assertEquals(obj1, obj2);
+		assertFalse(one.equals(two));	
 	}
 }

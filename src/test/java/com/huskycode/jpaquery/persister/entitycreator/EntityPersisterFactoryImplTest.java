@@ -2,15 +2,16 @@ package com.huskycode.jpaquery.persister.entitycreator;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.huskycode.jpaquery.DependenciesDefinition;
@@ -25,7 +26,7 @@ public class EntityPersisterFactoryImplTest {
 	private EntityNode anyNode;
 	private EntityManager em;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		factory = new EntityPersisterFactoryImpl();
 		anyNode = EntityNodeImpl.newInstance(aClass);
@@ -36,7 +37,7 @@ public class EntityPersisterFactoryImplTest {
 	public void testCreateEntityPersisterReturnNewRowEntityPersisterIfNotInSetOfEnumTable() {
 		DependenciesDefinition depsWithoutEnumTable = new DepsBuilder().build();
 		
-		Assert.assertThat(factory.createEntityPersister(anyNode, depsWithoutEnumTable, em),
+		assertThat(factory.createEntityPersister(anyNode, depsWithoutEnumTable, em),
 				is(instanceOf(NewRowEntityPersister.class)));
 	}
 	
@@ -45,18 +46,18 @@ public class EntityPersisterFactoryImplTest {
 		DependenciesDefinition depsWithMatchingEnumTable = 
 				new DepsBuilder().withEnumTable(aClass).build();
 		
-		Assert.assertThat(factory.createEntityPersister(anyNode, depsWithMatchingEnumTable, em),
+		assertThat(factory.createEntityPersister(anyNode, depsWithMatchingEnumTable, em),
 				is(instanceOf(EnumTableEntityPersister.class)));
 	}
 	
 	@Test
-    @Ignore("temporary remove support for enum class")
+    @Disabled("temporary remove support for enum class")
 	public void testCreateEntityPersisterReturnEnumClassIfDeclaredSo() {
 		anyNode = EntityNodeImpl.newInstance(AnEnum.class);
 		DependenciesDefinition depsWithMatchingEnumClass = 
 				new DepsBuilder().withEnumTable(AnEnum.class).build();
 		
-		Assert.assertThat(factory.createEntityPersister(anyNode, depsWithMatchingEnumClass, em),
+		assertThat(factory.createEntityPersister(anyNode, depsWithMatchingEnumClass, em),
 				is(instanceOf(EnumClassEntityPersister.class)));
 	}
 

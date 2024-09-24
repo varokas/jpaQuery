@@ -8,7 +8,7 @@ import com.huskycode.jpaquery.types.db.Link;
 import com.huskycode.jpaquery.types.db.Table;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.lang.reflect.Field;
 import java.util.*;
 

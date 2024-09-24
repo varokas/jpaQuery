@@ -1,15 +1,17 @@
 package com.huskycode.jpaquery.types.db;
 
-import com.huskycode.jpaquery.util.Function;
-import junit.framework.TestCase;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.apache.commons.lang.RandomStringUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class ColumnDefinitionUtilTest extends TestCase {
+import java.util.function.Function;
 
-    public void testCreateToColumnFunction() throws Exception {
+public class ColumnDefinitionUtilTest {
+
+	@Test
+	public void testCreateToColumnFunction() throws Exception {
         Table table = Mockito.mock(Table.class);
         String name = RandomStringUtils.randomAlphanumeric(5);
         Class type = String.class;
@@ -19,8 +21,8 @@ public class ColumnDefinitionUtilTest extends TestCase {
         Column result = toColumnFunction.apply(new ColumnDefinition(name, type));
 
         //verify
-        Assert.assertThat(result.getName(), Matchers.equalTo(name));
-        Assert.assertThat(result.getType(), Matchers.equalTo(type));
-        Assert.assertThat(result.getTable(), Matchers.equalTo(table));
+        assertThat(result.getName(), Matchers.equalTo(name));
+        assertThat(result.getType(), Matchers.equalTo(type));
+        assertThat(result.getTable(), Matchers.equalTo(table));
     }
 }

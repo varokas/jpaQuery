@@ -1,16 +1,18 @@
 package com.huskycode.jpaquery;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import com.huskycode.jpaquery.testmodel.ClassA;
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.huskycode.jpaquery.link.AttributeImpl;
@@ -37,8 +39,8 @@ public class DependenciesDefinitionTest {
 
         DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
 
-        Assert.assertThat(deps.getLinks().length, CoreMatchers.is(1));
-        Assert.assertThat(deps.getLinks()[0],
+        assertThat(deps.getLinks().length, CoreMatchers.is(1));
+        assertThat(deps.getLinks()[0],
                 CoreMatchers.is(CoreMatchers.sameInstance(anyLink)));
     }
 
@@ -50,7 +52,7 @@ public class DependenciesDefinitionTest {
 
         List<Link<?,?,?>> dependencies = deps.getDirectDependency(A.class);
 
-        Assert.assertEquals(1, dependencies.size());
+        Assertions.assertEquals(1, dependencies.size());
 
     }
 
@@ -66,21 +68,21 @@ public class DependenciesDefinitionTest {
 		DependenciesDefinition dependenciesDefinition = new PizzaDeps().getDepsUsingField();
 
 		Set<Class<?>> customerAllDependencies = dependenciesDefinition.getAllParentDependencyEntity(Customer.class);
-		Assert.assertEquals(2, customerAllDependencies.size());
-		Assert.assertTrue("Shuold have Address as parent dependency", customerAllDependencies.contains(Address.class));
-		Assert.assertTrue("Shuold have RefPaymentType as parent dependency", customerAllDependencies.contains(RefPaymentMethod.class));
+		Assertions.assertEquals(2, customerAllDependencies.size());
+		Assertions.assertTrue(customerAllDependencies.contains(Address.class), "Shuold have Address as parent dependency");
+		Assertions.assertTrue(customerAllDependencies.contains(RefPaymentMethod.class), "Shuold have RefPaymentType as parent dependency");
 
 
 		Set<Class<?>> pizzaOrderAllDependencies = dependenciesDefinition.getAllParentDependencyEntity(PizzaOrder.class);
-		Assert.assertEquals(7, pizzaOrderAllDependencies.size());
-		Assert.assertTrue("Shuold have Customer as parent dependency", pizzaOrderAllDependencies.contains(Customer.class));
-		Assert.assertTrue("Shuold have Employee as parent dependency", pizzaOrderAllDependencies.contains(Employee.class));
-		Assert.assertTrue("Shuold have Address as parent dependency", pizzaOrderAllDependencies.contains(Address.class));
-		Assert.assertTrue("Shuold have Vehicle as parent dependency", pizzaOrderAllDependencies.contains(Vehicle.class));
+		Assertions.assertEquals(7, pizzaOrderAllDependencies.size());
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(Customer.class), "Shuold have Customer as parent dependency");
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(Employee.class), "Shuold have Employee as parent dependency");
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(Address.class), "Shuold have Address as parent dependency");
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(Vehicle.class), "Shuold have Vehicle as parent dependency");
 
-		Assert.assertTrue("Shuold have RefPaymentMethod as parent dependency", pizzaOrderAllDependencies.contains(RefPaymentMethod.class));
-		Assert.assertTrue("Shuold have RefDeliveryStatus as parent dependency", pizzaOrderAllDependencies.contains(RefDeliveryStatus.class));
-		Assert.assertTrue("Shuold have RefVehicleType as parent dependency", pizzaOrderAllDependencies.contains(RefVehicleTypeEnum.class));
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(RefPaymentMethod.class), "Shuold have RefPaymentMethod as parent dependency");
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(RefDeliveryStatus.class), "Shuold have RefDeliveryStatus as parent dependency");
+		Assertions.assertTrue(pizzaOrderAllDependencies.contains(RefVehicleTypeEnum.class), "Shuold have RefVehicleType as parent dependency");
 	}
 
 	@Test
@@ -89,16 +91,16 @@ public class DependenciesDefinitionTest {
 
 		List<Link<?,?,?>> links = dependenciesDefinition.getDependencyLinks(PizzaOrder.class, Customer.class);
 
-		Assert.assertEquals(1, links.size());
-		Assert.assertEquals(PizzaOrder.class, links.get(0).getFrom().getEntityClass());
-		Assert.assertEquals(Customer.class, links.get(0).getTo().getEntityClass());
+		Assertions.assertEquals(1, links.size());
+		Assertions.assertEquals(PizzaOrder.class, links.get(0).getFrom().getEntityClass());
+		Assertions.assertEquals(Customer.class, links.get(0).getTo().getEntityClass());
 	}
 
 	@Test
 	public void testTriggeredTables() {
 	    DependenciesDefinition deps = new DepsBuilder().withTriggeredTable(ClassA.class).build();
 
-	    Assert.assertTrue("Fail to contain Triggered Table correctly", deps.getTriggeredTables().contains(tableFactory.createFromJPAEntity(ClassA.class)));
+	    Assertions.assertTrue(deps.getTriggeredTables().contains(tableFactory.createFromJPAEntity(ClassA.class)), "Fail to contain Triggered Table correctly");
 	}
 	
 	@Test
@@ -108,8 +110,8 @@ public class DependenciesDefinitionTest {
 		Mockito.when(aFieldAttr.getJavaMember()).thenReturn(A.class.getDeclaredField("aField"));
         DependenciesDefinition deps = new DepsBuilder().withLink(anyLink).build();
 
-	    Assert.assertTrue("Fail return true when field is a foreign key", deps.isForeignKey(A.class, A.class.getDeclaredField("aField")));
-	    Assert.assertTrue("Fail return true when field is a foreign key", deps.isForeignKey(A.class, aFieldAttr));
+	    Assertions.assertTrue(deps.isForeignKey(A.class, A.class.getDeclaredField("aField")), "Fail return true when field is a foreign key");
+	    Assertions.assertTrue(deps.isForeignKey(A.class, aFieldAttr), "Fail return true when field is a foreign key");
 	}
 	
 	@Test
@@ -118,8 +120,8 @@ public class DependenciesDefinitionTest {
 		Mockito.when(aFieldAttr.getJavaMember()).thenReturn(A.class.getDeclaredField("aField"));
         DependenciesDefinition deps = new DepsBuilder().build();
 
-	    Assert.assertFalse("Fail return false when field is NOT a foreign key", deps.isForeignKey(A.class, A.class.getDeclaredField("aField")));
-	    Assert.assertFalse("Fail return false when field is NOT a foreign key", deps.isForeignKey(A.class, aFieldAttr));
+	    Assertions.assertFalse(deps.isForeignKey(A.class, A.class.getDeclaredField("aField")), "Fail return false when field is NOT a foreign key");
+	    Assertions.assertFalse(deps.isForeignKey(A.class, aFieldAttr), "Fail return false when field is NOT a foreign key");
 	}
 
     static class A {

@@ -3,11 +3,12 @@ package com.huskycode.jpaquery.command;
 import static com.huskycode.jpaquery.command.CommandNodesFactory.ns;
 import static com.huskycode.jpaquery.command.CommandNodeFactory.n;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.huskycode.jpaquery.testmodel.pizza.Address;
+
+import org.junit.jupiter.api.Test;
 import com.huskycode.jpaquery.testmodel.pizza.Customer;
 
 public class CommandNodesFactoryTest {

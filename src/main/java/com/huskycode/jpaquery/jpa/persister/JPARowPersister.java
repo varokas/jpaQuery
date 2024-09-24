@@ -6,7 +6,7 @@ import com.huskycode.jpaquery.types.db.ColumnValue;
 import com.huskycode.jpaquery.types.db.Row;
 import com.huskycode.jpaquery.types.db.Table;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.lang.reflect.Field;
 import java.util.Map;
 

@@ -3,7 +3,7 @@ package com.huskycode.jpaquery.command;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import com.huskycode.jpaquery.command.CommandNodeFactory.CommandNodeImpl;
 

@@ -6,7 +6,7 @@ import com.huskycode.jpaquery.types.db.Table;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 /**
  * Populates Random value into an Entity

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CollectionUtilTest {
 	
@@ -19,8 +19,8 @@ public class CollectionUtilTest {
 		List<Object> c2 = new ArrayList<Object>();
 		c2.add(shareObject);
 		
-		Assert.assertTrue(CollectionUtil.containAny(c1, c2));
-		Assert.assertTrue(CollectionUtil.containAny(c2, c1));
+		Assertions.assertTrue(CollectionUtil.containAny(c1, c2));
+		Assertions.assertTrue(CollectionUtil.containAny(c2, c1));
 	}
 	
 	@Test
@@ -28,13 +28,13 @@ public class CollectionUtilTest {
 		Set<Object> c1 = new HashSet<Object>();
 		List<Object> c2 = new ArrayList<Object>();
 		
-		Assert.assertFalse(CollectionUtil.containAny(c1, c2));
-		Assert.assertFalse(CollectionUtil.containAny(c2, c1));
+		Assertions.assertFalse(CollectionUtil.containAny(c1, c2));
+		Assertions.assertFalse(CollectionUtil.containAny(c2, c1));
 		
 		c2.add(new Object());
 		
-		Assert.assertFalse(CollectionUtil.containAny(c1, c2));
-		Assert.assertFalse(CollectionUtil.containAny(c2, c1));
+		Assertions.assertFalse(CollectionUtil.containAny(c1, c2));
+		Assertions.assertFalse(CollectionUtil.containAny(c2, c1));
 	}
 	
 	@Test
@@ -44,8 +44,8 @@ public class CollectionUtilTest {
 		List<Object> c2 = new ArrayList<Object>();
 		c2.add(new Object());
 
-		Assert.assertFalse(CollectionUtil.containAny(c1, c2));
-		Assert.assertFalse(CollectionUtil.containAny(c2, c1));
+		Assertions.assertFalse(CollectionUtil.containAny(c1, c2));
+		Assertions.assertFalse(CollectionUtil.containAny(c2, c1));
 	}
 	
 	

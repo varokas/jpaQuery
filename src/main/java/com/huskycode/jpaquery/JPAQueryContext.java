@@ -1,6 +1,6 @@
 package com.huskycode.jpaquery;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.huskycode.jpaquery.command.CommandNodes;
 import com.huskycode.jpaquery.crud.CreationPlanFromDefinition;

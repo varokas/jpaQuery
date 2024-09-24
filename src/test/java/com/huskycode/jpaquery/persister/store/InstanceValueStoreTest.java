@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.persister.store;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class InstanceValueStoreTest {
 	
@@ -14,9 +14,9 @@ public class InstanceValueStoreTest {
 		InstanceValueStore<Object, Object> valueStore = InstanceValueStore.newInstance();
 		valueStore.putValue(instance1, value);
 		
-		Assert.assertEquals(instance1, instance2);
-		Assert.assertNotSame(instance1, instance2);
-		Assert.assertNull("Shuold return null because it is not the same instance", valueStore.get(instance2));
-		Assert.assertSame(value, valueStore.get(instance1));
+		Assertions.assertEquals(instance1, instance2);
+		Assertions.assertNotSame(instance1, instance2);
+		Assertions.assertNull(valueStore.get(instance2), "Shuold return null because it is not the same instance");
+		Assertions.assertSame(value, valueStore.get(instance1));
 	}
 }

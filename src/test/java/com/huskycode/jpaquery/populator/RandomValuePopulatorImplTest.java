@@ -1,7 +1,8 @@
 package com.huskycode.jpaquery.populator;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.huskycode.jpaquery.types.db.Row;
 import com.huskycode.jpaquery.types.db.RowBuilder;
@@ -9,15 +10,15 @@ import com.huskycode.jpaquery.types.db.Table;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.util.Randomizer;
 import com.huskycode.jpaquery.util.RandomizerImpl;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.util.Arrays;
 
 /**
@@ -71,7 +72,7 @@ public class RandomValuePopulatorImplTest {
         
         populator.populateValue(paa);
         assertNotNull(paa.parentField2);
-        Assert.assertEquals(expectedValue, paa.parentField2);
+        Assertions.assertEquals(expectedValue, paa.parentField2);
     }
 
     @Test
@@ -89,12 +90,12 @@ public class RandomValuePopulatorImplTest {
 
         Row result = populator.random(table);
 
-        Assert.assertThat(result.getTable(), Matchers.sameInstance(table));
-        Assert.assertThat(result.getColumnValue().size(), Matchers.equalTo(2));
-        Assert.assertThat(result.getColumnValue().get(0).getColumn(), Matchers.equalTo(col1));
-        Assert.assertThat(result.getColumnValue().get(0).getValue(), Matchers.instanceOf(Integer.class));
-        Assert.assertThat(result.getColumnValue().get(1).getColumn(), Matchers.equalTo(col2));
-        Assert.assertThat(result.getColumnValue().get(1).getValue(), Matchers.instanceOf(String.class));
+        assertThat(result.getTable(), Matchers.sameInstance(table));
+        assertThat(result.getColumnValue().size(), Matchers.equalTo(2));
+        assertThat(result.getColumnValue().get(0).getColumn(), Matchers.equalTo(col1));
+        assertThat(result.getColumnValue().get(0).getValue(), Matchers.instanceOf(Integer.class));
+        assertThat(result.getColumnValue().get(1).getColumn(), Matchers.equalTo(col2));
+        assertThat(result.getColumnValue().get(1).getValue(), Matchers.instanceOf(String.class));
     }
 
     private void mockTableValues(Table table, com.huskycode.jpaquery.types.db.Column col1, com.huskycode.jpaquery.types.db.Column col2) {

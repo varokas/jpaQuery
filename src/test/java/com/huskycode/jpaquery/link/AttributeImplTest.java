@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.link;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 
@@ -21,8 +21,8 @@ public class AttributeImplTest {
 
         Attribute<TestClass, Integer> attr = AttributeImpl.newInstance(c, field);
 
-        Assert.assertEquals(c, attr.getEntityClass());
-        Assert.assertEquals(c.getDeclaredField("a"), attr.getField());
+        Assertions.assertEquals(c, attr.getEntityClass());
+        Assertions.assertEquals(c.getDeclaredField("a"), attr.getField());
     }
 
     @Test
@@ -30,17 +30,17 @@ public class AttributeImplTest {
         Attribute<TestClass, Integer> attr1 = createAttribute("a");
         Attribute<TestClass, Integer> attr2 = createAttribute("a");
 
-        Assert.assertEquals(attr1, attr2);
+        Assertions.assertEquals(attr1, attr2);
 
         Class<TestClass> c = TestClass.class;
         Attribute<TestClass, Integer> attr3  = AttributeImpl.newInstance(c, c.getDeclaredField("b"));
 
-        Assert.assertFalse(attr1.equals(attr3));
+        Assertions.assertFalse(attr1.equals(attr3));
 
         Class<TestClass2> c2 = TestClass2.class;
         Attribute<TestClass2, Integer> attr4  = AttributeImpl.newInstance(c2, c2.getDeclaredField("a"));
 
-        Assert.assertFalse(attr1.equals(attr4));
+        Assertions.assertFalse(attr1.equals(attr4));
     }
 
     private  Attribute<TestClass, Integer> createAttribute(String fieldName) throws NoSuchFieldException {

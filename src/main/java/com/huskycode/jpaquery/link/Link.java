@@ -2,7 +2,7 @@ package com.huskycode.jpaquery.link;
 
 import java.lang.reflect.Field;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 /**
  * Use to define dependency on one class to another.

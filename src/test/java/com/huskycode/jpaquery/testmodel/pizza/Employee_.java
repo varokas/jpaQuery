@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.testmodel.pizza;
 
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.StaticMetamodel;
 
 @StaticMetamodel(Employee.class)
 public class Employee_ {

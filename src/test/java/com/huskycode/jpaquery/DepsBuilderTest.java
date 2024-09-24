@@ -1,13 +1,13 @@
 package com.huskycode.jpaquery;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.huskycode.jpaquery.types.db.factory.TableFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.link.Link;
 import com.huskycode.jpaquery.testmodel.pizza.Address;
@@ -25,7 +25,7 @@ public class DepsBuilderTest {
 	private Class<?> anEnumTable;
 
 	@SuppressWarnings("unchecked")
-	@Before
+	@BeforeEach
 	public void before() throws SecurityException, NoSuchFieldException { 
 		depBuilder = new DepsBuilder();
 		aLink = Link.from(Customer.class, Customer.class.getDeclaredField("customerAddressId"))

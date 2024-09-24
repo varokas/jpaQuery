@@ -1,7 +1,9 @@
 package com.huskycode.jpaquery.persister;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.persister.exception.EntityInstantiationException;
 import com.huskycode.jpaquery.persister.util.BeanUtil;
@@ -12,15 +14,16 @@ import com.huskycode.jpaquery.persister.util.BeanUtil;
 public class BeanCreatorTest {
 	private BeanUtil beanCreator;
 	
-	@Before
+	@BeforeEach
 	public void before() {
 		beanCreator = new BeanUtil();
 	}
 	
-    @Test(expected = EntityInstantiationException.class)
+    @Test
     public void shouldThrowExceptionIfCannotInstantiateClass() {
-        beanCreator.newInstance(NoPublicConstructor.class);
-    }
+		assertThrows(EntityInstantiationException.class, () ->
+			beanCreator.newInstance(NoPublicConstructor.class));
+	}
 
 
     /** A class with no public constructor for test */

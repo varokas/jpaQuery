@@ -2,8 +2,8 @@ package com.huskycode.jpaquery.testmodel.pizza;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class PizzaOrderedKey implements Serializable {

@@ -1,7 +1,7 @@
 package com.huskycode.jpaquery.testmodel;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 /**
  * Just a generic annotated entity class for testing

@@ -1,11 +1,13 @@
 package com.huskycode.jpaquery.util;
 
 import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by surachat on 8/17/14.
@@ -19,7 +21,7 @@ public class ListUtilTest {
         List<Integer> intResult = ListUtil.map(numberStrings, createStringIntegerFunction());
         List<String>  strResult = ListUtil.map(intResult, createIntegerStringFunction());
 
-        Assert.assertThat(strResult, Matchers.equalTo(numberStrings));
+        assertThat(strResult, Matchers.equalTo(numberStrings));
 
 
     }
@@ -30,26 +32,16 @@ public class ListUtilTest {
 
         List<String> result = ListUtil.from(numberStrings);
 
-        Assert.assertThat(result, Matchers.equalTo(numberStrings));
+        assertThat(result, Matchers.equalTo(numberStrings));
     }
 
 
     private Function<Integer, String> createIntegerStringFunction() {
-        return new Function<Integer, String>() {
-                @Override
-                public String apply(Integer input) {
-                    return String.valueOf(input);
-                }
-            };
+        return String::valueOf;
     }
 
     private Function<String, Integer> createStringIntegerFunction() {
-        return new Function<String, Integer>() {
-                @Override
-                public Integer apply(String input) {
-                    return Integer.valueOf(input);
-                }
-            };
+        return Integer::valueOf;
     }
 
 

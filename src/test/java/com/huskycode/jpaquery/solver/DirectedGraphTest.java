@@ -3,8 +3,8 @@ package com.huskycode.jpaquery.solver;
 import java.util.List;
 
 import com.huskycode.jpaquery.types.tree.EntityNodeImpl;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.huskycode.jpaquery.types.tree.EntityNode;
 
@@ -31,16 +31,16 @@ public class DirectedGraphTest {
 		List<EntityNode> descResult = graph.getInorderNodeDescendent();
 		
 		//verify ascendent
-		Assert.assertEquals(4, ascResult.size());
-		Assert.assertSame(a, ascResult.get(0));
-		Assert.assertSame(bNeedA, ascResult.get(1));
-		Assert.assertSame(cNeedAandB, ascResult.get(2));
-		Assert.assertSame(dNeedBandC, ascResult.get(3));
+		Assertions.assertEquals(4, ascResult.size());
+		Assertions.assertSame(a, ascResult.get(0));
+		Assertions.assertSame(bNeedA, ascResult.get(1));
+		Assertions.assertSame(cNeedAandB, ascResult.get(2));
+		Assertions.assertSame(dNeedBandC, ascResult.get(3));
 		//verify descendent
-		Assert.assertEquals(4, descResult.size());
-		Assert.assertSame(a, descResult.get(3));
-		Assert.assertSame(bNeedA, descResult.get(2));
-		Assert.assertSame(cNeedAandB, descResult.get(1));
-		Assert.assertSame(dNeedBandC, descResult.get(0));
+		Assertions.assertEquals(4, descResult.size());
+		Assertions.assertSame(a, descResult.get(3));
+		Assertions.assertSame(bNeedA, descResult.get(2));
+		Assertions.assertSame(cNeedAandB, descResult.get(1));
+		Assertions.assertSame(dNeedBandC, descResult.get(0));
 	}
 }

@@ -4,9 +4,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 import com.huskycode.jpaquery.persister.exception.EntityInstantiationException;
 import com.huskycode.jpaquery.populator.CannotSetValueException;
